@@ -21,7 +21,7 @@ M.load = function(callback)
 		return
 	end
 
-	local result = util.lcov_to_table(p);
+	local result = util.lcov_to_table(p)
 	callback(result)
 end
 
