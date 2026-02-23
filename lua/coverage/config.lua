@@ -134,10 +134,7 @@ local defaults = {
             coverage_file = "coverage/coverage.json",
         },
         rust = {
-            coverage_command =
-            "grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN",
-            project_files_only = true,
-            project_files = { "src/*", "tests/*" },
+            coverage_file = "target/lcov.info",
         },
         swift = {
             coverage_file = function()
