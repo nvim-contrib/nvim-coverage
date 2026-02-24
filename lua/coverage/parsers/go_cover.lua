@@ -65,6 +65,7 @@ local parse_coverprofile = function(path, files)
                 table.insert(file.missing_lines, linenr)
             else
                 table.insert(file.executed_lines, linenr)
+                file.hit_counts[linenr] = count
                 file.summary.covered_lines = file.summary.covered_lines + 1
             end
             file.summary.num_statements = file.summary.num_statements + 1

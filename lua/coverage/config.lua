@@ -14,6 +14,8 @@ local cached_swift_coverage_file = nil
 --- @field signs SignsConfig
 --- @field sign_group string name of the sign group (:h sign_placelist)
 --- @field summary SummaryOpts
+--- @field virtual_text VirtualTextOpts
+--- @field neotest NeotestOpts
 --- @field lang table
 local defaults = {
     auto_reload = false,
@@ -76,6 +78,32 @@ local defaults = {
         min_coverage = 80.0,
     },
 
+    --- @class VirtualTextOpts
+    --- @field enabled boolean show virtual text after loading coverage
+    --- @field annotation "coverage"|"hits" "coverage" shows ✓/✗, "hits" shows execution count
+    --- @field covered_string string virtual text for covered lines (used when annotation="coverage")
+    --- @field uncovered_string string virtual text for uncovered lines
+    --- @field partial_string string virtual text for partially covered lines
+    --- @field covered_hl string highlight group for covered virtual text
+    --- @field uncovered_hl string highlight group for uncovered virtual text
+    --- @field partial_hl string highlight group for partial virtual text
+    virtual_text = {
+        enabled = false,
+        annotation = "coverage",
+        covered_string = " ✓",
+        uncovered_string = " ✗",
+        partial_string = " ½",
+        covered_hl = "CoverageCovered",
+        uncovered_hl = "CoverageUncovered",
+        partial_hl = "CoveragePartial",
+    },
+
+    --- @class NeotestOpts
+    --- @field enabled boolean auto-reload coverage after neotest runs
+    neotest = {
+        enabled = false,
+    },
+
     -- language specific configuration
     lang = {
         cpp = {
@@ -83,6 +111,9 @@ local defaults = {
         },
         cs = {
             coverage_file = "TestResults/lcov.info",
+            -- Set format = "cobertura" to use Coverlet XML output instead of LCOV
+            format = "lcov",
+            path_mappings = {},
         },
         dart = {
             coverage_file = "coverage/lcov.info",
@@ -96,6 +127,10 @@ local defaults = {
         java = {
             coverage_file = "build/reports/jacoco/test/jacocoTestReport.xml",
             dir_prefix = "src/main/java",
+        },
+        kotlin = {
+            coverage_file = "build/reports/jacoco/test/jacocoTestReport.xml",
+            dir_prefix = "src/main/kotlin",
         },
         javascript = {
             coverage_file = "coverage/lcov.info",
@@ -117,10 +152,6 @@ local defaults = {
             ]] .. "'",
             coverage_file = "lcov.info",
             directories = "src,ext",
-            -- julia is disabled because the coverage command itself produces the file to be
-            -- watched which leads to an infinite loop (see
-            -- https://github.com/andythigpen/nvim-coverage/issues/41)
-            disable_auto_reload = true,
         },
         lua = {
             coverage_file = "luacov.report.out",

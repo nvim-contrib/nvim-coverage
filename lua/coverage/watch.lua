@@ -4,6 +4,11 @@ local config = require("coverage.config")
 
 local fs_event = nil
 local debounce_timer = nil
+--- Timestamp (ms) of the last self-triggered write.  When a coverage command
+--- generates the coverage file itself (e.g. Julia), we record the time here so
+--- that the resulting fs_event is silently ignored for a short cooldown period.
+local self_write_ts = nil
+local self_write_cooldown_ms = 2000
 
 --- @class Event
 --- @field change? boolean
@@ -29,7 +34,11 @@ local function watch(fname, change_cb, events)
 
     if events ~= nil and events.rename then
         -- the file was deleted and recreated
-        change_cb()
+        -- Skip if the recreation was triggered by ourselves (e.g. Julia command)
+        if self_write_ts == nil or (vim.loop.now() - self_write_ts) > self_write_cooldown_ms then
+            change_cb()
+        end
+        self_write_ts = nil
     end
 
     fs_event = vim.loop.new_fs_event()
@@ -52,6 +61,10 @@ local function watch(fname, change_cb, events)
                 watch(fname, change_cb, ev)
             end, 0)
         else
+            -- Ignore change events that immediately follow a self-triggered write
+            if self_write_ts ~= nil and (vim.loop.now() - self_write_ts) <= self_write_cooldown_ms then
+                return
+            end
             if debounce_timer ~= nil then
                 vim.loop.timer_stop(debounce_timer)
             end
@@ -77,6 +90,14 @@ M.stop = function()
         vim.loop.fs_event_stop(fs_event)
     end
     fs_event = nil
+end
+
+--- Record that the coverage file is about to be written by the plugin itself.
+--- Call this immediately before running a coverage command that writes the
+--- watched file (e.g. Julia's coverage_command) so the resulting fs_event is
+--- ignored for a short cooldown window.
+M.mark_self_write = function()
+    self_write_ts = vim.loop.now()
 end
 
 return M

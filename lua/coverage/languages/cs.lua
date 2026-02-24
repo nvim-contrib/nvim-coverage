@@ -12,17 +12,23 @@ M.sign_list = common.sign_list
 M.summary = common.summary
 
 --- Loads a coverage report.
+-- Supports format = "lcov" (default) or format = "cobertura" (Coverlet XML).
 -- @param callback called with the results of the coverage report
 M.load = function(callback)
-	local cs_config = config.opts.lang.cs
-	local p = Path:new(util.get_coverage_file(cs_config.coverage_file))
-	if not p:exists() then
-		vim.notify("No coverage file exists.", vim.log.levels.INFO)
-		return
-	end
+    local cs_config = config.opts.lang.cs
+    local p = Path:new(util.get_coverage_file(cs_config.coverage_file))
+    if not p:exists() then
+        vim.notify("No coverage file exists.", vim.log.levels.INFO)
+        return
+    end
 
-	local result = util.lcov_to_table(p);
-	callback(result)
+    local fmt = cs_config.format or "lcov"
+    if fmt == "cobertura" then
+        local cobertura = require("coverage.parsers.cobertura")
+        callback(cobertura.parse(p, cs_config.path_mappings or {}))
+    else
+        callback(util.lcov_to_table(p))
+    end
 end
 
 return M

@@ -4,6 +4,7 @@ local Path = require("plenary.path")
 local common = require("coverage.languages.common")
 local config = require("coverage.config")
 local util = require("coverage.util")
+local watch = require("coverage.watch")
 
 --- Returns a list of signs to be placed.
 M.sign_list = common.sign_list
@@ -15,6 +16,11 @@ M.summary = common.summary
 -- @param callback called with the results of the coverage report
 M.load = function(callback)
     local julia_config = config.opts.lang.julia
+
+    -- Mark that we are about to write the coverage file ourselves, so the
+    -- resulting fs_event will be ignored by the file watcher (avoids the
+    -- infinite reload loop described in https://github.com/andythigpen/nvim-coverage/issues/41).
+    watch.mark_self_write()
 
     -- Run the coverage command to construct the lcov.info file
     local cmd = julia_config.coverage_command

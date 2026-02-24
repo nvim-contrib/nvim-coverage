@@ -32,6 +32,7 @@ local lcov_parser = function(path, files)
             local l, n = tonumber(ls, 10), tonumber(ns, 10)
             if n > 0 then
                 table.insert(cmeta.executed_lines, l)
+                cmeta.hit_counts[l] = n
             else
                 table.insert(cmeta.missing_lines, l)
                 cmeta.summary.missing_lines = cmeta.summary.missing_lines + 1

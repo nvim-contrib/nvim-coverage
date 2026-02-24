@@ -38,6 +38,8 @@ M.new_file_meta = function()
         missing_branches = {},
         executed_lines = {},
         excluded_lines = {},
+        --- @type table<integer,integer>|nil optional map of line number → hit count
+        hit_counts = {},
     }
 end
 

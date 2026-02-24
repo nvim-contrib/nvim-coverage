@@ -29,6 +29,9 @@ local fixed_col_width = 64 -- this should match the width of header columns belo
 local min_filename_width = 25 -- the filename column should be at least this wide
 local max_col_width = 99 -- string.format doesn't like values larger than this
 
+-- Active filter string (empty string = no filter)
+local filter_text = ""
+
 -- Sort file coverage ascending.
 local coverage_ascending = function(a, b)
     if a.coverage == b.coverage then
@@ -88,7 +91,11 @@ end
 --- Loads the header lines and highlighting for rendering later.
 local load_header = function()
     header = { lines = {}, highlights = {} }
-    table.insert(header.lines, "press ? for help")
+    local hint = "press ? for help"
+    if filter_text ~= "" then
+        hint = hint .. string.format("  [filter: %s]", filter_text)
+    end
+    table.insert(header.lines, hint)
     table.insert(header.lines, "")
     table.insert(
         header.highlights,
@@ -109,11 +116,27 @@ local load_header = function()
     )
 end
 
+--- Returns the list of files after applying the active filter.
+local get_filtered_files = function()
+    if filter_text == "" then
+        return summary.files
+    end
+    local pattern = filter_text:lower()
+    local filtered = {}
+    for _, file in ipairs(summary.files) do
+        if file.filename:lower():find(pattern, 1, true) then
+            table.insert(filtered, file)
+        end
+    end
+    return filtered
+end
+
 --- Loads the content lines and highlighting for rendering later.
 local load_content = function()
     content = { lines = {}, highlights = {} }
     summary.files = vim.fn.sort(summary.files, sort_method)
-    for _, file in ipairs(summary.files) do
+    local files = get_filtered_files()
+    for _, file in ipairs(files) do
         local filename = file.filename
         if string.len(filename) > get_filename_width() then
             -- this truncates paths other than first & last ({1, -1}) to 1 character
@@ -246,6 +269,8 @@ local render_help = function()
         " Jump to top entry           H",
         " Sort coverage ascending     s",
         " Sort coverage descending    S",
+        " Filter files by name        /",
+        " Clear filter                <BS>",
         " Open selected file          <CR>",
         " Close window                <Esc>",
         " Close window                q",
@@ -288,6 +313,20 @@ local keymaps = function()
         "n",
         "?",
         ":lua require('coverage.summary').toggle_help()<CR>",
+        { silent = true }
+    )
+    vim.api.nvim_buf_set_keymap(
+        popup.bufnr,
+        "n",
+        "/",
+        ":lua require('coverage.summary').prompt_filter()<CR>",
+        { silent = true }
+    )
+    vim.api.nvim_buf_set_keymap(
+        popup.bufnr,
+        "n",
+        "<BS>",
+        ":lua require('coverage.summary').clear_filter()<CR>",
         { silent = true }
     )
 end
@@ -434,7 +473,35 @@ M.win_on_close = function()
     content = nil
     footer = nil
     help_displayed = false
+    filter_text = ""
     popup = nil
+end
+
+--- Prompt for a filter string and re-render the content.
+M.prompt_filter = function()
+    if popup == nil then
+        return
+    end
+    local input = vim.fn.input({ prompt = "Filter: ", default = filter_text, cancelreturn = filter_text })
+    filter_text = input or ""
+    cached_filename_width = nil
+    load_header()
+    load_content()
+    load_footer()
+    render_summary()
+end
+
+--- Clear the active filter and re-render the content.
+M.clear_filter = function()
+    if popup == nil then
+        return
+    end
+    filter_text = ""
+    cached_filename_width = nil
+    load_header()
+    load_content()
+    load_footer()
+    render_summary()
 end
 
 return M
