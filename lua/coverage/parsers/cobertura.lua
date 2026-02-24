@@ -1,3 +1,5 @@
+local M = {}
+
 local Path = require("plenary.path")
 local util = require("coverage.util")
 local xmlreader = require("xmlreader")
@@ -142,7 +144,7 @@ end
 --- @param path Path
 --- @param files table<string, FileCoverage>
 --- @param a_path_mappings table<string, string>
-return function (path, files, a_path_mappings)
+local cobertura_parser = function(path, files, a_path_mappings)
     reader = read_path(path)
     path_mappings = a_path_mappings
     sources = {}
@@ -165,3 +167,15 @@ return function (path, files, a_path_mappings)
 
     reader:close()
 end
+
+--- Parses a cobertura XML file into a CoverageData table.
+--- @param path Path
+--- @param a_path_mappings table<string, string>|nil
+--- @return CoverageData
+M.parse = function(path, a_path_mappings)
+    return util.report_to_table(path, function(p, f)
+        return cobertura_parser(p, f, a_path_mappings or {})
+    end)
+end
+
+return M

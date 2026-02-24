@@ -1,0 +1,21 @@
+{
+  "RSpec": {
+    "coverage": {
+      "/project/lib/app.rb": {
+        "lines": [1, 1, null, 0, 3, null]
+      },
+      "/project/lib/util.rb": {
+        "lines": [2, 0, 1]
+      }
+    },
+    "timestamp": 1700000000
+  },
+  "coverage": {
+    "/project/lib/app.rb": {
+      "lines": [1, 1, null, 0, 3, null]
+    },
+    "/project/lib/util.rb": {
+      "lines": [2, 0, 1]
+    }
+  }
+}

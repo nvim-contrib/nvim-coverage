@@ -4,6 +4,7 @@ local Path = require("plenary.path")
 local common = require("coverage.languages.common")
 local config = require("coverage.config")
 local util = require("coverage.util")
+local cobertura = require("coverage.parsers.cobertura")
 
 --- Returns a list of signs to be placed.
 M.sign_list = common.sign_list
@@ -21,7 +22,7 @@ M.load = function(callback)
         return
     end
 
-    callback(util.cobertura_to_table(p, php_config.path_mappings or {}))
+    callback(cobertura.parse(p, php_config.path_mappings or {}))
 end
 
 return M
