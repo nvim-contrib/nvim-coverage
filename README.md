@@ -1,5 +1,7 @@
 # nvim-coverage
 
+> **Note:** This is an actively maintained fork of [andythigpen/nvim-coverage](https://github.com/andythigpen/nvim-coverage). The upstream repository appears unmaintained (inactive since December 2024 with open PRs left unmerged). This fork continues development and merges community contributions.
+
 Displays coverage information in the sign column.
 
 ![markers](https://user-images.githubusercontent.com/542263/159128715-32e6eddf-5f9f-4853-9e2b-abd66bbf01d4.png)
@@ -18,7 +20,7 @@ Currently supports:
 - Julia (lcov): [Pkg.jl](https://pkgdocs.julialang.org/v1/)
 - Python (json): [coverage.py](https://coverage.readthedocs.io/en/6.3.2/index.html)
 - Ruby (json): [SimpleCov](https://github.com/simplecov-ruby/simplecov)
-- Rust (json): [grcov](https://github.com/mozilla/grcov#usage)
+- Rust (lcov): [cargo-llvm-cov](https://github.com/taiki-e/cargo-llvm-cov) or [grcov](https://github.com/mozilla/grcov)
 - Swift (json)
 - PHP (cobertura)
 - Lua (lcov)
@@ -55,7 +57,7 @@ This plugin depends on [plenary](https://github.com/nvim-lua/plenary.nvim) and o
 Using vim-plug (not including the luarock dependency):
 ```vim
 Plug 'nvim-lua/plenary.nvim'
-Plug 'andythigpen/nvim-coverage'
+Plug 'nvim-contrib/nvim-coverage'
 ```
 
 The following lua is required to configure the plugin after installation.
@@ -66,7 +68,7 @@ require("coverage").setup()
 Using packer:
 ```lua
 use({
-  "andythigpen/nvim-coverage",
+  "nvim-contrib/nvim-coverage",
   requires = "nvim-lua/plenary.nvim",
   -- Optional: needed for PHP when using the cobertura parser
   rocks = { 'lua-xmlreader' },
@@ -79,7 +81,7 @@ use({
 Using lazyvim:
 ```lua
  {
-    "andythigpen/nvim-coverage",
+    "nvim-contrib/nvim-coverage",
     version = "*",
     config = function()
       require("coverage").setup({
@@ -91,7 +93,7 @@ Using lazyvim:
 
 ## Configuration
 
-See [docs](https://github.com/andythigpen/nvim-coverage/blob/main/doc/nvim-coverage.txt) for more info.
+See [docs](https://github.com/nvim-contrib/nvim-coverage/blob/main/doc/nvim-coverage.txt) for more info.
 
 Example:
 
