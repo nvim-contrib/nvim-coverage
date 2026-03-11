@@ -33,6 +33,7 @@ local create_highlight_groups = function()
     highlight("CoverageSummaryPass", config.opts.highlights.summary_pass)
     highlight("CoverageSummaryFail", config.opts.highlights.summary_fail)
     highlight("CoverageSummaryHeader", config.opts.highlights.summary_header)
+    highlight("CoverageVirtualText", config.opts.highlights.virtual_text)
 end
 
 -- Creates default highlight groups.

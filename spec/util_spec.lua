@@ -56,6 +56,14 @@ describe("util.lcov_to_table", function()
             assert.equals(100, bar.summary.percent_covered)
         end)
 
+        it("records hit counts for all DA lines", function()
+            local foo = data.files["/project/src/foo.lua"]
+            assert.equals(1, foo.hit_counts[1])
+            assert.equals(0, foo.hit_counts[2])
+            assert.equals(1, foo.hit_counts[3])
+            assert.equals(0, foo.hit_counts[4])
+        end)
+
         it("aggregates totals", function()
             assert.equals(7, data.totals.num_statements)
             assert.equals(5, data.totals.covered_lines)

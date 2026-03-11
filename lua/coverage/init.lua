@@ -1,12 +1,13 @@
 local M = {}
 
-local config    = require("coverage.config")
-local signs     = require("coverage.signs")
-local highlight = require("coverage.highlight")
-local summary   = require("coverage.summary")
-local report    = require("coverage.report")
-local watch     = require("coverage.watch")
-local util      = require("coverage.util")
+local config       = require("coverage.config")
+local signs        = require("coverage.signs")
+local highlight    = require("coverage.highlight")
+local summary      = require("coverage.summary")
+local report       = require("coverage.report")
+local watch        = require("coverage.watch")
+local util         = require("coverage.util")
+local virtual_text = require("coverage.virtual_text")
 
 --- Setup the coverage plugin.
 --- @param user_opts? Configuration
@@ -23,6 +24,7 @@ M.setup = function(user_opts)
     command! CoverageToggle lua require('coverage').toggle()
     command! CoverageClear lua require('coverage').clear()
     command! CoverageSummary lua require('coverage').summary()
+    command! CoverageToggleHitCount lua require('coverage').toggle_hit_count()
     ]])
     end
 end
@@ -73,6 +75,9 @@ M.load = function(file, place)
         else
             signs.cache(sign_list)
         end
+        if config.opts.virtual_text.enabled or virtual_text.is_enabled() then
+            virtual_text.place(data)
+        end
     end
 
     watch.start(file, reload)
@@ -91,12 +96,26 @@ M.toggle = signs.toggle
 --- Hides signs, clears cache, stops file watcher.
 M.clear = function()
     signs.clear()
+    virtual_text.clear()
     report.clear()
     watch.stop()
 end
 
 --- Displays a pop-up with a coverage summary report.
 M.summary = summary.show
+
+--- Toggles virtual text hit counts.
+M.toggle_hit_count = function()
+    if not report.is_cached() then
+        vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
+        return
+    end
+    if virtual_text.is_enabled() then
+        virtual_text.clear()
+    else
+        virtual_text.place(report.get())
+    end
+end
 
 --- Jumps to the next sign of the given type.
 --- @param sign_type? "covered"|"uncovered"|"partial" Defaults to "covered"

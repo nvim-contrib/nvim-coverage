@@ -6,6 +6,7 @@ local Path = require("plenary.path")
 --- @field executed_lines integer[]
 --- @field missing_lines integer[]
 --- @field missing_branches integer[][]|nil
+--- @field hit_counts table<integer, integer> map of line number to execution count
 --- @field summary CoverageSummary
 
 --- @class CoverageSummary
@@ -34,6 +35,7 @@ local new_file_meta = function()
         missing_branches = {},
         executed_lines = {},
         excluded_lines = {},
+        hit_counts = {},
     }
 end
 
@@ -61,6 +63,7 @@ M.lcov_to_table = function(path)
             -- DA:<line number>,<execution count>[,<checksum>]
             local ls, ns = line:match("DA:(%d+),(%d+),?.*")
             local l, n = tonumber(ls, 10), tonumber(ns, 10)
+            cmeta.hit_counts[l] = n
             if n > 0 then
                 table.insert(cmeta.executed_lines, l)
             else
