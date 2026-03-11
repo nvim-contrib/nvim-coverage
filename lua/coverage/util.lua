@@ -3,14 +3,15 @@ local Path = require("plenary.path")
 
 --- @class FileCoverage
 --- @field excluded_lines integer[]
---- @field executed_lines integer[]
---- @field missing_lines integer[]
---- @field missing_branches integer[][]|nil
+--- @field covered_lines integer[]
+--- @field uncovered_lines integer[]
+--- @field partial_lines integer[][]|nil
+--- @field hit_counts table<integer, integer> map of line number to execution count
 --- @field summary CoverageSummary
 
 --- @class CoverageSummary
 --- @field covered_lines integer
---- @field missing_lines integer
+--- @field uncovered_lines integer
 --- @field excluded_lines integer
 --- @field num_branches integer
 --- @field num_partial_branches integer
@@ -26,14 +27,15 @@ local new_file_meta = function()
         summary = {
             covered_lines = 0,
             excluded_lines = 0,
-            missing_lines = 0,
+            uncovered_lines = 0,
             num_statements = 0,
             percent_covered = 0,
         },
-        missing_lines = {},
-        missing_branches = {},
-        executed_lines = {},
+        uncovered_lines = {},
+        partial_lines = {},
+        covered_lines = {},
         excluded_lines = {},
+        hit_counts = {},
     }
 end
 
@@ -61,11 +63,12 @@ M.lcov_to_table = function(path)
             -- DA:<line number>,<execution count>[,<checksum>]
             local ls, ns = line:match("DA:(%d+),(%d+),?.*")
             local l, n = tonumber(ls, 10), tonumber(ns, 10)
+            cmeta.hit_counts[l] = n
             if n > 0 then
-                table.insert(cmeta.executed_lines, l)
+                table.insert(cmeta.covered_lines, l)
             else
-                table.insert(cmeta.missing_lines, l)
-                cmeta.summary.missing_lines = cmeta.summary.missing_lines + 1
+                table.insert(cmeta.uncovered_lines, l)
+                cmeta.summary.uncovered_lines = cmeta.summary.uncovered_lines + 1
             end
         elseif line:match("^BRDA:%d+,%d+,%d+,(%d+|-)") and cmeta ~= nil then
             -- BRDA:<line number>,<block number>,<branch number>,<taken>
@@ -73,7 +76,7 @@ M.lcov_to_table = function(path)
             local l = tonumber(ls, 10)
             local n = ns ~= '-' and tonumber(ns, 10) or 0
             if n == 0 then
-                table.insert(cmeta.missing_branches, { l, -1 })
+                table.insert(cmeta.partial_lines, { l, -1 })
             end
         elseif line:match("^BRF:%d+") and cmeta ~= nil then
             -- BRF:<number of branches found>
@@ -93,11 +96,11 @@ M.lcov_to_table = function(path)
         end
     end
 
-    local totals = { num_statements = 0, covered_lines = 0, missing_lines = 0, excluded_lines = 0 }
+    local totals = { num_statements = 0, covered_lines = 0, uncovered_lines = 0, excluded_lines = 0 }
     for _, meta in pairs(files) do
         totals.num_statements = totals.num_statements + meta.summary.num_statements
         totals.covered_lines  = totals.covered_lines  + meta.summary.covered_lines
-        totals.missing_lines  = totals.missing_lines  + meta.summary.missing_lines
+        totals.uncovered_lines  = totals.uncovered_lines  + meta.summary.uncovered_lines
         totals.excluded_lines = totals.excluded_lines + meta.summary.excluded_lines
     end
     totals.percent_covered = totals.covered_lines / totals.num_statements * 100

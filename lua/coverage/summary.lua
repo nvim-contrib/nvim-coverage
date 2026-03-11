@@ -300,7 +300,7 @@ local build = function(data)
         table.insert(files, {
             filename = fname,
             statements = cov.summary.num_statements,
-            missing = cov.summary.missing_lines,
+            missing = cov.summary.uncovered_lines,
             excluded = cov.summary.excluded_lines,
             branches = cov.summary.num_branches,
             partial = cov.summary.num_partial_branches,
@@ -311,7 +311,7 @@ local build = function(data)
         files = files,
         totals = {
             statements = data.totals.num_statements,
-            missing = data.totals.missing_lines,
+            missing = data.totals.uncovered_lines,
             excluded = data.totals.excluded_lines,
             branches = data.totals.num_branches,
             partial = data.totals.num_partial_branches,
@@ -445,11 +445,11 @@ M.close = function()
         return
     end
     vim.api.nvim_buf_delete(popup.bufnr, { force = true })
-    M.win_on_close()
+    M.on_close()
 end
 
 --- Clear variables on window close.
-M.win_on_close = function()
+M.on_close = function()
     if popup == nil then
         return
     end

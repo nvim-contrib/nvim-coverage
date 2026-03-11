@@ -99,6 +99,9 @@ Valid keys for {opts.highlights}:
     summary_fail: ~
         Highlight for files below the min_coverage threshold.
         Defaults to: `{ link = "CoverageUncovered" }`
+    virtual_text: ~
+        Highlight for virtual text hit counts.
+        Defaults to: `{ link = "Comment" }`
 
                                                               *coverage.signs*
 Valid keys for {opts.signs}:
@@ -133,6 +136,19 @@ Valid keys for {opts.summary}:
     window: ~
         Additional window options passed to the popup. See plenary window API.
 
+                                                        *coverage.virtual_text*
+Valid keys for {opts.virtual_text}:
+
+    enabled: ~
+        When true, virtual text hit counts are shown automatically after
+        |coverage.load()|.
+        Defaults to: `false`
+
+    position: ~
+        Where to place the virtual text. One of `"eol"`, `"right_align"`,
+        or `"inline"`. See |nvim_buf_set_extmark()|.
+        Defaults to: `"eol"`
+
 
 ================================================================================
 COMMANDS                                              *nvim-coverage-commands*
@@ -155,6 +171,9 @@ COMMANDS                                              *nvim-coverage-commands*
 
 :CoverageSummary                                            *:CoverageSummary*
     Open the coverage summary popup. Requires a prior |:CoverageLoad|.
+
+:CoverageToggleVirtualText                        *:CoverageToggleVirtualText*
+    Toggle virtual text hit counts on/off. Requires a prior |:CoverageLoad|.
 
 
 ================================================================================
@@ -196,6 +215,12 @@ coverage.summary()
         `?`       Toggle help screen
         `q`       Close
         `<Esc>`   Close
+
+                                              *coverage.toggle_virtual_text()*
+coverage.toggle_virtual_text()
+    Toggle virtual text hit counts. Shows execution count for every
+    instrumented line as virtual text (e.g. `× 42`). Requires a prior
+    |coverage.load()|.
 
                                                        *coverage.jump_next()*
 coverage.jump_next({sign_type})

@@ -4,6 +4,7 @@
 :CoverageShow	nvim-coverage.txt	/*:CoverageShow*
 :CoverageSummary	nvim-coverage.txt	/*:CoverageSummary*
 :CoverageToggle	nvim-coverage.txt	/*:CoverageToggle*
+:CoverageToggleVirtualText	nvim-coverage.txt	/*:CoverageToggleVirtualText*
 coverage.clear()	nvim-coverage.txt	/*coverage.clear()*
 coverage.hide()	nvim-coverage.txt	/*coverage.hide()*
 coverage.highlights	nvim-coverage.txt	/*coverage.highlights*
@@ -16,6 +17,8 @@ coverage.signs	nvim-coverage.txt	/*coverage.signs*
 coverage.summary	nvim-coverage.txt	/*coverage.summary*
 coverage.summary()	nvim-coverage.txt	/*coverage.summary()*
 coverage.toggle()	nvim-coverage.txt	/*coverage.toggle()*
+coverage.toggle_virtual_text()	nvim-coverage.txt	/*coverage.toggle_virtual_text()*
+coverage.virtual_text	nvim-coverage.txt	/*coverage.virtual_text*
 nvim-coverage	nvim-coverage.txt	/*nvim-coverage*
 nvim-coverage-commands	nvim-coverage.txt	/*nvim-coverage-commands*
 nvim-coverage-lua-api	nvim-coverage.txt	/*nvim-coverage-lua-api*

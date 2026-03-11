@@ -11,9 +11,9 @@ local make_data = function(opts)
     return {
         files = {
             ["/project/src/foo.lua"] = {
-                executed_lines   = opts.executed   or {},
-                missing_lines    = opts.missing    or {},
-                missing_branches = opts.branches   or {},
+                covered_lines   = opts.executed   or {},
+                uncovered_lines    = opts.missing    or {},
+                partial_lines = opts.branches   or {},
             },
         },
         totals = {},
@@ -80,7 +80,7 @@ describe("signs.build", function()
         local data = {
             files = {
                 ["/not/open/file.lua"] = {
-                    executed_lines = { 1, 2 }, missing_lines = {}, missing_branches = {},
+                    covered_lines = { 1, 2 }, uncovered_lines = {}, partial_lines = {},
                 },
             },
             totals = {},

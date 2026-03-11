@@ -28,12 +28,12 @@ describe("util.lcov_to_table", function()
 
         it("records executed lines", function()
             local foo = data.files["/project/src/foo.lua"]
-            assert.same({ 1, 3 }, foo.executed_lines)
+            assert.same({ 1, 3 }, foo.covered_lines)
         end)
 
         it("records missing lines", function()
             local foo = data.files["/project/src/foo.lua"]
-            assert.same({ 2, 4 }, foo.missing_lines)
+            assert.same({ 2, 4 }, foo.uncovered_lines)
         end)
 
         it("records covered_lines from LH", function()
@@ -56,10 +56,18 @@ describe("util.lcov_to_table", function()
             assert.equals(100, bar.summary.percent_covered)
         end)
 
+        it("records hit counts for all DA lines", function()
+            local foo = data.files["/project/src/foo.lua"]
+            assert.equals(1, foo.hit_counts[1])
+            assert.equals(0, foo.hit_counts[2])
+            assert.equals(1, foo.hit_counts[3])
+            assert.equals(0, foo.hit_counts[4])
+        end)
+
         it("aggregates totals", function()
             assert.equals(7, data.totals.num_statements)
             assert.equals(5, data.totals.covered_lines)
-            assert.equals(2, data.totals.missing_lines)
+            assert.equals(2, data.totals.uncovered_lines)
         end)
 
         it("calculates total percent_covered", function()
@@ -87,7 +95,7 @@ describe("util.lcov_to_table", function()
 
         it("records missing branches", function()
             -- BRDA:2,0,1,0 => line 2, branch not taken
-            local branches = baz().missing_branches
+            local branches = baz().partial_lines
             assert.equals(1, #branches)
             assert.equals(2, branches[1][1])
         end)
