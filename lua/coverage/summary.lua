@@ -445,11 +445,11 @@ M.close = function()
         return
     end
     vim.api.nvim_buf_delete(popup.bufnr, { force = true })
-    M.win_on_close()
+    M.on_close()
 end
 
 --- Clear variables on window close.
-M.win_on_close = function()
+M.on_close = function()
     if popup == nil then
         return
     end
