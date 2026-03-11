@@ -200,21 +200,37 @@ coverage.jump_prev("uncovered")
 Navigate the quickfix list with `:cnext` / `:cprev` (or `]q` / `[q` with a mapping).
 Navigate the location list with `:lnext` / `:lprev`.
 
-### Auto-reload with neotest
+### neotest integration
 
-If you use [neotest](https://github.com/nvim-neotest/neotest), hook into test results to reload coverage automatically after every run:
+The plugin ships built-in neotest consumers so coverage reloads automatically after every test run.
+
+**Generic consumer** — works for any language that writes an lcov file during the test run (e.g. Rust with `cargo-llvm-cov`):
 
 ```lua
 require("neotest").setup({
   consumers = {
-    coverage = function(client)
-      client.listeners.results = function(_, _, partial)
-        if not partial then
-          require("coverage").load(nil, require("coverage.signs").is_enabled())
-        end
-      end
-      return {}
-    end,
+    coverage = require("coverage.neotest"),
+  },
+})
+```
+
+**Go consumer** — converts `coverage.out` to `coverage/lcov.info` via `go tool cover`, then reloads. Expects tests to be run with `-coverprofile=coverage.out`:
+
+```lua
+require("neotest").setup({
+  consumers = {
+    coverage_go = require("coverage.neotest.go"),
+  },
+})
+```
+
+Both consumers can be combined:
+
+```lua
+require("neotest").setup({
+  consumers = {
+    coverage    = require("coverage.neotest"),
+    coverage_go = require("coverage.neotest.go"),
   },
 })
 ```

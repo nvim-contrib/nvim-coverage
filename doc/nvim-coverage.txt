@@ -9,6 +9,7 @@ navigation. It does not run tests or invoke any external tools itself.
   1. Setup................................................|nvim-coverage-setup|
   2. Commands.........................................|nvim-coverage-commands|
   3. Lua API...........................................|nvim-coverage-lua-api|
+  4. Neotest consumers.........................|nvim-coverage-neotest|
 
 ================================================================================
 SETUP                                                    *nvim-coverage-setup*
@@ -278,5 +279,40 @@ coverage.jump_prev({sign_type})
     {sign_type} is one of `"covered"`, `"uncovered"`, `"partial"`.
     Defaults to `"covered"`.
 
+
+================================================================================
+NEOTEST CONSUMERS                                       *nvim-coverage-neotest*
+
+The plugin ships built-in neotest consumers that reload coverage automatically
+after every test run. Require them directly in your neotest setup.
+
+                                                    *coverage.neotest*
+require("coverage.neotest")
+    Generic consumer. Reloads the configured lcov file after every completed
+    test run. Suitable for any language that writes the lcov file during the
+    test run (e.g. Rust with cargo-llvm-cov).
+
+    Usage: >
+        require("neotest").setup({
+          consumers = {
+            coverage = require("coverage.neotest"),
+          },
+        })
+<
+
+                                                    *coverage.neotest.go*
+require("coverage.neotest.go")
+    Go consumer. After tests finish, converts `coverage.out` in the current
+    working directory to `coverage/lcov.info` using `go tool cover`, then
+    reloads coverage. Expects tests to produce a `coverage.out` file (e.g.
+    via `-coverprofile=coverage.out`).
+
+    Usage: >
+        require("neotest").setup({
+          consumers = {
+            coverage_go = require("coverage.neotest.go"),
+          },
+        })
+<
 
  vim:tw=78:ts=8:ft=help:norl:
