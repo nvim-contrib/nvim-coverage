@@ -179,6 +179,18 @@ COMMANDS                                              *nvim-coverage-commands*
     Toggle branch info popup on/off. Shows per-branch execution counts
     when cursor is on a partially covered line. Requires a prior |:CoverageLoad|.
 
+:CoverageQuickfix [{filter}]                          *:CoverageQuickfix*
+    Populate the quickfix list with one entry per file showing coverage
+    percentage and uncovered/partial line counts. Opens the quickfix window.
+    {filter} can be `uncovered` to include only files that have uncovered lines.
+    Requires a prior |:CoverageLoad|.
+
+:CoverageLoclist [{sign_type}]                          *:CoverageLoclist*
+    Populate the location list for the current window with lines of the given
+    type in the current buffer. Opens the location list window.
+    {sign_type} is `uncovered` (default) or `partial`.
+    Requires a prior |:CoverageLoad|.
+
 
 ================================================================================
 LUA API                                                *nvim-coverage-lua-api*
@@ -230,6 +242,19 @@ coverage.toggle_line_hits()
 coverage.toggle_branch_hits()
     Toggle branch info popup. Shows per-branch execution counts when cursor
     is on a partially covered line. Requires a prior |coverage.load()|.
+
+                                                        *coverage.quickfix()*
+coverage.quickfix({filter})
+    Populate the quickfix list with one entry per file, sorted by coverage
+    ascending (worst first). Each entry shows the coverage percentage and
+    counts of uncovered/partial lines. Opens the quickfix window.
+    {filter} is optional — pass `"uncovered"` to skip fully-covered files.
+
+                                                         *coverage.loclist()*
+coverage.loclist({sign_type})
+    Populate the location list for the current window with lines of the given
+    type in the current buffer. Opens the location list window.
+    {sign_type} is `"uncovered"` (default) or `"partial"`.
 
                                                        *coverage.jump_next()*
 coverage.jump_next({sign_type})

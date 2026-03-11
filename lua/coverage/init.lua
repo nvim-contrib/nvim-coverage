@@ -9,6 +9,8 @@ local watch        = require("coverage.watch")
 local util         = require("coverage.util")
 local virtual_text = require("coverage.virtual_text")
 local overlay      = require("coverage.overlay")
+local quickfix     = require("coverage.quickfix")
+local loclist      = require("coverage.loclist")
 
 --- Setup the coverage plugin.
 --- @param user_opts? Configuration
@@ -28,6 +30,12 @@ M.setup = function(user_opts)
     command! CoverageToggleLineHits lua require('coverage').toggle_line_hits()
     command! CoverageToggleBranchHits lua require('coverage').toggle_branch_hits()
     ]])
+        vim.api.nvim_create_user_command("CoverageQuickfix", function(opts)
+            require("coverage").quickfix(opts.args ~= "" and opts.args or nil)
+        end, { nargs = "?" })
+        vim.api.nvim_create_user_command("CoverageLoclist", function(opts)
+            require("coverage").loclist(opts.args ~= "" and opts.args or nil)
+        end, { nargs = "?" })
     end
 end
 
@@ -132,6 +140,14 @@ M.toggle_line_hits = function()
         virtual_text.place(report.get())
     end
 end
+
+--- Populates the quickfix list with one entry per file.
+--- @param filter? "uncovered" Only include files with uncovered lines.
+M.quickfix = quickfix.populate
+
+--- Populates the location list with lines of the given type in the current buffer.
+--- @param sign_type? "uncovered"|"partial" Defaults to "uncovered".
+M.loclist = loclist.populate
 
 --- Jumps to the next sign of the given type.
 --- @param sign_type? "covered"|"uncovered"|"partial" Defaults to "covered"
