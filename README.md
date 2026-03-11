@@ -31,9 +31,7 @@ A Neovim plugin that displays code coverage from [lcov](http://ltp.sourceforge.n
   "nvim-contrib/nvim-coverage",
   dependencies = { "nvim-lua/plenary.nvim" },
   config = function()
-    require("coverage").setup({
-      file = "coverage/lcov.info",
-    })
+    require("coverage").setup()
   end,
 }
 ```
@@ -45,9 +43,7 @@ use({
   "nvim-contrib/nvim-coverage",
   requires = "nvim-lua/plenary.nvim",
   config = function()
-    require("coverage").setup({
-      file = "coverage/lcov.info",
-    })
+    require("coverage").setup()
   end,
 })
 ```
@@ -56,21 +52,33 @@ use({
 
 The plugin reads a pre-generated lcov file — it does not run tests or invoke any tools itself.
 
-| Language       | Command |
-|----------------|---------|
-| Go             | `go test -coverprofile=coverage.out ./... && go tool cover -o coverage/lcov.info coverage.out` |
-| Rust           | `cargo llvm-cov --lcov --output-path coverage/lcov.info` |
-| JavaScript/TypeScript | Jest: `jest --coverage` (outputs `coverage/lcov.info` by default) |
-| Python         | `pytest --cov && coverage lcov -o coverage/lcov.info` |
-| C/C++          | `lcov --capture --directory . --output-file coverage/lcov.info` |
-| Swift          | `xcrun xccov view --report --json ... | <converter>` |
+By default the plugin searches for an lcov file in these locations (first existing file wins):
+
+```
+lcov.info
+cover/lcov.info
+coverage/lcov.info
+target/lcov.info
+```
+
+Override with the `file` option if your tool writes elsewhere.
+
+| Language | Command | Default output path |
+|----------|---------|---------------------|
+| Go | `go test -coverprofile=coverage.out ./... && go tool cover -o coverage/lcov.info coverage.out` | `coverage/lcov.info` |
+| Rust | `cargo llvm-cov --lcov --output-path target/lcov.info` | `target/lcov.info` |
+| JavaScript/TypeScript | `jest --coverage` | `coverage/lcov.info` |
+| Python | `pytest --cov && coverage lcov -o coverage/lcov.info` | `coverage/lcov.info` |
+| C/C++ | `lcov --capture --directory . --output-file lcov.info` | `lcov.info` |
+| Swift | `xcrun xccov view --report --json ... \| <converter>` | `coverage/lcov.info` |
 
 ## Configuration
 
 ```lua
 require("coverage").setup({
-  -- path to the lcov file (required)
-  file = "coverage/lcov.info",
+  -- path (or list of paths) to the lcov file; first existing file wins
+  -- defaults to: { "lcov.info", "cover/lcov.info", "coverage/lcov.info", "target/lcov.info" }
+  -- file = "coverage/lcov.info",
 
   -- register :Coverage* commands (default: true)
   commands = true,
