@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.0.0](https://github.com/nvim-contrib/nvim-coverage/compare/v0.2.1...v1.0.0) (2026-03-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* breaking API renames for ergonomics
+* the `lcov_file` configuration key is renamed to `file`.
+
+### Features
+
+* breaking API renames for ergonomics ([1e461d4](https://github.com/nvim-contrib/nvim-coverage/commit/1e461d44fa9c53d8fa7feb38aa7bff986af7168d))
+* default file to common lcov paths list ([abfa535](https://github.com/nvim-contrib/nvim-coverage/commit/abfa5354fb77fe43d011c77c1df34d68dcb51047))
+* rename lcov_file config option to file ([7dfa05c](https://github.com/nvim-contrib/nvim-coverage/commit/7dfa05c5d183f62cc36fb674f07c44e3814cdabe))
+* support list of lcov file paths (closes [#7](https://github.com/nvim-contrib/nvim-coverage/issues/7)) ([f4d6d54](https://github.com/nvim-contrib/nvim-coverage/commit/f4d6d54d17679cf114d9a1030c9a13fd770c185d))
+* virtual text hit counts ([#13](https://github.com/nvim-contrib/nvim-coverage/issues/13)) ([e559e80](https://github.com/nvim-contrib/nvim-coverage/commit/e559e8096387aacc2684fa32573ea020dd10724a))
+
 ## [0.2.1](https://github.com/nvim-contrib/nvim-coverage/compare/v0.2.0...v0.2.1) (2026-03-11)
 
 
