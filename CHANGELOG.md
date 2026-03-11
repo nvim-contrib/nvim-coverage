@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/nvim-contrib/nvim-coverage/compare/v0.2.0...v0.2.1) (2026-03-11)
+
+
+### Bug Fixes
+
+* stable baseline before breaking API changes ([0505063](https://github.com/nvim-contrib/nvim-coverage/commit/0505063e6cc7afce91c6a9372159cd4e4f59035a))
+
 ## [0.2.0](https://github.com/nvim-contrib/nvim-coverage/compare/v0.1.0...v0.2.0) (2026-03-11)
 
 
