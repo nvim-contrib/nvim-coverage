@@ -1,9 +1,10 @@
 ================================================================================
 INTRODUCTION                                                   *nvim-coverage*
 
-nvim-coverage displays lcov code coverage in the sign column with highlight
-groups and a summary popup. It reads a pre-generated lcov file — it does not
-run tests or invoke any external tools itself.
+nvim-coverage displays code coverage from lcov files directly in the editor.
+It reads a pre-generated lcov file and provides sign column markers, virtual
+text hit counts, a branch overlay popup, a summary popup, and quickfix/loclist
+navigation. It does not run tests or invoke any external tools itself.
 
   1. Setup................................................|nvim-coverage-setup|
   2. Commands.........................................|nvim-coverage-commands|
@@ -19,7 +20,6 @@ coverage.setup({opts})
     Usage: >
 
     require('coverage').setup({
-      -- file = "coverage/lcov.info",  -- override if needed
       auto_reload = { enabled = true },
     })
 <
@@ -62,6 +62,7 @@ Valid keys for {opts}:
             end,
         })
 <
+
     sign_group: ~
         Name of the sign group used when placing signs. See |sign-group|.
         Defaults to: `"coverage"`
@@ -154,8 +155,9 @@ Valid keys for {opts.virtual_text}:
 COMMANDS                                              *nvim-coverage-commands*
 
 :CoverageLoad [{file}]                                         *:CoverageLoad*
-    Load an lcov file and place signs immediately. If {file} is not given,
-    uses the `file` configuration option.
+    Load an lcov file. If {file} is not given, uses the `file` config option.
+    Signs are placed immediately if already visible, otherwise cached until
+    |:CoverageShow| is called.
 
 :CoverageShow                                                  *:CoverageShow*
     Show coverage signs. Requires a prior |:CoverageLoad|.
@@ -167,27 +169,31 @@ COMMANDS                                              *nvim-coverage-commands*
     Toggle coverage sign visibility.
 
 :CoverageClear                                                *:CoverageClear*
-    Remove signs, clear the cached report, and stop the file watcher.
+    Remove signs, clear the cached report, stop the file watcher, and disable
+    virtual text and branch overlay.
 
 :CoverageSummary                                            *:CoverageSummary*
     Open the coverage summary popup. Requires a prior |:CoverageLoad|.
 
 :CoverageToggleLineHits                            *:CoverageToggleLineHits*
-    Toggle virtual text hit counts on/off. Requires a prior |:CoverageLoad|.
+    Toggle virtual text hit counts on/off. Shows execution count for every
+    instrumented line (e.g. `× 42`). Requires a prior |:CoverageLoad|.
 
 :CoverageToggleBranchHits                        *:CoverageToggleBranchHits*
-    Toggle branch info popup on/off. Shows per-branch execution counts
-    when cursor is on a partially covered line. Requires a prior |:CoverageLoad|.
+    Toggle branch overlay popup on/off. When enabled, moving the cursor to a
+    partially covered line shows a floating window with per-branch execution
+    counts. Requires a prior |:CoverageLoad|.
 
-:CoverageQuickfix [{filter}]                          *:CoverageQuickfix*
+:CoverageQuickfix [{filter}]                              *:CoverageQuickfix*
     Populate the quickfix list with one entry per file showing coverage
-    percentage and uncovered/partial line counts. Opens the quickfix window.
+    percentage and uncovered/partial line counts, sorted by coverage ascending
+    (worst first). Opens the quickfix window.
     {filter} can be `uncovered` to include only files that have uncovered lines.
     Requires a prior |:CoverageLoad|.
 
-:CoverageLoclist [{sign_type}]                          *:CoverageLoclist*
+:CoverageLoclist [{sign_type}]                              *:CoverageLoclist*
     Populate the location list for the current window with lines of the given
-    type in the current buffer. Opens the location list window.
+    type in the current buffer, sorted by line number. Opens the location list.
     {sign_type} is `uncovered` (default) or `partial`.
     Requires a prior |:CoverageLoad|.
 
@@ -198,8 +204,8 @@ LUA API                                                *nvim-coverage-lua-api*
                                                              *coverage.load()*
 coverage.load({file}, {place})
     Load an lcov file. If {file} is nil, uses `config.opts.file`.
-    When {place} is true, signs are placed immediately; otherwise they are
-    cached and shown when |coverage.show()| is called.
+    When {place} is true, signs are placed immediately; otherwise signs are
+    placed only if already visible, else cached until |coverage.show()|.
     Also starts the file watcher when `auto_reload.enabled` is true.
 
                                                             *coverage.show()*
@@ -217,7 +223,8 @@ coverage.toggle()
 
                                                            *coverage.clear()*
 coverage.clear()
-    Remove signs, clear the cached report, and stop the file watcher.
+    Remove signs, clear the cached report, stop the file watcher, and disable
+    virtual text and branch overlay.
 
                                                          *coverage.summary()*
 coverage.summary()
@@ -232,29 +239,32 @@ coverage.summary()
         `q`       Close
         `<Esc>`   Close
 
-                                                *coverage.toggle_line_hits()*
+                                               *coverage.toggle_line_hits()*
 coverage.toggle_line_hits()
     Toggle virtual text hit counts. Shows execution count for every
     instrumented line as virtual text (e.g. `× 42`). Requires a prior
     |coverage.load()|.
 
-                                                  *coverage.toggle_branch_hits()*
+                                             *coverage.toggle_branch_hits()*
 coverage.toggle_branch_hits()
-    Toggle branch info popup. Shows per-branch execution counts when cursor
-    is on a partially covered line. Requires a prior |coverage.load()|.
+    Toggle branch overlay popup. When enabled, moving the cursor to a
+    partially covered line shows a floating window with per-branch execution
+    counts. Requires a prior |coverage.load()|.
 
                                                         *coverage.quickfix()*
 coverage.quickfix({filter})
     Populate the quickfix list with one entry per file, sorted by coverage
-    ascending (worst first). Each entry shows the coverage percentage and
-    counts of uncovered/partial lines. Opens the quickfix window.
+    ascending (worst first). Each entry shows coverage percentage and counts
+    of uncovered/partial lines. Opens the quickfix window.
     {filter} is optional — pass `"uncovered"` to skip fully-covered files.
+    Requires a prior |coverage.load()|.
 
                                                          *coverage.loclist()*
 coverage.loclist({sign_type})
     Populate the location list for the current window with lines of the given
-    type in the current buffer. Opens the location list window.
+    type in the current buffer, sorted by line number. Opens the location list.
     {sign_type} is `"uncovered"` (default) or `"partial"`.
+    Requires a prior |coverage.load()|.
 
                                                        *coverage.jump_next()*
 coverage.jump_next({sign_type})

@@ -103,7 +103,7 @@ M.hide = signs.unplace
 --- Toggles signs.
 M.toggle = signs.toggle
 
---- Hides signs, clears cache, stops file watcher.
+--- Hides signs, clears cache, stops file watcher, disables virtual text and branch overlay.
 M.clear = function()
     signs.clear()
     virtual_text.clear()
@@ -115,7 +115,7 @@ end
 --- Displays a pop-up with a coverage summary report.
 M.summary = summary.show
 
---- Toggles branch info popup for partial lines.
+--- Toggles branch overlay popup. Shows per-branch execution counts when cursor is on a partial line.
 M.toggle_branch_hits = function()
     if not report.is_cached() then
         vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
