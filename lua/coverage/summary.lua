@@ -416,8 +416,8 @@ M.show = function()
     local win_opts = vim.tbl_deep_extend("force", {}, config.opts.summary.window)
 
     popup = window.percentage_range_window(
-        adjust_width_percentage(config.opts.summary.width_percentage),
-        config.opts.summary.height_percentage,
+        adjust_width_percentage(config.opts.summary.width),
+        config.opts.summary.height,
         win_opts,
         border_opts
     )

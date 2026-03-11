@@ -62,8 +62,8 @@ M.load = function(file, place)
     end
 
     local reload = function()
-        if config.opts.load_coverage_cb ~= nil then
-            vim.schedule(function() config.opts.load_coverage_cb("lcov") end)
+        if config.opts.on_load ~= nil then
+            vim.schedule(config.opts.on_load)
         end
         local data = util.lcov_to_table(p)
         report.set(data)
