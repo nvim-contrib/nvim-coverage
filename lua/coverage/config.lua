@@ -3,18 +3,16 @@ local M = {
     opts = {},
 }
 
-local cached_swift_coverage_file = nil
-
 --- @class Configuration
---- @field auto_reload boolean
---- @field auto_reload_timeout_ms integer
---- @field commands boolean
+--- @field auto_reload boolean automatically reload when lcov file changes
+--- @field auto_reload_timeout_ms integer debounce timeout for auto reload
+--- @field commands boolean register vim commands on setup
 --- @field highlights HighlightConfig
---- @field load_coverage_cb fun(ftype: string)
+--- @field load_coverage_cb fun(ftype: string) callback after coverage is loaded
 --- @field signs SignsConfig
 --- @field sign_group string name of the sign group (:h sign_placelist)
 --- @field summary SummaryOpts
---- @field lang table
+--- @field lcov_file string|nil default path to the lcov file
 local defaults = {
     auto_reload = false,
     auto_reload_timeout_ms = 500,
@@ -76,82 +74,6 @@ local defaults = {
         min_coverage = 80.0,
     },
 
-    -- language specific configuration
-    lang = {
-        cpp = {
-            coverage_file = "report.info",
-        },
-        cs = {
-            coverage_file = "TestResults/lcov.info",
-        },
-        dart = {
-            coverage_file = "coverage/lcov.info",
-        },
-        elixir = {
-            coverage_file = "cover/lcov.info",
-        },
-        go = {
-            coverage_file = "coverage.out",
-        },
-        java = {
-            coverage_file = "build/reports/jacoco/test/jacocoTestReport.xml",
-            dir_prefix = "src/main/java",
-        },
-        javascript = {
-            coverage_file = "coverage/lcov.info",
-        },
-        julia = {
-            -- See https://github.com/julia-actions/julia-processcoverage
-            coverage_command = "julia -e '" .. [[
-                coverage_file = ARGS[1]
-                directories = ARGS[2]
-                push!(empty!(LOAD_PATH), "@nvim-coverage", "@stdlib")
-                using CoverageTools
-                coverage_data = FileCoverage[]
-                for dir in split(directories, ",")
-                    isdir(dir) || continue
-                    append!(coverage_data, process_folder(dir))
-                    clean_folder(dir)
-                end
-                LCOV.writefile(coverage_file, coverage_data)
-            ]] .. "'",
-            coverage_file = "lcov.info",
-            directories = "src,ext",
-            -- julia is disabled because the coverage command itself produces the file to be
-            -- watched which leads to an infinite loop (see
-            -- https://github.com/andythigpen/nvim-coverage/issues/41)
-            disable_auto_reload = true,
-        },
-        lua = {
-            coverage_file = "luacov.report.out",
-        },
-        python = {
-            coverage_file = ".coverage",
-            coverage_command = "coverage json --fail-under=0 -q -o -",
-            only_open_buffers = false,
-        },
-        ruby = {
-            coverage_file = "coverage/coverage.json",
-        },
-        rust = {
-            coverage_file = "target/lcov.info",
-        },
-        swift = {
-            coverage_file = function()
-                if cached_swift_coverage_file == nil then
-                    cached_swift_coverage_file = vim.trim(vim.system({ 'swift', 'test', '--show-codecov-path' },
-                            { text = true })
-                        :wait()
-                        .stdout)
-                end
-                return cached_swift_coverage_file
-            end
-        },
-        php = {
-            coverage_file = "coverage/cobertura.xml",
-            path_mappings = {},
-        }
-    },
     lcov_file = nil,
 }
 

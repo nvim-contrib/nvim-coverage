@@ -8,10 +8,10 @@ local signs = require("coverage.signs")
 local util = require("coverage.util")
 local watch = require("coverage.watch")
 
---- Loads a coverage report from an lcov file but does not place signs.
---- @param file string the path to the lcov file
---- @param place boolean true to immediately place signs
-M.load_lcov = function(file, place)
+--- Loads a coverage report from an lcov file.
+--- @param file? string path to the lcov file (defaults to config.opts.lcov_file)
+--- @param place? boolean true to immediately place signs
+M.load = function(file, place)
     if file == nil then
         file = config.opts.lcov_file
     end
@@ -21,7 +21,7 @@ M.load_lcov = function(file, place)
     end
     local p = Path:new(file)
     if not p:exists() then
-        vim.notify("No coverage file exists.", vim.log.levels.INFO)
+        vim.notify("No coverage file exists at: " .. file, vim.log.levels.INFO)
         return
     end
 
@@ -33,10 +33,7 @@ M.load_lcov = function(file, place)
         end
 
         local result = util.lcov_to_table(p)
-
-        -- Since we don't know the actual language, use the default common
-        -- summary and sign_list.
-        report.cache(result, "common")
+        report.cache(result, "lcov")
         local sign_list = common.sign_list(result)
         if place or signs.is_enabled() then
             signs.place(sign_list)
@@ -46,12 +43,7 @@ M.load_lcov = function(file, place)
     end
 
     watch.start(file, load_lcov)
-
-    -- When signs were enabled, calling load_lcov would disable them.
-    -- That didn't seem like good UX to me, so I disabled this.
-    -- signs.clear()
     load_lcov()
 end
-
 
 return M
