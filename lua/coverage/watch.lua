@@ -12,64 +12,51 @@ local debounce_timer = nil
 --- @param fname string filename to watch
 --- @param change_cb fun() callback when a file changes
 --- @param events? Event previous triggered events
-local function watch(fname, change_cb, events)
+local start
+
+start = function(fname, change_cb, events)
     if fs_event ~= nil then
         M.stop()
     end
 
     if vim.fn.filereadable(fname) == 0 then
         vim.defer_fn(function()
-            -- if events is nil, default to rename = true to trigger change_cb when the file is readable
-            -- this can happen if the file does not initially exist when coverage.load() is called but is created later
-            local ev = events or { rename = true }
-            watch(fname, change_cb, ev)
+            -- default to rename=true so change_cb fires once the file becomes readable
+            start(fname, change_cb, events or { rename = true })
         end, config.opts.auto_reload_timeout_ms)
         return
     end
 
     if events ~= nil and events.rename then
-        -- the file was deleted and recreated
         change_cb()
     end
 
     fs_event = vim.loop.new_fs_event()
-    local flags = {
-        watch_entry = false,
-        stat = false,
-        recursive = false,
-    }
     ---@diagnostic disable-next-line: unused-local
-    local cb = function(err, filename, ev)
-        if err then
-            vim.notify("Coverage watch error: " .. err, vim.log.levels.ERROR)
-            M.stop()
-        elseif ev.rename then
-            if debounce_timer ~= nil then
-                vim.loop.timer_stop(debounce_timer)
+    vim.loop.fs_event_start(fs_event, fname, { watch_entry = false, stat = false, recursive = false },
+        function(err, filename, ev)
+            if err then
+                vim.notify("Coverage watch error: " .. err, vim.log.levels.ERROR)
+                M.stop()
+            elseif ev.rename then
+                if debounce_timer ~= nil then vim.loop.timer_stop(debounce_timer) end
+                debounce_timer = vim.defer_fn(function()
+                    start(fname, change_cb, ev)
+                end, 0)
+            else
+                if debounce_timer ~= nil then vim.loop.timer_stop(debounce_timer) end
+                debounce_timer = vim.defer_fn(function()
+                    debounce_timer = nil
+                    change_cb()
+                end, config.opts.auto_reload_timeout_ms)
             end
-            -- reschedule immediately to watch for the file to be recreated
-            debounce_timer = vim.defer_fn(function()
-                watch(fname, change_cb, ev)
-            end, 0)
-        else
-            if debounce_timer ~= nil then
-                vim.loop.timer_stop(debounce_timer)
-            end
-            debounce_timer = vim.defer_fn(function()
-                debounce_timer = nil
-                change_cb()
-            end, config.opts.auto_reload_timeout_ms)
-        end
-    end
-    vim.loop.fs_event_start(fs_event, fname, flags, cb)
+        end)
 end
 
---- Starts the file watcher that executes a callback when a file changes.
---- @param fname string filename to watch
---- @param change_cb fun() callback when a file changes
-M.start = function(fname, change_cb)
-    watch(fname, change_cb)
-end
+--- Starts watching a file and calls change_cb whenever it changes.
+--- @param fname string
+--- @param change_cb fun()
+M.start = start
 
 --- Stops the file watcher.
 M.stop = function()
