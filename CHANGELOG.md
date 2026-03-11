@@ -1,5 +1,46 @@
 # Changelog
 
+## [0.5.0](https://github.com/nvim-contrib/nvim-coverage/compare/v0.4.0...v0.5.0) (2026-03-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* breaking API renames for ergonomics
+* the `lcov_file` configuration key is renamed to `file`.
+
+### Features
+
+* add CoverageQuickfix and CoverageLoclist commands (close [#16](https://github.com/nvim-contrib/nvim-coverage/issues/16)) ([8713945](https://github.com/nvim-contrib/nvim-coverage/commit/8713945519365a9b0bc7de2847755415ac113a1c))
+* add Dart config ([065fede](https://github.com/nvim-contrib/nvim-coverage/commit/065fede12826e35fdee128b130c43bcb619fe73d))
+* Add java jacoco coverage support ([a939e42](https://github.com/nvim-contrib/nvim-coverage/commit/a939e425e363319d952a6c35fb3f38b34041ded2))
+* added typescriptreact filetype (same as typescript/jacascript) ([d73dd63](https://github.com/nvim-contrib/nvim-coverage/commit/d73dd633b2c62e3e4e7cfb1e4c268ab2a9a7b55a))
+* added typescriptreact filetype (same as typescript/jacascript) ([fdd6752](https://github.com/nvim-contrib/nvim-coverage/commit/fdd67521bf745f7a6682cbb095020dab8faa0709))
+* branch overlay popup ([#15](https://github.com/nvim-contrib/nvim-coverage/issues/15)) ([1ca59e0](https://github.com/nvim-contrib/nvim-coverage/commit/1ca59e0cde8b3e619dc7ff64d8dd3604c13ca5e7))
+* breaking API renames for ergonomics ([1e461d4](https://github.com/nvim-contrib/nvim-coverage/commit/1e461d44fa9c53d8fa7feb38aa7bff986af7168d))
+* default file to common lcov paths list ([abfa535](https://github.com/nvim-contrib/nvim-coverage/commit/abfa5354fb77fe43d011c77c1df34d68dcb51047))
+* path compatibility ([492c1a8](https://github.com/nvim-contrib/nvim-coverage/commit/492c1a835cf79fcb808b22bb5fb863b2d4e08cbf))
+* quickfix and loclist navigation (close [#16](https://github.com/nvim-contrib/nvim-coverage/issues/16)) ([d85e3b6](https://github.com/nvim-contrib/nvim-coverage/commit/d85e3b6bccbaffabd92ae73d237eb68c09fa165a))
+* read the entire jacoco report ([906fad0](https://github.com/nvim-contrib/nvim-coverage/commit/906fad0363b80f0d83897890f6219ef0189756ad))
+* rename lcov_file config option to file ([7dfa05c](https://github.com/nvim-contrib/nvim-coverage/commit/7dfa05c5d183f62cc36fb674f07c44e3814cdabe))
+* ship built-in neotest consumers for generic and Go coverage ([dd4e8d0](https://github.com/nvim-contrib/nvim-coverage/commit/dd4e8d08e29cee4099a729a3f4a4152b9b0c6f36))
+* **summary:** allow custom win options for summary window ([da956c2](https://github.com/nvim-contrib/nvim-coverage/commit/da956c2853e6e83b56bbfde5c5517f16643ce323))
+* support list of lcov file paths (closes [#7](https://github.com/nvim-contrib/nvim-coverage/issues/7)) ([f4d6d54](https://github.com/nvim-contrib/nvim-coverage/commit/f4d6d54d17679cf114d9a1030c9a13fd770c185d))
+* support nested go modules (monorepo) ([e582e52](https://github.com/nvim-contrib/nvim-coverage/commit/e582e520e9f6458389f1f1478dadc264f8c27e08))
+* support nested go modules (monorepo) ([0026441](https://github.com/nvim-contrib/nvim-coverage/commit/0026441f716e642c7bbc9161381c6eed5bc54af3))
+* takes total of missed and covered branches and lines ([ddee593](https://github.com/nvim-contrib/nvim-coverage/commit/ddee593da2d4db420943ff3c7a1d20b1b8331701))
+* virtual text hit counts ([#13](https://github.com/nvim-contrib/nvim-coverage/issues/13)) ([e559e80](https://github.com/nvim-contrib/nvim-coverage/commit/e559e8096387aacc2684fa32573ea020dd10724a))
+
+
+### Bug Fixes
+
+* broken auto_reload when using list or function for coverage file ([668549b](https://github.com/nvim-contrib/nvim-coverage/commit/668549b9f28ae20b521e2352978fbae235b36775))
+* only set the highlight groups as default ([42eb08e](https://github.com/nvim-contrib/nvim-coverage/commit/42eb08eec941b34b17a86ad65f7dd69061484c35))
+* python - actually use the coverage-file ([aa4b440](https://github.com/nvim-contrib/nvim-coverage/commit/aa4b4400588e2259e87e372b1e4e90ae13cf5a39))
+* python - actually use the coverage-file ([1b0dafb](https://github.com/nvim-contrib/nvim-coverage/commit/1b0dafb737a81ffb9547d39f9bffb53b750d7b15))
+* robust path matching in overlay using bufnr fallback ([4826987](https://github.com/nvim-contrib/nvim-coverage/commit/4826987036170611e0f07162303b8073268f91c0))
+* **rust:** replace grcov/coveralls with lcov file-based coverage ([1bec71e](https://github.com/nvim-contrib/nvim-coverage/commit/1bec71e10d42032493537c4f60dc543196fb6bf7))
+* stable baseline before breaking API changes ([0505063](https://github.com/nvim-contrib/nvim-coverage/commit/0505063e6cc7afce91c6a9372159cd4e4f59035a))
+
 ## [0.4.0](https://github.com/nvim-contrib/nvim-coverage/compare/v0.3.0...v0.4.0) (2026-03-11)
 
 
