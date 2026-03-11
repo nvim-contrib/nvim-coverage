@@ -1,5 +1,7 @@
 # nvim-coverage
 
+[![test](https://github.com/nvim-contrib/nvim-coverage/actions/workflows/test.yml/badge.svg)](https://github.com/nvim-contrib/nvim-coverage/actions/workflows/test.yml)
+[![Release](https://img.shields.io/github/v/release/nvim-contrib/nvim-coverage?include_prereleases)](https://github.com/nvim-contrib/nvim-coverage/releases)
 [![License](https://img.shields.io/github/license/nvim-contrib/nvim-coverage)](LICENSE)
 [![Neovim](https://img.shields.io/badge/Neovim-0.9%2B-blueviolet?logo=neovim&logoColor=white)](https://neovim.io)
 
