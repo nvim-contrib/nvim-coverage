@@ -294,7 +294,7 @@ end
 
 --- Builds a summary report from CoverageData.
 --- @param data CoverageData
-local build_summary = function(data)
+local build = function(data)
     local files = {}
     for fname, cov in pairs(data.files) do
         table.insert(files, {
@@ -322,7 +322,7 @@ end
 
 --- Loads the summary report.
 local load_summary = function()
-    summary = build_summary(report.get())
+    summary = build(report.get())
 end
 
 --- Sets buffer/window options for the popup after creation.

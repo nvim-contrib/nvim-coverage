@@ -183,7 +183,7 @@ end
 --- Returns a list of signs to be placed from a CoverageData table.
 --- @param data CoverageData
 --- @return SignPlace[]
-M.sign_list = function(data)
+M.build = function(data)
     local list = {}
     for fname, cov in pairs(data.files) do
         local buffer = vim.fn.bufnr(fname, false)
