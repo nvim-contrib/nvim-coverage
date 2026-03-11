@@ -75,12 +75,13 @@ require("coverage").setup({
   -- register :Coverage* commands (default: true)
   commands = true,
 
-  -- auto-reload signs when the lcov file changes on disk (default: false)
-  auto_reload = false,
-  auto_reload_timeout_ms = 500,
+  auto_reload = {
+    enabled = false,    -- auto-reload signs when lcov file changes on disk
+    timeout_ms = 500,   -- debounce delay before reloading
+  },
 
-  -- called after coverage is loaded, receives "lcov" as argument
-  load_coverage_cb = nil,
+  -- called after coverage is loaded
+  on_load = nil,
 
   signs = {
     covered  = { hl = "CoverageCovered",   text = "▎" },
@@ -101,9 +102,9 @@ require("coverage").setup({
   },
 
   summary = {
-    width_percentage  = 0.70,
-    height_percentage = 0.50,
-    min_coverage      = 80.0, -- threshold for pass/fail highlight in summary
+    width        = 0.70,
+    height       = 0.50,
+    min_coverage = 80.0, -- threshold for pass/fail highlight in summary
   },
 })
 ```

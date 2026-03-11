@@ -3,19 +3,24 @@ local M = {
     opts = {},
 }
 
+--- @class AutoReloadOpts
+--- @field enabled boolean
+--- @field timeout_ms integer
+
 --- @class Configuration
---- @field auto_reload boolean automatically reload when lcov file changes
---- @field auto_reload_timeout_ms integer debounce timeout for auto reload
+--- @field auto_reload AutoReloadOpts automatically reload when lcov file changes
 --- @field commands boolean register vim commands on setup
 --- @field highlights HighlightConfig
---- @field load_coverage_cb fun(ftype: string) callback after coverage is loaded
+--- @field on_load fun() callback after coverage is loaded
 --- @field signs SignsConfig
 --- @field sign_group string name of the sign group (:h sign_placelist)
 --- @field summary SummaryOpts
 --- @field file string|string[]|nil path or list of paths to the lcov file (first existing wins)
 local defaults = {
-    auto_reload = false,
-    auto_reload_timeout_ms = 500,
+    auto_reload = {
+        enabled = false,
+        timeout_ms = 500,
+    },
     commands = true,
 
     --- @class HighlightConfig
@@ -39,7 +44,7 @@ local defaults = {
         summary_pass = { link = "CoverageCovered" },
         summary_fail = { link = "CoverageUncovered" },
     },
-    load_coverage_cb = nil,
+    on_load = nil,
 
     --- @class SignsConfig
     --- @field covered Sign
@@ -53,12 +58,12 @@ local defaults = {
     sign_group = "coverage",
 
     --- @class SummaryOpts
-    --- @field width_percentage number
-    --- @field height_percentage number
+    --- @field width number
+    --- @field height number
     --- @field min_coverage number
     summary = {
-        width_percentage = 0.70,
-        height_percentage = 0.50,
+        width = 0.70,
+        height = 0.50,
         borders = {
             topleft = "╭",
             topright = "╮",

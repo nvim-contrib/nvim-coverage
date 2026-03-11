@@ -26,7 +26,7 @@ start = function(fname, change_cb, events)
         vim.defer_fn(function()
             -- default to rename=true so change_cb fires once the file becomes readable
             start(fname, change_cb, events or { rename = true })
-        end, config.opts.auto_reload_timeout_ms)
+        end, config.opts.auto_reload.timeout_ms)
         return
     end
 
@@ -51,7 +51,7 @@ start = function(fname, change_cb, events)
                 debounce_timer = vim.defer_fn(function()
                     debounce_timer = nil
                     change_cb()
-                end, config.opts.auto_reload_timeout_ms)
+                end, config.opts.auto_reload.timeout_ms)
             end
         end)
 end

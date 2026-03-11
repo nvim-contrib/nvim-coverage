@@ -20,7 +20,7 @@ coverage.setup({opts})
 
     require('coverage').setup({
       file = "coverage/lcov.info",
-      auto_reload = true,
+      auto_reload = { enabled = true },
     })
 <
 
@@ -32,28 +32,30 @@ Valid keys for {opts}:
         Defaults to: `nil`
 
     auto_reload: ~
-        When true, the lcov file is watched for changes after loading.
-        Signs are updated automatically whenever the file changes on disk.
-        The watcher stops when |:CoverageClear| or |coverage.clear()| is
-        called.
-        Defaults to: `false`
+        Table controlling file watching behaviour.
 
-    auto_reload_timeout_ms: ~
-        Debounce delay in milliseconds before reloading after a file change.
-        Defaults to: `500`
+        auto_reload.enabled: ~
+            When true, the lcov file is watched for changes after loading.
+            Signs are updated automatically whenever the file changes on disk.
+            The watcher stops when |:CoverageClear| or |coverage.clear()| is
+            called.
+            Defaults to: `false`
+
+        auto_reload.timeout_ms: ~
+            Debounce delay in milliseconds before reloading after a change.
+            Defaults to: `500`
 
     commands: ~
         When true, register the |nvim-coverage-commands| on setup.
         Defaults to: `true`
 
-    load_coverage_cb: ~
-        A Lua function called after coverage is loaded. Receives `"lcov"` as
-        its argument.
+    on_load: ~
+        A Lua function called after coverage is loaded.
         Example: >
 
         require('coverage').setup({
-            load_coverage_cb = function(ftype)
-                vim.notify("Loaded " .. ftype .. " coverage")
+            on_load = function()
+                vim.notify("Coverage loaded")
             end,
         })
 <
@@ -113,10 +115,10 @@ Valid keys for {opts.signs}:
                                                             *coverage.summary*
 Valid keys for {opts.summary}:
 
-    width_percentage: ~
+    width: ~
         Width of the popup window as a fraction of the terminal width.
         Defaults to: `0.70`
-    height_percentage: ~
+    height: ~
         Height of the popup window as a fraction of the terminal height.
         Defaults to: `0.50`
     min_coverage: ~
@@ -160,7 +162,7 @@ coverage.load({file}, {place})
     Load an lcov file. If {file} is nil, uses `config.opts.file`.
     When {place} is true, signs are placed immediately; otherwise they are
     cached and shown when |coverage.show()| is called.
-    Also starts the file watcher when `auto_reload` is enabled.
+    Also starts the file watcher when `auto_reload.enabled` is true.
 
                                                             *coverage.show()*
 coverage.show()
