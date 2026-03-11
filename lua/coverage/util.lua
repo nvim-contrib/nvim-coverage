@@ -1,11 +1,17 @@
 local M = {}
 local Path = require("plenary.path")
 
+--- @class BranchInfo
+--- @field block integer block number from BRDA
+--- @field branch integer branch number from BRDA
+--- @field count integer execution count (0 = not taken, -1 = no data)
+
 --- @class FileCoverage
 --- @field excluded_lines integer[]
 --- @field covered_lines integer[]
 --- @field uncovered_lines integer[]
 --- @field partial_lines integer[][]|nil
+--- @field branches table<integer, BranchInfo[]> all branches per line number
 --- @field hit_counts table<integer, integer> map of line number to execution count
 --- @field summary CoverageSummary
 
@@ -35,6 +41,7 @@ local new_file_meta = function()
         partial_lines = {},
         covered_lines = {},
         excluded_lines = {},
+        branches = {},
         hit_counts = {},
     }
 end
@@ -72,9 +79,15 @@ M.lcov_to_table = function(path)
             end
         elseif line:match("^BRDA:%d+,%d+,%d+,(%d+|-)") and cmeta ~= nil then
             -- BRDA:<line number>,<block number>,<branch number>,<taken>
-            local ls, ns = line:match("^BRDA:(%d+),%d+,%d+,(%d+|-)")
+            local ls, bs, brs, ns = line:match("^BRDA:(%d+),(%d+),(%d+),(%d+|-)")
             local l = tonumber(ls, 10)
-            local n = ns ~= '-' and tonumber(ns, 10) or 0
+            local n = ns ~= "-" and tonumber(ns, 10) or -1
+            if cmeta.branches[l] == nil then cmeta.branches[l] = {} end
+            table.insert(cmeta.branches[l], {
+                block = tonumber(bs, 10),
+                branch = tonumber(brs, 10),
+                count = n,
+            })
             if n == 0 then
                 table.insert(cmeta.partial_lines, { l, -1 })
             end
