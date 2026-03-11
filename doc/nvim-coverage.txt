@@ -101,7 +101,7 @@ Valid keys for {opts.highlights}:
     summary_fail: ~
         Highlight for files below the min_coverage threshold.
         Defaults to: `{ link = "CoverageUncovered" }`
-    virtual_text: ~
+    line_hits: ~
         Highlight for virtual text hit counts.
         Defaults to: `{ link = "Comment" }`
 
@@ -138,8 +138,8 @@ Valid keys for {opts.summary}:
     window: ~
         Additional window options passed to the popup. See plenary window API.
 
-                                                        *coverage.virtual_text*
-Valid keys for {opts.virtual_text}:
+                                                           *coverage.line_hits*
+Valid keys for {opts.line_hits}:
 
     enabled: ~
         When true, virtual text hit counts are shown automatically after

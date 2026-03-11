@@ -85,7 +85,7 @@ M.load = function(file, place)
         else
             signs.cache(sign_list)
         end
-        if config.opts.virtual_text.enabled or virtual_text.is_enabled() then
+        if config.opts.line_hits.enabled or virtual_text.is_enabled() then
             virtual_text.place(data)
         end
     end

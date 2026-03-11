@@ -54,7 +54,7 @@ describe("virtual_text", function()
 
     it("places an extmark for each line with a hit count", function()
         virtual_text.place(make_data({ [1] = 10, [3] = 0 }))
-        local ns = vim.api.nvim_get_namespaces()["coverage_virtual_text"]
+        local ns = vim.api.nvim_get_namespaces()["coverage_line_hits"]
         assert.is_not_nil(ns)
         local marks = vim.api.nvim_buf_get_extmarks(bufnr, ns, 0, -1, { details = true })
         assert.equals(2, #marks)
@@ -77,7 +77,7 @@ describe("virtual_text", function()
 
     it("formats the virtual text as '× <count>'", function()
         virtual_text.place(make_data({ [1] = 42 }))
-        local ns = vim.api.nvim_get_namespaces()["coverage_virtual_text"]
+        local ns = vim.api.nvim_get_namespaces()["coverage_line_hits"]
         local marks = vim.api.nvim_buf_get_extmarks(bufnr, ns, 0, -1, { details = true })
         assert.equals(1, #marks)
         local virt = marks[1][4].virt_text

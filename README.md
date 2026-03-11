@@ -109,7 +109,7 @@ require("coverage").setup({
     summary_header      = { style = "bold,underline", sp = "fg" },
     summary_pass        = { link = "CoverageCovered" },
     summary_fail        = { link = "CoverageUncovered" },
-    virtual_text        = { link = "Comment" },
+    line_hits           = { link = "Comment" },
   },
 
   summary = {
@@ -118,7 +118,7 @@ require("coverage").setup({
     min_coverage = 80.0, -- threshold for pass/fail highlight in summary
   },
 
-  virtual_text = {
+  line_hits = {
     enabled  = false,           -- show hit counts automatically after load
     position = "eol",           -- "eol" | "right_align" | "inline"
   },

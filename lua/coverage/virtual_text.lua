@@ -7,7 +7,7 @@ local enabled = false
 
 local function get_ns()
     if ns_id == nil then
-        ns_id = vim.api.nvim_create_namespace("coverage_virtual_text")
+        ns_id = vim.api.nvim_create_namespace("coverage_line_hits")
     end
     return ns_id
 end
@@ -15,13 +15,13 @@ end
 --- Places virtual text hit counts for all open buffers in data.
 --- @param data CoverageData
 M.place = function(data)
-    local vt = config.opts.virtual_text
+    local vt = config.opts.line_hits
     for fname, cov in pairs(data.files) do
         local bufnr = vim.fn.bufnr(fname, false)
         if bufnr ~= -1 and cov.hit_counts ~= nil then
             for lnum, count in pairs(cov.hit_counts) do
                 vim.api.nvim_buf_set_extmark(bufnr, get_ns(), lnum - 1, 0, {
-                    virt_text = { { string.format("× %d", count), "CoverageVirtualText" } },
+                    virt_text = { { string.format("× %d", count), "CoverageLineHits" } },
                     virt_text_pos = vt.position,
                 })
             end

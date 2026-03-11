@@ -7,7 +7,7 @@ local M = {
 --- @field enabled boolean
 --- @field timeout_ms integer
 
---- @class VirtualTextOpts
+--- @class LineHitsOpts
 --- @field enabled boolean show hit counts as virtual text
 --- @field position "eol"|"right_align"|"inline" virtual text position
 
@@ -19,7 +19,7 @@ local M = {
 --- @field signs SignsConfig
 --- @field sign_group string name of the sign group (:h sign_placelist)
 --- @field summary SummaryOpts
---- @field virtual_text VirtualTextOpts
+--- @field line_hits LineHitsOpts
 --- @field file string|string[]|nil path or list of paths to the lcov file (first existing wins)
 local defaults = {
     auto_reload = {
@@ -38,7 +38,7 @@ local defaults = {
     --- @field summary_header Highlight
     --- @field summary_pass Highlight
     --- @field summary_fail Highlight
-    --- @field virtual_text Highlight
+    --- @field line_hits Highlight
     highlights = {
         covered = { fg = "#B7F071" },
         uncovered = { fg = "#F07178" },
@@ -49,7 +49,7 @@ local defaults = {
         summary_header = { style = "bold,underline", sp = "fg" },
         summary_pass = { link = "CoverageCovered" },
         summary_fail = { link = "CoverageUncovered" },
-        virtual_text = { link = "Comment" },
+        line_hits = { link = "Comment" },
     },
     on_load = nil,
 
@@ -86,7 +86,7 @@ local defaults = {
         min_coverage = 80.0,
     },
 
-    virtual_text = {
+    line_hits = {
         enabled = false,
         position = "eol",
     },
