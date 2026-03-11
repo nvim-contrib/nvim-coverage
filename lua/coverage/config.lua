@@ -79,7 +79,12 @@ local defaults = {
         min_coverage = 80.0,
     },
 
-    file = nil,
+    file = {
+        "lcov.info",
+        "cover/lcov.info",
+        "coverage/lcov.info",
+        "target/lcov.info",
+    },
 }
 
 --- Setup configuration values.

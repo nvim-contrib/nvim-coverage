@@ -19,7 +19,7 @@ coverage.setup({opts})
     Usage: >
 
     require('coverage').setup({
-      file = "coverage/lcov.info",
+      -- file = "coverage/lcov.info",  -- override if needed
       auto_reload = { enabled = true },
     })
 <
@@ -27,9 +27,12 @@ coverage.setup({opts})
 Valid keys for {opts}:
 
     file: ~
-        Path to the lcov file to load. Used by |:CoverageLoad| and
+        Path (string) or list of paths (table) to the lcov file. When a list
+        is given the first existing file is used. Used by |:CoverageLoad| and
         |coverage.load()| when no file argument is given.
-        Defaults to: `nil`
+        Defaults to: >
+            { "lcov.info", "cover/lcov.info", "coverage/lcov.info", "target/lcov.info" }
+<
 
     auto_reload: ~
         Table controlling file watching behaviour.
