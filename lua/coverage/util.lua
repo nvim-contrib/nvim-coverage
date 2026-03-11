@@ -1,6 +1,26 @@
 local M = {}
 local Path = require("plenary.path")
 
+--- @class FileCoverage
+--- @field excluded_lines integer[]
+--- @field executed_lines integer[]
+--- @field missing_lines integer[]
+--- @field missing_branches integer[][]|nil
+--- @field summary CoverageSummary
+
+--- @class CoverageSummary
+--- @field covered_lines integer
+--- @field missing_lines integer
+--- @field excluded_lines integer
+--- @field num_branches integer
+--- @field num_partial_branches integer
+--- @field num_statements integer
+--- @field percent_covered number
+
+--- @class CoverageData
+--- @field files table<string, FileCoverage>
+--- @field totals CoverageSummary
+
 --- Safely decode JSON and call the callback with decoded data.
 -- @param data to decode
 -- @param callback to call on decode success

@@ -292,10 +292,37 @@ local keymaps = function()
     )
 end
 
+--- Builds a summary report from CoverageData.
+--- @param data CoverageData
+local build_summary = function(data)
+    local files = {}
+    for fname, cov in pairs(data.files) do
+        table.insert(files, {
+            filename = fname,
+            statements = cov.summary.num_statements,
+            missing = cov.summary.missing_lines,
+            excluded = cov.summary.excluded_lines,
+            branches = cov.summary.num_branches,
+            partial = cov.summary.num_partial_branches,
+            coverage = cov.summary.percent_covered,
+        })
+    end
+    return {
+        files = files,
+        totals = {
+            statements = data.totals.num_statements,
+            missing = data.totals.missing_lines,
+            excluded = data.totals.excluded_lines,
+            branches = data.totals.num_branches,
+            partial = data.totals.num_partial_branches,
+            coverage = data.totals.percent_covered,
+        },
+    }
+end
+
 --- Loads the summary report.
 local load_summary = function()
-    local json_data = report.get()
-    summary = require("coverage.languages.common").summary(json_data)
+    summary = build_summary(report.get())
 end
 
 --- Sets buffer/window options for the popup after creation.
