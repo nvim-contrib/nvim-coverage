@@ -1,0 +1,15 @@
+SF:/project/src/foo.lua
+DA:1,1
+DA:2,0
+DA:3,1
+DA:4,0
+LH:2
+LF:4
+end_of_record
+SF:/project/src/bar.lua
+DA:1,1
+DA:2,1
+DA:3,1
+LH:3
+LF:3
+end_of_record
