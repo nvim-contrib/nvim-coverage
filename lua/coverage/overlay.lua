@@ -70,7 +70,7 @@ local show_for_line = function(lnum, branches)
 
     -- highlight individual branch lines
     for i, b in ipairs(branches) do
-        local hl = b.count > 0 and "CoverageCovered" or "CoverageUncovered"
+        local hl = b.count > 0 and "CoverageCovered" or (b.count == 0 and "CoverageUncovered" or "CoveragePartial")
         vim.api.nvim_buf_add_highlight(float_bufnr, -1, hl, i + 1, 0, -1)
     end
 end
