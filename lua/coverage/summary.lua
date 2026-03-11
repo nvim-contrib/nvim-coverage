@@ -292,12 +292,10 @@ local keymaps = function()
     )
 end
 
---- Loads the summary report based on the language filetype.
+--- Loads the summary report.
 local load_summary = function()
-    -- get summary results based on language filetype
     local json_data = report.get()
-    local lang = require("coverage.languages." .. report.language())
-    summary = lang.summary(json_data)
+    summary = require("coverage.languages.common").summary(json_data)
 end
 
 --- Sets buffer/window options for the popup after creation.
@@ -338,7 +336,7 @@ M.select_item = function()
     local bufnr = get_bufnr(fname)
     if bufnr == -1 then
         vim.cmd("edit " .. fname)
-        require("coverage").load(true)
+        require("coverage").load(nil, true)
     else
         vim.api.nvim_win_set_buf(0, bufnr)
     end
