@@ -19,14 +19,14 @@ coverage.setup({opts})
     Usage: >
 
     require('coverage').setup({
-      lcov_file = "coverage/lcov.info",
+      file = "coverage/lcov.info",
       auto_reload = true,
     })
 <
 
 Valid keys for {opts}:
 
-    lcov_file: ~
+    file: ~
         Path to the lcov file to load. Used by |:CoverageLoad| and
         |coverage.load()| when no file argument is given.
         Defaults to: `nil`
@@ -134,7 +134,7 @@ COMMANDS                                              *nvim-coverage-commands*
 
 :CoverageLoad [{file}]                                         *:CoverageLoad*
     Load an lcov file and place signs immediately. If {file} is not given,
-    uses the `lcov_file` configuration option.
+    uses the `file` configuration option.
 
 :CoverageShow                                                  *:CoverageShow*
     Show coverage signs. Requires a prior |:CoverageLoad|.
@@ -157,7 +157,7 @@ LUA API                                                *nvim-coverage-lua-api*
 
                                                              *coverage.load()*
 coverage.load({file}, {place})
-    Load an lcov file. If {file} is nil, uses `config.opts.lcov_file`.
+    Load an lcov file. If {file} is nil, uses `config.opts.file`.
     When {place} is true, signs are placed immediately; otherwise they are
     cached and shown when |coverage.show()| is called.
     Also starts the file watcher when `auto_reload` is enabled.

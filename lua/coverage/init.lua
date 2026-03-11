@@ -27,7 +27,7 @@ M.setup = function(user_opts)
     end
 end
 
---- Resolves lcov_file config to a single existing path, or nil.
+--- Resolves file config to a single existing path, or nil.
 --- Accepts a string or a list of strings (first existing path wins).
 --- @param file? string|string[]
 --- @return string|nil
@@ -46,10 +46,10 @@ local resolve_file = function(file)
 end
 
 --- Loads an lcov file and optionally places signs immediately.
---- @param file? string|string[] path(s) to the lcov file (defaults to config.opts.lcov_file)
+--- @param file? string|string[] path(s) to the lcov file (defaults to config.opts.file)
 --- @param place? boolean true to immediately place signs
 M.load = function(file, place)
-    file = resolve_file(file) or resolve_file(config.opts.lcov_file)
+    file = resolve_file(file) or resolve_file(config.opts.file)
     if file == nil then
         vim.notify("A path to the lcov file was not supplied.", vim.log.levels.INFO)
         return

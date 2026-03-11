@@ -32,7 +32,7 @@ A Neovim plugin that displays code coverage from [lcov](http://ltp.sourceforge.n
   dependencies = { "nvim-lua/plenary.nvim" },
   config = function()
     require("coverage").setup({
-      lcov_file = "coverage/lcov.info",
+      file = "coverage/lcov.info",
     })
   end,
 }
@@ -46,7 +46,7 @@ use({
   requires = "nvim-lua/plenary.nvim",
   config = function()
     require("coverage").setup({
-      lcov_file = "coverage/lcov.info",
+      file = "coverage/lcov.info",
     })
   end,
 })
@@ -70,7 +70,7 @@ The plugin reads a pre-generated lcov file — it does not run tests or invoke a
 ```lua
 require("coverage").setup({
   -- path to the lcov file (required)
-  lcov_file = "coverage/lcov.info",
+  file = "coverage/lcov.info",
 
   -- register :Coverage* commands (default: true)
   commands = true,
@@ -114,7 +114,7 @@ require("coverage").setup({
 
 | Command | Description |
 |---------|-------------|
-| `:CoverageLoad [file]` | Load lcov file and place signs (uses `lcov_file` if no arg) |
+| `:CoverageLoad [file]` | Load lcov file and place signs (uses `file` if no arg) |
 | `:CoverageShow` | Show signs (if previously hidden) |
 | `:CoverageHide` | Hide signs |
 | `:CoverageToggle` | Toggle sign visibility |
@@ -126,7 +126,7 @@ require("coverage").setup({
 ```lua
 local coverage = require("coverage")
 
-coverage.load()                        -- load from config.lcov_file
+coverage.load()                        -- load from config.file
 coverage.load("path/to/lcov.info")     -- load from explicit path
 coverage.load("path/to/lcov.info", true) -- load and immediately show signs
 
