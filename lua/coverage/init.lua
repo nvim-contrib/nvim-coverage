@@ -25,7 +25,7 @@ M.setup = function(user_opts)
     command! CoverageToggle lua require('coverage').toggle()
     command! CoverageClear lua require('coverage').clear()
     command! CoverageSummary lua require('coverage').summary()
-    command! CoverageToggleVirtualText lua require('coverage').toggle_virtual_text()
+    command! CoverageToggleHitCounts lua require('coverage').toggle_hit_counts()
     command! CoverageToggleBranchOverlay lua require('coverage').toggle_branch_overlay()
     ]])
     end
@@ -121,7 +121,7 @@ M.toggle_branch_overlay = function()
 end
 
 --- Toggles virtual text hit counts.
-M.toggle_virtual_text = function()
+M.toggle_hit_counts = function()
     if not report.is_cached() then
         vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
         return

@@ -172,7 +172,7 @@ COMMANDS                                              *nvim-coverage-commands*
 :CoverageSummary                                            *:CoverageSummary*
     Open the coverage summary popup. Requires a prior |:CoverageLoad|.
 
-:CoverageToggleVirtualText                        *:CoverageToggleVirtualText*
+:CoverageToggleHitCounts                            *:CoverageToggleHitCounts*
     Toggle virtual text hit counts on/off. Requires a prior |:CoverageLoad|.
 
 
@@ -216,8 +216,8 @@ coverage.summary()
         `q`       Close
         `<Esc>`   Close
 
-                                              *coverage.toggle_virtual_text()*
-coverage.toggle_virtual_text()
+                                                *coverage.toggle_hit_counts()*
+coverage.toggle_hit_counts()
     Toggle virtual text hit counts. Shows execution count for every
     instrumented line as virtual text (e.g. `× 42`). Requires a prior
     |coverage.load()|.
