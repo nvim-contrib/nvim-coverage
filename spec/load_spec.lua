@@ -73,27 +73,27 @@ describe("coverage.load file resolution", function()
         end)
     end)
 
-    describe("config.opts.lcov_file fallback", function()
-        it("falls back to string lcov_file", function()
+    describe("config.opts.file fallback", function()
+        it("falls back to string file", function()
             local loaded_file = nil
             local watch = require("coverage.watch")
             local orig = watch.start
             watch.start = function(f, _) loaded_file = f end
 
-            config.opts.lcov_file = fixture("simple.lcov")
+            config.opts.file = fixture("simple.lcov")
             coverage.load()
 
             watch.start = orig
             assert.equals(fixture("simple.lcov"), loaded_file)
         end)
 
-        it("falls back to list lcov_file", function()
+        it("falls back to list file", function()
             local loaded_file = nil
             local watch = require("coverage.watch")
             local orig = watch.start
             watch.start = function(f, _) loaded_file = f end
 
-            config.opts.lcov_file = { nonexistent, fixture("simple.lcov") }
+            config.opts.file = { nonexistent, fixture("simple.lcov") }
             coverage.load()
 
             watch.start = orig
