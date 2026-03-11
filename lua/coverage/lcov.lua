@@ -1,7 +1,6 @@
 local M = {}
 
 local Path = require("plenary.path")
-local common = require("coverage.languages.common")
 local config = require("coverage.config")
 local report = require("coverage.report")
 local signs = require("coverage.signs")
@@ -34,7 +33,7 @@ M.load = function(file, place)
 
         local result = util.lcov_to_table(p)
         report.cache(result, "lcov")
-        local sign_list = common.sign_list(result)
+        local sign_list = signs.sign_list(result)
         if place or signs.is_enabled() then
             signs.place(sign_list)
         else

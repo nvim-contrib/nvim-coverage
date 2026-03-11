@@ -180,4 +180,39 @@ M.new_partial = function(buffer, lnum)
     }
 end
 
+--- Returns a list of signs to be placed from a CoverageData table.
+--- @param data CoverageData
+--- @return SignPlace[]
+M.sign_list = function(data)
+    local list = {}
+    for fname, cov in pairs(data.files) do
+        local buffer = vim.fn.bufnr(fname, false)
+        if buffer ~= -1 then
+            local missing_branches_from = {}
+            if cov.missing_branches ~= nil then
+                for _, branch in ipairs(cov.missing_branches) do
+                    table.insert(missing_branches_from, branch[1])
+                end
+            end
+
+            for _, lnum in ipairs(cov.executed_lines) do
+                if not vim.tbl_contains(missing_branches_from, lnum) then
+                    table.insert(list, M.new_covered(buffer, lnum))
+                end
+            end
+
+            for _, lnum in ipairs(cov.missing_lines) do
+                table.insert(list, M.new_uncovered(buffer, lnum))
+            end
+
+            for _, lnum in ipairs(missing_branches_from) do
+                if not vim.tbl_contains(cov.missing_lines, lnum) then
+                    table.insert(list, M.new_partial(buffer, lnum))
+                end
+            end
+        end
+    end
+    return list
+end
+
 return M
