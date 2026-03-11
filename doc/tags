@@ -4,6 +4,7 @@
 :CoverageShow	nvim-coverage.txt	/*:CoverageShow*
 :CoverageSummary	nvim-coverage.txt	/*:CoverageSummary*
 :CoverageToggle	nvim-coverage.txt	/*:CoverageToggle*
+:CoverageToggleBranchInfo	nvim-coverage.txt	/*:CoverageToggleBranchInfo*
 :CoverageToggleHitCounts	nvim-coverage.txt	/*:CoverageToggleHitCounts*
 coverage.clear()	nvim-coverage.txt	/*coverage.clear()*
 coverage.hide()	nvim-coverage.txt	/*coverage.hide()*
@@ -17,6 +18,7 @@ coverage.signs	nvim-coverage.txt	/*coverage.signs*
 coverage.summary	nvim-coverage.txt	/*coverage.summary*
 coverage.summary()	nvim-coverage.txt	/*coverage.summary()*
 coverage.toggle()	nvim-coverage.txt	/*coverage.toggle()*
+coverage.toggle_branch_info()	nvim-coverage.txt	/*coverage.toggle_branch_info()*
 coverage.toggle_hit_counts()	nvim-coverage.txt	/*coverage.toggle_hit_counts()*
 coverage.virtual_text	nvim-coverage.txt	/*coverage.virtual_text*
 nvim-coverage	nvim-coverage.txt	/*nvim-coverage*

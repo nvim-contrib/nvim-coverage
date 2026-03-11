@@ -175,6 +175,10 @@ COMMANDS                                              *nvim-coverage-commands*
 :CoverageToggleHitCounts                            *:CoverageToggleHitCounts*
     Toggle virtual text hit counts on/off. Requires a prior |:CoverageLoad|.
 
+:CoverageToggleBranchInfo                        *:CoverageToggleBranchInfo*
+    Toggle branch info popup on/off. Shows per-branch execution counts
+    when cursor is on a partially covered line. Requires a prior |:CoverageLoad|.
+
 
 ================================================================================
 LUA API                                                *nvim-coverage-lua-api*
@@ -221,6 +225,11 @@ coverage.toggle_hit_counts()
     Toggle virtual text hit counts. Shows execution count for every
     instrumented line as virtual text (e.g. `× 42`). Requires a prior
     |coverage.load()|.
+
+                                                  *coverage.toggle_branch_info()*
+coverage.toggle_branch_info()
+    Toggle branch info popup. Shows per-branch execution counts when cursor
+    is on a partially covered line. Requires a prior |coverage.load()|.
 
                                                        *coverage.jump_next()*
 coverage.jump_next({sign_type})

@@ -26,7 +26,7 @@ M.setup = function(user_opts)
     command! CoverageClear lua require('coverage').clear()
     command! CoverageSummary lua require('coverage').summary()
     command! CoverageToggleHitCounts lua require('coverage').toggle_hit_counts()
-    command! CoverageToggleBranchOverlay lua require('coverage').toggle_branch_overlay()
+    command! CoverageToggleBranchInfo lua require('coverage').toggle_branch_info()
     ]])
     end
 end
@@ -107,8 +107,8 @@ end
 --- Displays a pop-up with a coverage summary report.
 M.summary = summary.show
 
---- Toggles branch overlay popup for partial lines.
-M.toggle_branch_overlay = function()
+--- Toggles branch info popup for partial lines.
+M.toggle_branch_info = function()
     if not report.is_cached() then
         vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
         return
