@@ -12,7 +12,7 @@ local M = {
 --- @field signs SignsConfig
 --- @field sign_group string name of the sign group (:h sign_placelist)
 --- @field summary SummaryOpts
---- @field lcov_file string|nil default path to the lcov file
+--- @field lcov_file string|string[]|nil path or list of paths to the lcov file (first existing wins)
 local defaults = {
     auto_reload = false,
     auto_reload_timeout_ms = 500,
