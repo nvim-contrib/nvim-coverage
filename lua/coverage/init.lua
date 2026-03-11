@@ -25,8 +25,8 @@ M.setup = function(user_opts)
     command! CoverageToggle lua require('coverage').toggle()
     command! CoverageClear lua require('coverage').clear()
     command! CoverageSummary lua require('coverage').summary()
-    command! CoverageToggleHitCounts lua require('coverage').toggle_hit_counts()
-    command! CoverageToggleBranchInfo lua require('coverage').toggle_branch_info()
+    command! CoverageToggleLineHits lua require('coverage').toggle_line_hits()
+    command! CoverageToggleBranchHits lua require('coverage').toggle_branch_hits()
     ]])
     end
 end
@@ -108,7 +108,7 @@ end
 M.summary = summary.show
 
 --- Toggles branch info popup for partial lines.
-M.toggle_branch_info = function()
+M.toggle_branch_hits = function()
     if not report.is_cached() then
         vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
         return
@@ -121,7 +121,7 @@ M.toggle_branch_info = function()
 end
 
 --- Toggles virtual text hit counts.
-M.toggle_hit_counts = function()
+M.toggle_line_hits = function()
     if not report.is_cached() then
         vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
         return

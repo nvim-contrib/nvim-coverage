@@ -4,8 +4,8 @@
 :CoverageShow	nvim-coverage.txt	/*:CoverageShow*
 :CoverageSummary	nvim-coverage.txt	/*:CoverageSummary*
 :CoverageToggle	nvim-coverage.txt	/*:CoverageToggle*
-:CoverageToggleBranchInfo	nvim-coverage.txt	/*:CoverageToggleBranchInfo*
-:CoverageToggleHitCounts	nvim-coverage.txt	/*:CoverageToggleHitCounts*
+:CoverageToggleBranchHits	nvim-coverage.txt	/*:CoverageToggleBranchHits*
+:CoverageToggleLineHits	nvim-coverage.txt	/*:CoverageToggleLineHits*
 coverage.clear()	nvim-coverage.txt	/*coverage.clear()*
 coverage.hide()	nvim-coverage.txt	/*coverage.hide()*
 coverage.highlights	nvim-coverage.txt	/*coverage.highlights*
@@ -18,8 +18,8 @@ coverage.signs	nvim-coverage.txt	/*coverage.signs*
 coverage.summary	nvim-coverage.txt	/*coverage.summary*
 coverage.summary()	nvim-coverage.txt	/*coverage.summary()*
 coverage.toggle()	nvim-coverage.txt	/*coverage.toggle()*
-coverage.toggle_branch_info()	nvim-coverage.txt	/*coverage.toggle_branch_info()*
-coverage.toggle_hit_counts()	nvim-coverage.txt	/*coverage.toggle_hit_counts()*
+coverage.toggle_branch_hits()	nvim-coverage.txt	/*coverage.toggle_branch_hits()*
+coverage.toggle_line_hits()	nvim-coverage.txt	/*coverage.toggle_line_hits()*
 coverage.virtual_text	nvim-coverage.txt	/*coverage.virtual_text*
 nvim-coverage	nvim-coverage.txt	/*nvim-coverage*
 nvim-coverage-commands	nvim-coverage.txt	/*nvim-coverage-commands*

@@ -172,10 +172,10 @@ COMMANDS                                              *nvim-coverage-commands*
 :CoverageSummary                                            *:CoverageSummary*
     Open the coverage summary popup. Requires a prior |:CoverageLoad|.
 
-:CoverageToggleHitCounts                            *:CoverageToggleHitCounts*
+:CoverageToggleLineHits                            *:CoverageToggleLineHits*
     Toggle virtual text hit counts on/off. Requires a prior |:CoverageLoad|.
 
-:CoverageToggleBranchInfo                        *:CoverageToggleBranchInfo*
+:CoverageToggleBranchHits                        *:CoverageToggleBranchHits*
     Toggle branch info popup on/off. Shows per-branch execution counts
     when cursor is on a partially covered line. Requires a prior |:CoverageLoad|.
 
@@ -220,14 +220,14 @@ coverage.summary()
         `q`       Close
         `<Esc>`   Close
 
-                                                *coverage.toggle_hit_counts()*
-coverage.toggle_hit_counts()
+                                                *coverage.toggle_line_hits()*
+coverage.toggle_line_hits()
     Toggle virtual text hit counts. Shows execution count for every
     instrumented line as virtual text (e.g. `× 42`). Requires a prior
     |coverage.load()|.
 
-                                                  *coverage.toggle_branch_info()*
-coverage.toggle_branch_info()
+                                                  *coverage.toggle_branch_hits()*
+coverage.toggle_branch_hits()
     Toggle branch info popup. Shows per-branch execution counts when cursor
     is on a partially covered line. Requires a prior |coverage.load()|.
 
