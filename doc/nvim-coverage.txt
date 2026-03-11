@@ -1,368 +1,208 @@
 ================================================================================
 INTRODUCTION                                                   *nvim-coverage*
 
-nvim-coverage is a plugin for displaying test coverage data in neovim.
+nvim-coverage displays lcov code coverage in the sign column with highlight
+groups and a summary popup. It reads a pre-generated lcov file — it does not
+run tests or invoke any external tools itself.
 
-  1. Setup...............................................|nvim-coverage-setup|
-  2. Language specific setup........................|nvim-coverage-lang-setup|
-  3. Commands.........................................|nvim-coverage-commands|
-  4. Lua API...........................................|nvim-coverage-lua-api|
+  1. Setup................................................|nvim-coverage-setup|
+  2. Commands.........................................|nvim-coverage-commands|
+  3. Lua API...........................................|nvim-coverage-lua-api|
 
 ================================================================================
 SETUP                                                    *nvim-coverage-setup*
 
                                                             *coverage.setup()*
 coverage.setup({opts})
-    Initial setup function. Must be called by the user to enable the plugin.
+    Initial setup function. Must be called before using the plugin.
 
     Usage: >
-    
+
     require('coverage').setup({
-      -- configuration options here
-      highlights = {
-        -- customize highlights
-      },
-      signs = {
-        -- customize signs
-      },
-      summary = {
-        -- customize summary pop-up
-      },
-      lang = {
-        -- customize language specific settings
-      }
+      lcov_file = "coverage/lcov.info",
+      auto_reload = true,
     })
 <
 
 Valid keys for {opts}:
 
+    lcov_file: ~
+        Path to the lcov file to load. Used by |:CoverageLoad| and
+        |coverage.load()| when no file argument is given.
+        Defaults to: `nil`
+
     auto_reload: ~
-        If true, the `coverage_file` for a language will be watched for
-        changes after executing |:CoverageLoad| or |coverage.load()|. The file watcher will be
-        stopped after executing |:CoverageClear| or |coverage.clear()|.
+        When true, the lcov file is watched for changes after loading.
+        Signs are updated automatically whenever the file changes on disk.
+        The watcher stops when |:CoverageClear| or |coverage.clear()| is
+        called.
+        Defaults to: `false`
+
     auto_reload_timeout_ms: ~
-        The number of milliseconds to wait before auto-reloading coverage
-        after detecting a change.
+        Debounce delay in milliseconds before reloading after a file change.
+        Defaults to: `500`
+
     commands: ~
-        If true, create commands. See |nvim-coverage-commands|.
+        When true, register the |nvim-coverage-commands| on setup.
         Defaults to: `true`
+
     load_coverage_cb: ~
-        A lua function that will be called when a coverage file is loaded. 
+        A Lua function called after coverage is loaded. Receives `"lcov"` as
+        its argument.
         Example: >
 
-        require("coverage").setup({
-            load_coverage_cb = function (ftype)
+        require('coverage').setup({
+            load_coverage_cb = function(ftype)
                 vim.notify("Loaded " .. ftype .. " coverage")
             end,
         })
 <
     sign_group: ~
-        Name of the sign group used when placing the signs. See |sign-group|.
-        Defaults to: `coverage`
-    lcov_file: ~
-        File that the plugin will try to read lcov coverage from.
-        Defaults to: `nil`
+        Name of the sign group used when placing signs. See |sign-group|.
+        Defaults to: `"coverage"`
 
                                                          *coverage.highlights*
 Valid keys for {opts.highlights}:
 
-    Each highlight group supports the following keys:
-
-    'fg': Customize the foreground color. See |highlight-guifg|.
-    'bg': Customize the background color. See |highlight-guibg|.
-    'sp': Customize the special color. See |highlight-guisp|.
-    'link': Link the highlight group. See |:highlight-link|.
+    Each highlight group accepts: `fg`, `bg`, `sp`, `style`, `link`.
+    See |highlight-gui| and |:highlight-link|.
 
     covered: ~
-        Customize the highlight group for covered signs.
+        Highlight for covered lines.
         Defaults to: `{ fg = "#B7F071" }`
     uncovered: ~
-        Customize the highlight group for uncovered signs.
+        Highlight for uncovered lines.
         Defaults to: `{ fg = "#F07178" }`
     partial: ~
-        Customize the highlight group for partial coverage signs.
+        Highlight for partially covered lines (branch coverage).
         Defaults to: `{ fg = "#AA71F0" }`
     summary_border: ~
-        Customize the border highlight group of the summary pop-up.
+        Border highlight for the summary popup.
         Defaults to: `{ link = "FloatBorder" }`
     summary_normal: ~
-        Customize the normal text highlight group of the summary pop-up.
+        Normal text highlight for the summary popup.
         Defaults to: `{ link = "NormalFloat" }`
     summary_cursor_line: ~
-        Customize the cursor line highlight group of the summary pop-up.
+        Cursor line highlight for the summary popup.
         Defaults to: `{ link = "CursorLine" }`
     summary_header: ~
-        Customize the header text highlight group of the summary pop-up.
-        Defaults to: `{ style = "bold,underline", sp = "bg" }`
+        Header row highlight for the summary popup.
+        Defaults to: `{ style = "bold,underline", sp = "fg" }`
     summary_pass: ~
-        Customize the pass text highlight group of the summary pop-up.
+        Highlight for files above the min_coverage threshold.
         Defaults to: `{ link = "CoverageCovered" }`
     summary_fail: ~
-        Customize the fail text highlight group of the summary pop-up.
+        Highlight for files below the min_coverage threshold.
         Defaults to: `{ link = "CoverageUncovered" }`
 
                                                               *coverage.signs*
 Valid keys for {opts.signs}:
 
     covered: ~
-        Customize the highlight group and text used for covered signs.
+        Sign for covered lines.
         Defaults to: `{ hl = "CoverageCovered", text = "▎" }`
     uncovered: ~
-        Customize the highlight group and text used for uncovered signs.
+        Sign for uncovered lines.
         Defaults to: `{ hl = "CoverageUncovered", text = "▎" }`
     partial: ~
-        Customize the highlight group and text used for partial coverage signs.
+        Sign for partially covered lines.
         Defaults to: `{ hl = "CoveragePartial", text = "▎" }`
+
+    Each sign also accepts an optional `priority` key. See |sign-priority|.
 
                                                             *coverage.summary*
 Valid keys for {opts.summary}:
 
     width_percentage: ~
-        Width of the pop-up window (0 < value <= 1.0)
-        Defaults to: `0.75`
+        Width of the popup window as a fraction of the terminal width.
+        Defaults to: `0.70`
     height_percentage: ~
-        Height of the pop-up window (0 < value <= 1.0)
+        Height of the popup window as a fraction of the terminal height.
         Defaults to: `0.50`
-    borders: ~
-        Customize the borders (see plenary window API)
-    window: ~
-        Customize the window options (see plenary window API)
     min_coverage: ~
-        Minimum coverage percentage (0 < value <= 100.0).
-        Values below this are highlighted with the fail group, values above
-        are highlighted with the pass group.
+        Coverage percentage threshold. Files below this value are highlighted
+        with `summary_fail`, files above with `summary_pass`.
         Defaults to: `80.0`
+    borders: ~
+        Border characters for the popup. See plenary window API.
+    window: ~
+        Additional window options passed to the popup. See plenary window API.
 
-                                                               *coverage.lang*
-Valid keys for {opts.lang}:
-
-    Each key corresponds with the |filetype| of the language and maps to a
-    table of configuration values that differ. See below for language specific
-    options.
-
-
-================================================================================
-LANGUAGE SPECIFIC SETUP                            *nvim-coverage-lang-setup*
-
-                                                             *nvim-coverage-c*
-                                                           *nvim-coverage-cpp*
-C/C++ supports the following configuration options:
-
-    coverage_file: ~
-        File that the plugin will try to read coverage from.
-        Defaults to: `"report.info"`
-
-                                                          *nvim-coverage-dart*
-Dart supports the following configuration options:
-
-    coverage_file: ~
-        File that the plugin will try to read coverage from.
-        Defaults to: `"coverage/lcov.info"`
-
-                                                            *nvim-coverage-go*
-Go supports the following configuration options:
-
-    coverage_file: ~
-        File that the plugin will try to read coverage from.
-        Defaults to: `"coverage.out"`
-
-                                                    *nvim-coverage-javascript*
-                                                    *nvim-coverage-typescript*
-Javascript and Typescript share the same configuration and support the
-following options:
-
-    coverage_file: ~
-        File that the plugin will try to read coverage from.
-        Defaults to: `"coverage/lcov.info"`
-
-                                                         *nvim-coverage-julia*
-Julias package manager outputs code coverage files when running package tests
-with `Pkg.test(; coverage=true)`. The plugin processes these files using the
-`CoverageTools.jl` package, which is expected to be installed in the
-`@nvim-coverage` environment. The package can be installed with the following
-shell command:
-
-   `julia --project=@nvim-coverage -e 'using Pkg; Pkg.add("CoverageTools")'`
-
-No other configuration should be necessary, but the following options are
-available:
-
-    coverage_file: ~
-        File that the plugin will try to read coverage from.
-        Defaults to: `"lcov.info"`
-    coverage_command: ~
-        Command for creating `"lcov.info"` from individual coverage output
-        files. The configured `coverage_file` and `directories` are passed as
-        the first and second argument to the command.
-        Defaults to: >
-
-        julia --project=@nvim-coverage - <<EOF
-            coverage_file = ARGS[1]
-            directories = ARGS[2]
-            push!(empty!(LOAD_PATH), "@nvim-coverage", "@stdlib")
-            using CoverageTools
-            coverage_data = FileCoverage[]
-            for dir in split(directories, ",")
-                isdir(dir) || continue
-                append!(coverage_data, process_folder(dir))
-                clean_folder(dir)
-            end
-            LCOV.writefile(coverage_file, coverage_data)
-        EOF
-<
-    directories: ~
-        Comma separated list of directories in which to search for coverage
-        data to process.
-        Defaults to: `"src,ext"`
-
-                                                        *nvim-coverage-php*
-PHP (cobertura) supports the following configuration options:
-
-In order to handle this format the parser requires the `lua-xmlreader` luarock
-package.
-
-    coverage_file: ~
-        File that the plugin will try to read coverage from.
-        Defaults to: `"coverage/cobertura.xml"`
-    path_mappings: ~
-        This allow you to configure how to update the paths retrieved from the
-        coverage.
-        This can be usefull when your tests are run inside a container.
-        For instance if your projet root inside the container is in
-        `/var/www/html` you can define the following mapping to retrieve
-        relative paths from the coverage report: >
-        {
-          ["/var/www/html"] = ""
-        }
-<
-        Defaults to: `{}`
-                                                        *nvim-coverage-python*
-Python (coverage.py) supports the following configuration options:
-
-    coverage_file: ~
-        File that the plugin will try to read coverage from.
-        Defaults to: `".coverage"`
-    coverage_command: ~
-        This command runs to load the coverage in coverage_file and output a
-        JSON report to stdout.
-        Defaults to: `"coverage json -q -o -"`
-
-                                                          *nvim-coverage-ruby*
-Ruby (simplecov) supports the following configuration options:
-
-    coverage_file: ~
-        File that the plugin will try to read coverage from.
-        Defaults to: `"coverage/coverage.json"`
-
-                                                          *nvim-coverage-rust*
-Rust (grcov) supports the following configuration options:
-
-    coverage_command: ~
-        This command runs to load the coverage and output a JSON report to
-        stdout.
-        The values `${cwd}` are replaced by the plugin with the current
-        working directory before the command is run.
-        Defaults to: `"grcov ${cwd} -s ${cwd} --binary-path ./target/debug/ -t coveralls --branch --ignore-not-existing --token NO_TOKEN"`
-    project_files_only: ~
-        By default, grcov outputs coverage for all crates. When true, this
-        option will add additional filters to `coverage_command` to filter for
-        only local files.
-        Defaults to: `true`
-    project_files: ~
-        When `project_files_only` is true, these filters are added to
-        `coverage_command`.
-        Defaults to: `{ "src/*", "tests/*" }`
-
-                                                          *nvim-coverage-swift*
-Swift supports the following configuration options:
-
-    coverage_file: ~
-        File that the plugin will try to read coverage from.
-        Defaults to: the output of `swift test --show-codecov-path`.
-
-                                                           *nvim-coverage-lua*
-Lua supports the following configuration options:
-
-    coverage_file: ~
-        File that the plugin will try to read coverage from.
-        Defaults to: `"luacov.report.out"`
-    
 
 ================================================================================
 COMMANDS                                              *nvim-coverage-commands*
 
-The following commands are available (when configured):
-
-:Coverage                                                          *:Coverage*
-    Loads a coverage report and immediately displays the coverage signs.
-
-:CoverageLoad                                                  *:CoverageLoad*
-    Loads a coverage report but does not display the coverage signs.
-
-:CoverageLoadLcov {file}                                   *:CoverageLoadLcov*
-    Loads a coverage report from an lcov file but does not display the coverage
-    signs. If `file` is not specified, the `lcov_file` configuration option is used
-    instead.
+:CoverageLoad [{file}]                                         *:CoverageLoad*
+    Load an lcov file and place signs immediately. If {file} is not given,
+    uses the `lcov_file` configuration option.
 
 :CoverageShow                                                  *:CoverageShow*
-    Shows the coverage signs. Must call |:Coverage| or |:CoverageLoad| first.
+    Show coverage signs. Requires a prior |:CoverageLoad|.
 
 :CoverageHide                                                  *:CoverageHide*
-    Hides the coverage signs. Must call |:Coverage| or |:CoverageLoad| first.
+    Hide coverage signs.
 
 :CoverageToggle                                              *:CoverageToggle*
-    Toggles the coverage signs. Must call |:Coverage| or |:CoverageLoad| first.
+    Toggle coverage sign visibility.
 
 :CoverageClear                                                *:CoverageClear*
-    Unloads the cached coverage signs. |:Coverage| or |:CoverageLoad| must be
-    called again to reload the data.
+    Remove signs, clear the cached report, and stop the file watcher.
 
 :CoverageSummary                                            *:CoverageSummary*
-    Displays a coverage summary report in a floating window.
+    Open the coverage summary popup. Requires a prior |:CoverageLoad|.
 
 
 ================================================================================
 LUA API                                                *nvim-coverage-lua-api*
 
                                                              *coverage.load()*
-coverage.load({place})
-    Loads a coverage report. When {place} is true, also place the signs in the
-    sign column.
+coverage.load({file}, {place})
+    Load an lcov file. If {file} is nil, uses `config.opts.lcov_file`.
+    When {place} is true, signs are placed immediately; otherwise they are
+    cached and shown when |coverage.show()| is called.
+    Also starts the file watcher when `auto_reload` is enabled.
 
-                                                        *coverage.load_lcov()*
-coverage.load_lcov({file}, {place})
-    Loads a coverage report from an lcov file. If `file` is not specified, the
-    `lcov_file` configuration option is used instead. When {place} is true, also
-    place the signs in the sign column.
-
-                                                            *coverage.clear()*
-coverage.clear()
-    Clears a loaded coverage report. Removes any placed signs.
-
-                                                             *coverage.show()*
+                                                            *coverage.show()*
 coverage.show()
-    Shows coverage signs in sign column, if coverage has already been loaded.
+    Show coverage signs. No-op if coverage has not been loaded or signs are
+    already visible.
 
-                                                             *coverage.hide()*
+                                                            *coverage.hide()*
 coverage.hide()
-    Hides coverage signs in the sign column.
+    Hide coverage signs.
 
-                                                           *coverage.toggle()*
+                                                          *coverage.toggle()*
 coverage.toggle()
-    Toggles coverage signs (must already be loaded).
+    Toggle sign visibility.
 
-                                                          *coverage.summary()*
+                                                           *coverage.clear()*
+coverage.clear()
+    Remove signs, clear the cached report, and stop the file watcher.
+
+                                                         *coverage.summary()*
 coverage.summary()
-    Displays a coverage summary report in a pop-up window.
+    Open the coverage summary popup.
 
-                                                          *coverage.jump_next()*
+    Summary popup keybindings:
+        `s`       Sort by coverage ascending
+        `S`       Sort by coverage descending
+        `H`       Jump to top entry
+        `<CR>`    Open file under cursor
+        `?`       Toggle help screen
+        `q`       Close
+        `<Esc>`   Close
+
+                                                       *coverage.jump_next()*
 coverage.jump_next({sign_type})
-    Jumps to the next line in the current buffer with the given sign_type
-    ("covered"|"uncovered"|"partial")
+    Jump to the next sign of {sign_type} in the current buffer.
+    {sign_type} is one of `"covered"`, `"uncovered"`, `"partial"`.
+    Defaults to `"covered"`.
 
-                                                          *coverage.jump_prev()*
+                                                       *coverage.jump_prev()*
 coverage.jump_prev({sign_type})
-    Jumps to the previous line in the current buffer with the given sign_type
-    ("covered"|"uncovered"|"partial")
+    Jump to the previous sign of {sign_type} in the current buffer.
+    {sign_type} is one of `"covered"`, `"uncovered"`, `"partial"`.
+    Defaults to `"covered"`.
+
 
  vim:tw=78:ts=8:ft=help:norl:
