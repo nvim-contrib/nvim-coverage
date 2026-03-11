@@ -1,16 +1,15 @@
 local M = {}
 
-local config = require("coverage.config")
-local signs = require("coverage.signs")
+local config    = require("coverage.config")
+local signs     = require("coverage.signs")
 local highlight = require("coverage.highlight")
-local summary = require("coverage.summary")
-local report = require("coverage.report")
-local watch = require("coverage.watch")
-local lcov = require("coverage.lcov")
+local summary   = require("coverage.summary")
+local report    = require("coverage.report")
+local watch     = require("coverage.watch")
+local util      = require("coverage.util")
 
 --- Setup the coverage plugin.
--- Also defines signs, creates highlight groups.
--- @param config options
+--- @param user_opts? Configuration
 M.setup = function(user_opts)
     config.setup(user_opts)
     signs.setup()
@@ -31,18 +30,47 @@ end
 --- Loads an lcov file and optionally places signs immediately.
 --- @param file? string path to the lcov file (defaults to config.opts.lcov_file)
 --- @param place? boolean true to immediately place signs
-M.load = lcov.load
+M.load = function(file, place)
+    file = file or config.opts.lcov_file
+    if file == nil then
+        vim.notify("A path to the lcov file was not supplied.", vim.log.levels.INFO)
+        return
+    end
 
--- Shows signs, if loaded.
+    local p = require("plenary.path"):new(file)
+    if not p:exists() then
+        vim.notify("No coverage file exists at: " .. file, vim.log.levels.INFO)
+        return
+    end
+
+    local reload = function()
+        if config.opts.load_coverage_cb ~= nil then
+            vim.schedule(function() config.opts.load_coverage_cb("lcov") end)
+        end
+        local data = util.lcov_to_table(p)
+        report.set(data)
+        local sign_list = signs.build(data)
+        if place or signs.is_enabled() then
+            signs.place(sign_list)
+        else
+            signs.cache(sign_list)
+        end
+    end
+
+    watch.start(file, reload)
+    reload()
+end
+
+--- Shows signs, if loaded.
 M.show = signs.show
 
--- Hides signs.
+--- Hides signs.
 M.hide = signs.unplace
 
 --- Toggles signs.
 M.toggle = signs.toggle
 
---- Hides and clears cached signs.
+--- Hides signs, clears cache, stops file watcher.
 M.clear = function()
     signs.clear()
     report.clear()

@@ -21,21 +21,7 @@ local Path = require("plenary.path")
 --- @field files table<string, FileCoverage>
 --- @field totals CoverageSummary
 
---- Safely decode JSON and call the callback with decoded data.
--- @param data to decode
--- @param callback to call on decode success
-M.safe_decode = function(data, callback)
-    local ok, json_data = pcall(vim.fn.json_decode, data)
-    if ok then
-        callback(json_data)
-    else
-        vim.notify("Failed to decode JSON coverage data: " .. json_data, vim.log.levels.ERROR)
-    end
-end
-
---- Returns a table containing file parameters.
---- @return FileCoverage
-M.new_file_meta = function()
+local new_file_meta = function()
     return {
         summary = {
             covered_lines = 0,
@@ -51,24 +37,26 @@ M.new_file_meta = function()
     }
 end
 
---- Parses an lcov report from path into files.
+--- Parses an lcov report from path into a CoverageData table.
+--- See http://ltp.sourceforge.net/coverage/lcov/geninfo.1.php for spec.
 --- @param path Path
---- @param files table<string, FileCoverage>
-local lcov_parser = function(path, files)
+--- @return CoverageData
+M.lcov_to_table = function(path)
+    local files = {}
     local cfile = nil
     local cmeta = nil
 
     for _, line in ipairs(path:readlines()) do
         if line:match("end_of_record") and cmeta ~= nil and cfile ~= nil then
-            cmeta.summary["excluded_lines"] = 0
-            cmeta.summary["percent_covered"] = cmeta.summary.covered_lines / cmeta.summary.num_statements * 100
+            cmeta.summary.excluded_lines = 0
+            cmeta.summary.percent_covered = cmeta.summary.covered_lines / cmeta.summary.num_statements * 100
             files[cfile] = cmeta
             cfile = nil
             cmeta = nil
         elseif line:match("SF:.+") then
             -- SF:<absolute path to the source file>
             cfile = line:gsub("SF:", "")
-            cmeta = M.new_file_meta()
+            cmeta = new_file_meta()
         elseif line:match("^DA:%d+,%d+,?.*") and cmeta ~= nil then
             -- DA:<line number>,<execution count>[,<checksum>]
             local ls, ns = line:match("DA:(%d+),(%d+),?.*")
@@ -83,17 +71,13 @@ local lcov_parser = function(path, files)
             -- BRDA:<line number>,<block number>,<branch number>,<taken>
             local ls, ns = line:match("^BRDA:(%d+),%d+,%d+,(%d+|-)")
             local l = tonumber(ls, 10)
-            local n = 0
-            if ns ~= '-' then
-                n = tonumber(ns, 10)
-            end
+            local n = ns ~= '-' and tonumber(ns, 10) or 0
             if n == 0 then
                 table.insert(cmeta.missing_branches, { l, -1 })
             end
         elseif line:match("^BRF:%d+") and cmeta ~= nil then
             -- BRF:<number of branches found>
-            local brf = tonumber(line:gsub("BRF:", ""), 10)
-            cmeta.summary.num_branches = brf
+            cmeta.summary.num_branches = tonumber(line:gsub("BRF:", ""), 10)
         elseif line:match("^BRH:%d+") and cmeta ~= nil then
             -- BRH:<number of branches hit>
             if cmeta.summary.num_branches ~= nil then
@@ -102,46 +86,23 @@ local lcov_parser = function(path, files)
             end
         elseif line:match("LH:%d+") and cmeta ~= nil then
             -- LH:<number of lines with a non-zero execution count>
-            local lh = tonumber(line:gsub("LH:", ""), 10)
-            cmeta.summary["covered_lines"] = lh
+            cmeta.summary.covered_lines = tonumber(line:gsub("LH:", ""), 10)
         elseif line:match("LF:%d+") and cmeta ~= nil then
             -- LF:<number of instrumented lines>
-            local lf = tonumber(line:gsub("LF:", ""), 10)
-            cmeta.summary["num_statements"] = lf
+            cmeta.summary.num_statements = tonumber(line:gsub("LF:", ""), 10)
         end
     end
-end
 
---- Parses a generic report into a files table.
---- @param path Path
---- @param parser fun(path:Path, files:table<string, FileCoverage>)
---- @return CoverageData
-M.report_to_table = function(path, parser)
-    local files = {}
-    parser(path, files)
-
-    local totals = {
-        num_statements = 0,
-        covered_lines = 0,
-        missing_lines = 0,
-        excluded_lines = 0,
-    }
+    local totals = { num_statements = 0, covered_lines = 0, missing_lines = 0, excluded_lines = 0 }
     for _, meta in pairs(files) do
         totals.num_statements = totals.num_statements + meta.summary.num_statements
-        totals.covered_lines = totals.covered_lines + meta.summary.covered_lines
-        totals.missing_lines = totals.missing_lines + meta.summary.missing_lines
+        totals.covered_lines  = totals.covered_lines  + meta.summary.covered_lines
+        totals.missing_lines  = totals.missing_lines  + meta.summary.missing_lines
         totals.excluded_lines = totals.excluded_lines + meta.summary.excluded_lines
     end
     totals.percent_covered = totals.covered_lines / totals.num_statements * 100
 
     return { meta = {}, totals = totals, files = files }
-end
-
---- Parses an lcov file into a table.
---- See http://ltp.sourceforge.net/coverage/lcov/geninfo.1.php for spec.
---- @param path Path
-M.lcov_to_table = function(path)
-    return M.report_to_table(path, lcov_parser)
 end
 
 return M
