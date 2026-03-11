@@ -300,7 +300,7 @@ local build = function(data)
         table.insert(files, {
             filename = fname,
             statements = cov.summary.num_statements,
-            missing = cov.summary.missing_lines,
+            missing = cov.summary.uncovered_lines,
             excluded = cov.summary.excluded_lines,
             branches = cov.summary.num_branches,
             partial = cov.summary.num_partial_branches,
@@ -311,7 +311,7 @@ local build = function(data)
         files = files,
         totals = {
             statements = data.totals.num_statements,
-            missing = data.totals.missing_lines,
+            missing = data.totals.uncovered_lines,
             excluded = data.totals.excluded_lines,
             branches = data.totals.num_branches,
             partial = data.totals.num_partial_branches,

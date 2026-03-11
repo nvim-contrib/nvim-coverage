@@ -11,9 +11,9 @@ local make_data = function(hit_counts)
     return {
         files = {
             [fname] = {
-                executed_lines   = {},
-                missing_lines    = {},
-                missing_branches = {},
+                covered_lines   = {},
+                uncovered_lines    = {},
+                partial_lines = {},
                 hit_counts       = hit_counts or {},
             },
         },
@@ -64,7 +64,7 @@ describe("virtual_text", function()
         local data = {
             files = {
                 ["/not/open/file.lua"] = {
-                    executed_lines = {}, missing_lines = {}, missing_branches = {},
+                    covered_lines = {}, uncovered_lines = {}, partial_lines = {},
                     hit_counts = { [1] = 5 },
                 },
             },
