@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/nvim-contrib/nvim-coverage/compare/v0.3.0...v0.4.0) (2026-03-11)
+
+
+### Features
+
+* add CoverageQuickfix and CoverageLoclist commands (close [#16](https://github.com/nvim-contrib/nvim-coverage/issues/16)) ([8713945](https://github.com/nvim-contrib/nvim-coverage/commit/8713945519365a9b0bc7de2847755415ac113a1c))
+* branch overlay popup ([#15](https://github.com/nvim-contrib/nvim-coverage/issues/15)) ([1ca59e0](https://github.com/nvim-contrib/nvim-coverage/commit/1ca59e0cde8b3e619dc7ff64d8dd3604c13ca5e7))
+
+
+### Bug Fixes
+
+* robust path matching in overlay using bufnr fallback ([4826987](https://github.com/nvim-contrib/nvim-coverage/commit/4826987036170611e0f07162303b8073268f91c0))
+
 ## [0.3.0](https://github.com/nvim-contrib/nvim-coverage/compare/v0.2.1...v0.3.0) (2026-03-11)
 
 
