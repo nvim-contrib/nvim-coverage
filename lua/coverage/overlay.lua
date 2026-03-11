@@ -82,9 +82,19 @@ local on_cursor_moved = function()
         return
     end
 
-    local fname = vim.api.nvim_buf_get_name(0)
-    local file = report.get().files[fname]
-    if file == nil or file.branches == nil then
+    local fname = vim.fn.expand("%:p")
+    local data = report.get()
+    local file = data.files[fname]
+    if file == nil then
+        -- fallback: match by buffer number the same way signs.build does
+        for sf, cov in pairs(data.files) do
+            if vim.fn.bufnr(sf, false) == vim.fn.bufnr("%", false) then
+                file = cov
+                break
+            end
+        end
+    end
+    if file == nil then
         close_float()
         return
     end
