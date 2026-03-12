@@ -25,6 +25,7 @@ local footer = nil
 -- help screen toggle
 local help_displayed = false
 local cached_filename_width = nil
+local cached_padding_width = nil
 local fixed_col_width = 64 -- this should match the width of header columns below
 local min_filename_width = 25 -- the filename column should be at least this wide
 local max_col_width = 99 -- string.format doesn't like values larger than this
@@ -67,6 +68,17 @@ local get_cov_hl_group = function(threshold)
 	return threshold >= min_threshold and "CoverageReportPass" or "CoverageReportFail"
 end
 
+--- Returns the number of spaces to left-pad each table row so the table is centered.
+local get_padding_width = function()
+	if cached_padding_width ~= nil then
+		return cached_padding_width
+	end
+	local win_width = vim.api.nvim_win_get_width(popup.win_id)
+	local table_width = get_filename_width() + fixed_col_width
+	cached_padding_width = math.max(0, math.floor((win_width - table_width) / 2))
+	return cached_padding_width
+end
+
 --- Returns the width of the filename column based on the popup window & filename widths.
 local get_filename_width = function()
 	if cached_filename_width ~= nil then
@@ -96,7 +108,7 @@ local load_header = function()
 	)
 	table.insert(
 		header.lines,
-		string.format(
+		string.rep(" ", get_padding_width()) .. string.format(
 			"%" .. get_filename_width() .. "s %11s %9s %9s %9s %9s %11s",
 			"Module",
 			"Statements",
@@ -112,6 +124,8 @@ end
 --- Loads the content lines and highlighting for rendering later.
 local load_content = function()
 	content = { lines = {}, highlights = {} }
+	local padding_width = get_padding_width()
+	local pad = string.rep(" ", padding_width)
 	summary.files = vim.fn.sort(summary.files, sort_method)
 	for _, file in ipairs(summary.files) do
 		local filename = file.filename
@@ -134,14 +148,14 @@ local load_content = function()
 			if hl_group ~= nil then
 				table.insert(
 					content.highlights,
-					{ hl_group = hl_group, line = #content.lines, col_start = #line, col_end = -1 }
+					{ hl_group = hl_group, line = #content.lines, col_start = padding_width + #line, col_end = -1 }
 				)
 			end
 			line = string.format("%s %10.0f%%", line, file.coverage)
 		else
 			line = line .. "-"
 		end
-		table.insert(content.lines, line)
+		table.insert(content.lines, pad .. line)
 	end
 end
 
@@ -153,6 +167,8 @@ local load_footer = function()
 		return
 	end
 
+	local padding_width = get_padding_width()
+	local pad = string.rep(" ", padding_width)
 	local line = string.format(
 		"%" .. get_filename_width() .. "s %11s %9s %9s %9s %9s",
 		"Total",
@@ -168,14 +184,14 @@ local load_footer = function()
 		if hl_group ~= nil then
 			table.insert(
 				footer.highlights,
-				{ hl_group = hl_group, line = #footer.lines, col_start = #line, col_end = -1 }
+				{ hl_group = hl_group, line = #footer.lines, col_start = padding_width + #line, col_end = -1 }
 			)
 		end
 		line = string.format("%s %10.0f%%", line, summary.totals.coverage)
 	else
 		line = line .. "-"
 	end
-	table.insert(footer.lines, line)
+	table.insert(footer.lines, pad .. line)
 	return footer
 end
 
@@ -331,6 +347,7 @@ local set_options = function()
 	vim.api.nvim_buf_set_option(popup.bufnr, "textwidth", win_width)
 	vim.api.nvim_buf_set_option(popup.bufnr, "filetype", "coverage")
 	vim.api.nvim_win_set_option(popup.win_id, "cursorline", true)
+	vim.api.nvim_win_set_option(popup.win_id, "winblend", 0)
 	vim.api.nvim_win_set_option(
 		popup.win_id,
 		"winhl",
@@ -454,6 +471,7 @@ M.on_close = function()
 		return
 	end
 	cached_filename_width = nil
+	cached_padding_width = nil
 	summary = nil
 	header = nil
 	content = nil
