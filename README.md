@@ -138,6 +138,7 @@ require("coverage").setup({
 | `:CoverageToggle` | Toggle sign visibility |
 | `:CoverageClear` | Remove signs, clear cache, stop file watcher |
 | `:CoverageReport` | Open the summary popup |
+| `:CoverageHeatmap` | Open full-screen treemap — files sized by LOC, colored by coverage % |
 | `:CoverageToggleLineHits` | Toggle virtual text hit counts per line |
 | `:CoverageToggleBranchHits` | Toggle branch overlay popup on partial lines |
 | `:CoverageQuickfix [uncovered]` | Populate quickfix list with per-file coverage summary |
@@ -162,6 +163,9 @@ coverage.clear()
 
 -- summary popup
 coverage.report()
+
+-- treemap heatmap
+coverage.heatmap()
 
 -- virtual text — shows execution hit counts (e.g. × 42) on every instrumented line
 coverage.toggle_line_hits()

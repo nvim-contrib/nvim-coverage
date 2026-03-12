@@ -11,12 +11,12 @@
 ---
 --- @type fun(client: table): table
 local consumer = function(client)
-    client.listeners.results = function(_, _, partial)
-        if not partial then
-            require("coverage").load(nil, require("coverage.signs").is_enabled())
-        end
-    end
-    return {}
+	client.listeners.results = function(_, _, partial)
+		if not partial then
+			require("coverage").load(nil, require("coverage.signs").is_enabled())
+		end
+	end
+	return {}
 end
 
 return consumer

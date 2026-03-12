@@ -1,5 +1,6 @@
 :CoverageBrowser	nvim-coverage.txt	/*:CoverageBrowser*
 :CoverageClear	nvim-coverage.txt	/*:CoverageClear*
+:CoverageHeatmap	nvim-coverage.txt	/*:CoverageHeatmap*
 :CoverageHide	nvim-coverage.txt	/*:CoverageHide*
 :CoverageLoad	nvim-coverage.txt	/*:CoverageLoad*
 :CoverageLoclist	nvim-coverage.txt	/*:CoverageLoclist*
@@ -11,6 +12,7 @@
 :CoverageToggleLineHits	nvim-coverage.txt	/*:CoverageToggleLineHits*
 coverage.browser()	nvim-coverage.txt	/*coverage.browser()*
 coverage.clear()	nvim-coverage.txt	/*coverage.clear()*
+coverage.heatmap()	nvim-coverage.txt	/*coverage.heatmap()*
 coverage.hide()	nvim-coverage.txt	/*coverage.hide()*
 coverage.highlights	nvim-coverage.txt	/*coverage.highlights*
 coverage.jump_next()	nvim-coverage.txt	/*coverage.jump_next()*

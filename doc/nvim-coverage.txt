@@ -181,6 +181,12 @@ COMMANDS                                              *nvim-coverage-commands*
 :CoverageReport                                            *:CoverageReport*
     Open the coverage summary popup. Requires a prior |:CoverageLoad|.
 
+:CoverageHeatmap                                        *:CoverageHeatmap*
+    Open a full-screen text-mode treemap. Files are sized proportionally to
+    their line count and colored by coverage % (dark red → dark amber → dark
+    green). Press `<CR>` to open the file under the cursor, `q` or `<Esc>` to
+    close. Requires a prior |:CoverageLoad|.
+
 :CoverageToggleLineHits                            *:CoverageToggleLineHits*
     Toggle virtual text hit counts on/off. Shows execution count for every
     instrumented line (e.g. `× 42`). Requires a prior |:CoverageLoad|.
@@ -249,6 +255,15 @@ coverage.report()
         `H`       Jump to top entry
         `<CR>`    Open file under cursor
         `?`       Toggle help screen
+        `q`       Close
+        `<Esc>`   Close
+
+                                                      *coverage.heatmap()*
+coverage.heatmap()
+    Open the full-screen treemap heatmap. Requires a prior |coverage.load()|.
+
+    Heatmap keybindings:
+        `<CR>`    Open file under cursor
         `q`       Close
         `<Esc>`   Close
 
