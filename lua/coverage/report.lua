@@ -68,17 +68,6 @@ local get_cov_hl_group = function(threshold)
 	return threshold >= min_threshold and "CoverageReportPass" or "CoverageReportFail"
 end
 
---- Returns the number of spaces to left-pad each table row so the table is centered.
-local get_padding_width = function()
-	if cached_padding_width ~= nil then
-		return cached_padding_width
-	end
-	local win_width = vim.api.nvim_win_get_width(popup.win_id)
-	local table_width = get_filename_width() + fixed_col_width
-	cached_padding_width = math.max(0, math.floor((win_width - table_width) / 2))
-	return cached_padding_width
-end
-
 --- Returns the width of the filename column based on the popup window & filename widths.
 local get_filename_width = function()
 	if cached_filename_width ~= nil then
@@ -95,6 +84,17 @@ local get_filename_width = function()
 	filename_width = vim.fn.min({ filename_width, win_width - fixed_col_width, max_col_width })
 	cached_filename_width = filename_width
 	return filename_width
+end
+
+--- Returns the number of spaces to left-pad each table row so the table is centered.
+local get_padding_width = function()
+	if cached_padding_width ~= nil then
+		return cached_padding_width
+	end
+	local win_width = vim.api.nvim_win_get_width(popup.win_id)
+	local table_width = get_filename_width() + fixed_col_width
+	cached_padding_width = math.max(0, math.floor((win_width - table_width) / 2))
+	return cached_padding_width
 end
 
 --- Loads the header lines and highlighting for rendering later.
