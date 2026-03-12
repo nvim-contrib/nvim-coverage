@@ -1,7 +1,7 @@
 -- Tests for loclist.lua
 
 local config  = require("coverage.config")
-local report  = require("coverage.report")
+local report  = require("coverage.cache")
 local ll      = require("coverage.loclist")
 
 config.setup()

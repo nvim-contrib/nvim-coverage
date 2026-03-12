@@ -1,6 +1,6 @@
 -- Tests for report.lua (coverage data cache)
 
-local report = require("coverage.report")
+local report = require("coverage.cache")
 
 local mock_data = {
     files = {},

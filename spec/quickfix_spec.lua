@@ -1,7 +1,7 @@
 -- Tests for quickfix.lua
 
 local config  = require("coverage.config")
-local report  = require("coverage.report")
+local report  = require("coverage.cache")
 local qf      = require("coverage.quickfix")
 
 config.setup()

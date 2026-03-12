@@ -1,7 +1,7 @@
 -- Tests for virtual_text.lua (extmark placement from CoverageData)
 
 local config       = require("coverage.config")
-local virtual_text = require("coverage.virtual_text")
+local virtual_text = require("coverage.hints")
 
 config.setup()
 

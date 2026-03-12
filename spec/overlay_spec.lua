@@ -1,7 +1,7 @@
 -- Tests for overlay.lua (branch overlay state management)
 
 local overlay = require("coverage.overlay")
-local report  = require("coverage.report")
+local report  = require("coverage.cache")
 
 local make_data = function(branches)
     return {
