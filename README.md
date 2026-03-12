@@ -137,16 +137,20 @@ require("coverage").setup({
 |---------|-------------|
 | `:CoverageLoad [file]` | Load lcov file and place signs (uses `file` config if no arg) |
 | `:CoverageLoad!` | Open interactive picker over all `*.info` files found under cwd |
-| `:CoverageShow` | Show signs (if previously hidden) |
-| `:CoverageHide` | Hide signs |
-| `:CoverageToggle` | Toggle sign visibility |
+| `:CoverageShowSigns` | Show signs (if previously hidden) |
+| `:CoverageHideSigns` | Hide signs |
+| `:CoverageToggleSigns` | Toggle sign visibility |
 | `:CoverageClear` | Remove signs, clear cache, stop file watcher |
 | `:CoverageReport` | Open the summary popup |
 | `:CoverageHeatmap` | Open full-screen treemap — files sized by LOC, colored by coverage % |
 
 ![Coverage Heatmap](doc/img/heatmap.webp)
+| `:CoverageShowLineHits` | Show virtual text hit counts per line |
+| `:CoverageHideLineHits` | Hide virtual text hit counts |
 | `:CoverageToggleLineHits` | Toggle virtual text hit counts per line |
-| `:CoverageToggleBranchHits` | Toggle branch overlay popup on partial lines |
+| `:CoverageShowBranchOverlay` | Show branch overlay popup on partial lines |
+| `:CoverageHideBranchOverlay` | Hide branch overlay popup |
+| `:CoverageToggleBranchOverlay` | Toggle branch overlay popup on partial lines |
 | `:CoverageQuickfix [uncovered]` | Populate quickfix list with per-file coverage summary |
 | `:CoverageLoclist [uncovered\|partial]` | Populate location list with lines of given type in current buffer |
 | `:CoverageBrowser` | Generate HTML report via `genhtml` and open in browser (registered only if `genhtml` is on `$PATH`) |
@@ -164,9 +168,9 @@ coverage.load("path/to/lcov.info")       -- load from explicit path
 coverage.load("path/to/lcov.info", true) -- load and immediately show signs
 
 -- signs
-coverage.show()
-coverage.hide()
-coverage.toggle()
+coverage.show_signs()
+coverage.hide_signs()
+coverage.toggle_signs()
 coverage.clear()
 
 -- summary popup
@@ -176,10 +180,14 @@ coverage.report()
 coverage.heatmap()
 
 -- virtual text — shows execution hit counts (e.g. × 42) on every instrumented line
+coverage.show_line_hits()
+coverage.hide_line_hits()
 coverage.toggle_line_hits()
 
 -- branch overlay — floating popup on partial lines showing per-branch counts
-coverage.toggle_branch_hits()
+coverage.show_branch_overlay()
+coverage.hide_branch_overlay()
+coverage.toggle_branch_overlay()
 
 -- quickfix / loclist navigation
 coverage.quickfix()             -- all files, sorted by coverage ascending
