@@ -1,6 +1,6 @@
 local M = {}
 
-local report = require("coverage.report")
+local report = require("coverage.cache")
 
 --- Populates the location list for the current window with lines of the given type.
 --- @param sign_type? "uncovered"|"partial" Defaults to "uncovered".

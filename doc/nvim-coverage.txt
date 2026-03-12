@@ -83,22 +83,22 @@ Valid keys for {opts.highlights}:
     partial: ~
         Highlight for partially covered lines (branch coverage).
         Defaults to: `{ fg = "#AA71F0" }`
-    summary_border: ~
+    report_border: ~
         Border highlight for the summary popup.
         Defaults to: `{ link = "FloatBorder" }`
-    summary_normal: ~
+    report_normal: ~
         Normal text highlight for the summary popup.
         Defaults to: `{ link = "NormalFloat" }`
-    summary_cursor_line: ~
+    report_cursor_line: ~
         Cursor line highlight for the summary popup.
         Defaults to: `{ link = "CursorLine" }`
-    summary_header: ~
+    report_header: ~
         Header row highlight for the summary popup.
         Defaults to: `{ style = "bold,underline", sp = "fg" }`
-    summary_pass: ~
+    report_pass: ~
         Highlight for files above the min_coverage threshold.
         Defaults to: `{ link = "CoverageCovered" }`
-    summary_fail: ~
+    report_fail: ~
         Highlight for files below the min_coverage threshold.
         Defaults to: `{ link = "CoverageUncovered" }`
     line_hits: ~
@@ -120,8 +120,8 @@ Valid keys for {opts.signs}:
 
     Each sign also accepts an optional `priority` key. See |sign-priority|.
 
-                                                            *coverage.summary*
-Valid keys for {opts.summary}:
+                                                             *coverage.report*
+Valid keys for {opts.report}:
 
     width: ~
         Width of the popup window as a fraction of the terminal width.
@@ -131,7 +131,7 @@ Valid keys for {opts.summary}:
         Defaults to: `0.50`
     min_coverage: ~
         Coverage percentage threshold. Files below this value are highlighted
-        with `summary_fail`, files above with `summary_pass`.
+        with `report_fail`, files above with `report_pass`.
         Defaults to: `80.0`
     borders: ~
         Border characters for the popup. See plenary window API.
@@ -178,7 +178,7 @@ COMMANDS                                              *nvim-coverage-commands*
     Remove signs, clear the cached report, stop the file watcher, and disable
     virtual text and branch overlay.
 
-:CoverageSummary                                            *:CoverageSummary*
+:CoverageReport                                            *:CoverageReport*
     Open the coverage summary popup. Requires a prior |:CoverageLoad|.
 
 :CoverageToggleLineHits                            *:CoverageToggleLineHits*
@@ -202,6 +202,12 @@ COMMANDS                                              *nvim-coverage-commands*
     type in the current buffer, sorted by line number. Opens the location list.
     {sign_type} is `uncovered` (default) or `partial`.
     Requires a prior |:CoverageLoad|.
+
+:CoverageBrowser                                    *:CoverageBrowser*
+    Generate an HTML coverage report from the loaded lcov file using `genhtml`
+    and open `index.html` in the system browser (`open` on macOS, `xdg-open`
+    on Linux). Requires a prior |:CoverageLoad|.
+    Only registered when `genhtml` is found on $PATH at startup.
 
 
 ================================================================================
@@ -233,8 +239,8 @@ coverage.clear()
     Remove signs, clear the cached report, stop the file watcher, and disable
     virtual text and branch overlay.
 
-                                                         *coverage.summary()*
-coverage.summary()
+                                                         *coverage.report()*
+coverage.report()
     Open the coverage summary popup.
 
     Summary popup keybindings:
@@ -284,6 +290,12 @@ coverage.jump_prev({sign_type})
     Jump to the previous sign of {sign_type} in the current buffer.
     {sign_type} is one of `"covered"`, `"uncovered"`, `"partial"`.
     Defaults to `"covered"`.
+
+                                                    *coverage.browser()*
+coverage.browser()
+    Generate an HTML report from the loaded lcov file using `genhtml` and open
+    it in the system browser. Requires `genhtml` on $PATH and a prior
+    |coverage.load()|.
 
 
 ================================================================================

@@ -1,6 +1,6 @@
 local M = {}
 
-local report = require("coverage.report")
+local report = require("coverage.cache")
 
 --- Populates the quickfix list with one entry per file showing coverage summary.
 --- @param filter? "uncovered" When given, only includes files with uncovered lines.

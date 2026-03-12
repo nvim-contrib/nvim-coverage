@@ -103,19 +103,19 @@ require("coverage").setup({
     covered             = { fg = "#B7F071" },
     uncovered           = { fg = "#F07178" },
     partial             = { fg = "#AA71F0" },
-    summary_border      = { link = "FloatBorder" },
-    summary_normal      = { link = "NormalFloat" },
-    summary_cursor_line = { link = "CursorLine" },
-    summary_header      = { style = "bold,underline", sp = "fg" },
-    summary_pass        = { link = "CoverageCovered" },
-    summary_fail        = { link = "CoverageUncovered" },
+    report_border      = { link = "FloatBorder" },
+    report_normal      = { link = "NormalFloat" },
+    report_cursor_line = { link = "CursorLine" },
+    report_header      = { style = "bold,underline", sp = "fg" },
+    report_pass        = { link = "CoverageCovered" },
+    report_fail        = { link = "CoverageUncovered" },
     line_hits           = { link = "Comment" },
   },
 
-  summary = {
+  report = {
     width        = 0.70,
     height       = 0.50,
-    min_coverage = 80.0, -- threshold for pass/fail highlight in summary
+    min_coverage = 80.0, -- threshold for pass/fail highlight in report
   },
 
   line_hits = {
@@ -137,11 +137,12 @@ require("coverage").setup({
 | `:CoverageHide` | Hide signs |
 | `:CoverageToggle` | Toggle sign visibility |
 | `:CoverageClear` | Remove signs, clear cache, stop file watcher |
-| `:CoverageSummary` | Open the summary popup |
+| `:CoverageReport` | Open the summary popup |
 | `:CoverageToggleLineHits` | Toggle virtual text hit counts per line |
 | `:CoverageToggleBranchHits` | Toggle branch overlay popup on partial lines |
 | `:CoverageQuickfix [uncovered]` | Populate quickfix list with per-file coverage summary |
 | `:CoverageLoclist [uncovered\|partial]` | Populate location list with lines of given type in current buffer |
+| `:CoverageBrowser` | Generate HTML report via `genhtml` and open in browser (registered only if `genhtml` is on `$PATH`) |
 
 ### Lua API
 
@@ -160,7 +161,7 @@ coverage.toggle()
 coverage.clear()
 
 -- summary popup
-coverage.summary()
+coverage.report()
 
 -- virtual text — shows execution hit counts (e.g. × 42) on every instrumented line
 coverage.toggle_line_hits()

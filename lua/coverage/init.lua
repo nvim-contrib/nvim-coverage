@@ -3,8 +3,8 @@ local M = {}
 local config       = require("coverage.config")
 local signs        = require("coverage.signs")
 local highlight    = require("coverage.highlight")
-local summary      = require("coverage.summary")
-local report       = require("coverage.report")
+local summary      = require("coverage.report")
+local report       = require("coverage.cache")
 local watch        = require("coverage.watch")
 local util         = require("coverage.util")
 local virtual_text = require("coverage.virtual_text")
@@ -25,10 +25,13 @@ M.setup = function(user_opts)
     command! CoverageHide lua require('coverage').hide()
     command! CoverageToggle lua require('coverage').toggle()
     command! CoverageClear lua require('coverage').clear()
-    command! CoverageSummary lua require('coverage').summary()
+    command! CoverageReport lua require('coverage').report()
     command! CoverageToggleLineHits lua require('coverage').toggle_line_hits()
     command! CoverageToggleBranchHits lua require('coverage').toggle_branch_hits()
     ]])
+        if vim.fn.executable("genhtml") == 1 then
+            vim.cmd([[command! CoverageBrowser lua require('coverage').browser()]])
+        end
         vim.api.nvim_create_user_command("CoverageLoad", function(opts)
             if opts.bang then
                 pick_and_load(nil)
@@ -110,7 +113,7 @@ M.load = function(file, place)
             vim.schedule(config.opts.on_load)
         end
         local data = util.lcov_to_table(p)
-        report.set(data)
+        report.set(data, file)
         local sign_list = signs.build(data)
         if place or signs.is_enabled() then
             signs.place(sign_list)
@@ -144,8 +147,8 @@ M.clear = function()
     watch.stop()
 end
 
---- Displays a pop-up with a coverage summary report.
-M.summary = summary.show
+--- Displays a pop-up with a coverage report.
+M.report = summary.show
 
 --- Toggles branch overlay popup. Shows per-branch execution counts when cursor is on a partial line.
 M.toggle_branch_hits = function()
@@ -191,6 +194,30 @@ end
 --- @param sign_type? "covered"|"uncovered"|"partial" Defaults to "covered"
 M.jump_prev = function(sign_type)
     signs.jump(sign_type, -1)
+end
+
+--- Generates an HTML coverage report from the loaded lcov file and opens it in the browser.
+--- Requires genhtml to be installed. No-op if no report is loaded.
+M.browser = function()
+    local lcov_file = report.get_file()
+    if lcov_file == nil then
+        vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
+        return
+    end
+
+    local tmpdir = vim.fn.tempname()
+    vim.fn.mkdir(tmpdir, "p")
+
+    vim.fn.jobstart({ "genhtml", lcov_file, "-o", tmpdir }, {
+        on_exit = function(_, code)
+            if code ~= 0 then
+                vim.notify("genhtml failed (exit code " .. code .. ")", vim.log.levels.ERROR)
+                return
+            end
+            local opener = vim.fn.has("mac") == 1 and "open" or "xdg-open"
+            vim.fn.jobstart({ opener, tmpdir .. "/index.html" })
+        end,
+    })
 end
 
 return M

@@ -1,6 +1,6 @@
 local M = {}
 
-local report = require("coverage.report")
+local report = require("coverage.cache")
 
 local float_win = nil
 local float_bufnr = nil
@@ -62,11 +62,11 @@ local show_for_line = function(lnum, branches)
     vim.api.nvim_win_set_option(
         float_win,
         "winhl",
-        "Normal:CoverageSummaryNormal,FloatBorder:CoverageSummaryBorder"
+        "Normal:CoverageReportNormal,FloatBorder:CoverageReportBorder"
     )
 
     -- highlight header
-    vim.api.nvim_buf_add_highlight(float_bufnr, -1, "CoverageSummaryHeader", 0, 0, -1)
+    vim.api.nvim_buf_add_highlight(float_bufnr, -1, "CoverageReportHeader", 0, 0, -1)
 
     -- highlight individual branch lines
     for i, b in ipairs(branches) do
