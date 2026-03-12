@@ -212,26 +212,30 @@ local function render(bufnr, rects, W, H)
 		table.insert(lines, string.rep(" ", W))
 	end
 
-	-- Write text into blocks and collect highlight calls
+	-- Write text into blocks and collect highlight calls.
+	-- Each block is inset by 1 col on the right and 1 row on the bottom so the
+	-- terminal background shows through as a 1-char gap between adjacent blocks.
 	local highlights = {} -- {row, col, w, hl}
 	for _, rect in ipairs(rects) do
-		local hl = hl_for_pct(rect.pct)
+		local hl   = hl_for_pct(rect.pct)
+		local iw   = math.max(1, rect.w - 1) -- inset width  (gap on right)
+		local ih   = math.max(1, rect.h - 1) -- inset height (gap on bottom)
 
-		-- Register highlights for every row of this block
-		for r = rect.row, rect.row + rect.h - 1 do
-			table.insert(highlights, { row = r, col = rect.col, w = rect.w, hl = hl })
+		-- Highlight the inset area only
+		for r = rect.row, rect.row + ih - 1 do
+			table.insert(highlights, { row = r, col = rect.col, w = iw, hl = hl })
 		end
 
-		-- Write label: shortened filename + pct
+		-- Write label inside the inset area
 		local pct_str = string.format("%.0f%%", rect.pct)
-		local name_w = rect.w - 1 -- leave 1 char padding on right
-		local short = shorten_name(rect.filename, name_w)
+		local name_w  = iw - 1 -- 1-char left padding
+		local short   = shorten_name(rect.filename, name_w)
 
-		if rect.h >= 2 then
-			write_text(lines, rect.row, rect.col, rect.w, " " .. short)
-			write_text(lines, rect.row + 1, rect.col, rect.w, " " .. pct_str)
-		elseif rect.w >= 6 then
-			write_text(lines, rect.row, rect.col, rect.w, " " .. short .. " " .. pct_str)
+		if ih >= 2 then
+			write_text(lines, rect.row,     rect.col, iw, " " .. short)
+			write_text(lines, rect.row + 1, rect.col, iw, " " .. pct_str)
+		elseif iw >= 6 then
+			write_text(lines, rect.row, rect.col, iw, " " .. short .. " " .. pct_str)
 		end
 	end
 
