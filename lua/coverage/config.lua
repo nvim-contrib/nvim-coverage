@@ -18,7 +18,7 @@ local M = {
 --- @field on_load fun() callback after coverage is loaded
 --- @field signs SignsConfig
 --- @field sign_group string name of the sign group (:h sign_placelist)
---- @field summary SummaryOpts
+--- @field report ReportOpts
 --- @field line_hits LineHitsOpts
 --- @field file string|string[]|nil path or list of paths to the lcov file (first existing wins)
 local defaults = {
@@ -32,23 +32,23 @@ local defaults = {
     --- @field covered Highlight
     --- @field uncovered Highlight
     --- @field partial Highlight
-    --- @field summary_border Highlight
-    --- @field summary_normal Highlight
-    --- @field summary_cursor_line Highlight
-    --- @field summary_header Highlight
-    --- @field summary_pass Highlight
-    --- @field summary_fail Highlight
+    --- @field report_border Highlight
+    --- @field report_normal Highlight
+    --- @field report_cursor_line Highlight
+    --- @field report_header Highlight
+    --- @field report_pass Highlight
+    --- @field report_fail Highlight
     --- @field line_hits Highlight
     highlights = {
         covered = { fg = "#B7F071" },
         uncovered = { fg = "#F07178" },
         partial = { fg = "#AA71F0" },
-        summary_border = { link = "FloatBorder" },
-        summary_normal = { link = "NormalFloat" },
-        summary_cursor_line = { link = "CursorLine" },
-        summary_header = { style = "bold,underline", sp = "fg" },
-        summary_pass = { link = "CoverageCovered" },
-        summary_fail = { link = "CoverageUncovered" },
+        report_border = { link = "FloatBorder" },
+        report_normal = { link = "NormalFloat" },
+        report_cursor_line = { link = "CursorLine" },
+        report_header = { style = "bold,underline", sp = "fg" },
+        report_pass = { link = "CoverageCovered" },
+        report_fail = { link = "CoverageUncovered" },
         line_hits = { link = "Comment" },
     },
     on_load = nil,
@@ -64,11 +64,11 @@ local defaults = {
     },
     sign_group = "coverage",
 
-    --- @class SummaryOpts
+    --- @class ReportOpts
     --- @field width number
     --- @field height number
     --- @field min_coverage number
-    summary = {
+    report = {
         width = 0.70,
         height = 0.50,
         borders = {
@@ -80,7 +80,7 @@ local defaults = {
             botleft = "╰",
             botright = "╯",
             bot = "─",
-            highlight = "Normal:CoverageSummaryBorder",
+            highlight = "Normal:CoverageReportBorder",
         },
         window = {},
         min_coverage = 80.0,
