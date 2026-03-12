@@ -40,4 +40,4 @@ luac.out
 *.hex
 
 # VHS tapes (local only)
-*.tape
+tapes/
