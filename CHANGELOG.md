@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.6.0](https://github.com/nvim-contrib/nvim-coverage/compare/v0.5.0...v0.6.0) (2026-03-12)
+
+
+### Features
+
+* add CoverageHeatmap text-mode strip treemap ([#27](https://github.com/nvim-contrib/nvim-coverage/issues/27)) ([3fcf1bd](https://github.com/nvim-contrib/nvim-coverage/commit/3fcf1bdbcdb96d3fbdf66e7aef92219b584d6c66))
+* add CoverageLoad! bang for interactive lcov file picker ([#23](https://github.com/nvim-contrib/nvim-coverage/issues/23)) ([1c6e05d](https://github.com/nvim-contrib/nvim-coverage/commit/1c6e05d9ddfb5e2a79c09440b03fe785487b745d))
+* add CoverageOpenHtml to open genhtml report in browser ([#25](https://github.com/nvim-contrib/nvim-coverage/issues/25)) ([c741b24](https://github.com/nvim-contrib/nvim-coverage/commit/c741b24aeb9a6585d07d5743871d142089c55719))
+* ship built-in neotest consumer for Python coverage ([0259bb3](https://github.com/nvim-contrib/nvim-coverage/commit/0259bb31cf0b52e88c082fd9bde265028071013b))
+
+
+### Bug Fixes
+
+* add 1-char gap between heatmap blocks via highlight inset ([e3ca3e3](https://github.com/nvim-contrib/nvim-coverage/commit/e3ca3e3dc494bb085ed71c504fe565f609d2a387))
+* add rounded border and centered title to heatmap float ([b9b23d6](https://github.com/nvim-contrib/nvim-coverage/commit/b9b23d6eb6102e92b9f82796808e1d967e95bd74))
+* clean up heatmap module bugs ([5e6e7d0](https://github.com/nvim-contrib/nvim-coverage/commit/5e6e7d097d5d2adda71d92313c7d457f49470d62))
+* make report popup opaque and center table content ([8687813](https://github.com/nvim-contrib/nvim-coverage/commit/868781309266f8d4fb7a550add2b0b92986006b4))
+* move get_padding_width after get_filename_width (Lua scoping) ([2b48f51](https://github.com/nvim-contrib/nvim-coverage/commit/2b48f51d2779c28bbd60b8083fa3b32739508124))
+* move pick_and_load above M.setup so it is in scope when called ([cdb9f73](https://github.com/nvim-contrib/nvim-coverage/commit/cdb9f73c270efc50ef048acd21625658f15d3642))
+* remove heatmap border for cleaner full-screen UI ([8ac1705](https://github.com/nvim-contrib/nvim-coverage/commit/8ac1705c52730a69ecd6e9ca9ade37aba2ae7262))
+* remove stray blank line in M.load ([e63c945](https://github.com/nvim-contrib/nvim-coverage/commit/e63c945986ecb795d953f5db3f0858733e820715))
+* **spec:** update module paths after coverage.report → cache rename ([8e6b703](https://github.com/nvim-contrib/nvim-coverage/commit/8e6b7030898eb1aeea55689023a6b2cb4295589c))
+* **tests:** update fixture paths from spec/ to tests/ ([01851f0](https://github.com/nvim-contrib/nvim-coverage/commit/01851f05871fd0216d5c77f5f16b21548b8fed99))
+* use relative paths and correct title in coverage report ([f7bd69d](https://github.com/nvim-contrib/nvim-coverage/commit/f7bd69d25b9611c14e9330b80612b7725e2b6e06))
+
 ## [0.5.0](https://github.com/nvim-contrib/nvim-coverage/compare/v0.4.0...v0.5.0) (2026-03-11)
 
 
