@@ -21,7 +21,6 @@ M.setup = function(user_opts)
 
     if config.opts.commands then
         vim.cmd([[
-    command! -nargs=? CoverageLoad lua require('coverage').load(<f-args>)
     command! CoverageShow lua require('coverage').show()
     command! CoverageHide lua require('coverage').hide()
     command! CoverageToggle lua require('coverage').toggle()
@@ -30,6 +29,14 @@ M.setup = function(user_opts)
     command! CoverageToggleLineHits lua require('coverage').toggle_line_hits()
     command! CoverageToggleBranchHits lua require('coverage').toggle_branch_hits()
     ]])
+        vim.api.nvim_create_user_command("CoverageLoad", function(opts)
+            if opts.bang then
+                pick_and_load(nil)
+            else
+                local file = opts.args ~= "" and opts.args or nil
+                require("coverage").load(file)
+            end
+        end, { nargs = "?", bang = true })
         vim.api.nvim_create_user_command("CoverageQuickfix", function(opts)
             require("coverage").quickfix(opts.args ~= "" and opts.args or nil)
         end, { nargs = "?" })
@@ -57,10 +64,36 @@ local resolve_file = function(file)
     return nil
 end
 
+--- Opens vim.ui.select with all *.info files found under cwd, then loads the chosen file.
+--- @param place? boolean true to immediately place signs
+local pick_and_load = function(place)
+    local cwd = vim.fn.getcwd()
+    local candidates = vim.fn.globpath(cwd, "**/*.info", false, true)
+    if #candidates == 0 then
+        vim.notify("No *.info files found under " .. cwd, vim.log.levels.INFO)
+        return
+    end
+    if #candidates == 1 then
+        M.load(candidates[1], place)
+        return
+    end
+    -- Make paths relative for readability in the picker
+    local rel = {}
+    for _, p in ipairs(candidates) do
+        table.insert(rel, p:sub(#cwd + 2))
+    end
+    vim.ui.select(rel, { prompt = "Select coverage file:" }, function(choice)
+        if choice then
+            M.load(cwd .. "/" .. choice, place)
+        end
+    end)
+end
+
 --- Loads an lcov file and optionally places signs immediately.
 --- @param file? string|string[] path(s) to the lcov file (defaults to config.opts.file)
 --- @param place? boolean true to immediately place signs
 M.load = function(file, place)
+
     file = resolve_file(file) or resolve_file(config.opts.file)
     if file == nil then
         vim.notify("A path to the lcov file was not supplied.", vim.log.levels.INFO)
