@@ -144,14 +144,14 @@ require("coverage").setup({
 | `:CoverageReport` | Open the summary popup |
 | `:CoverageHeatmap` | Open full-screen treemap — files sized by LOC, colored by coverage % |
 
-![Coverage Heatmap](doc/img/heatmap.gif)
+![Coverage Heatmap](doc/img/heatmap.webp)
 | `:CoverageToggleLineHits` | Toggle virtual text hit counts per line |
 | `:CoverageToggleBranchHits` | Toggle branch overlay popup on partial lines |
 | `:CoverageQuickfix [uncovered]` | Populate quickfix list with per-file coverage summary |
 | `:CoverageLoclist [uncovered\|partial]` | Populate location list with lines of given type in current buffer |
 | `:CoverageBrowser` | Generate HTML report via `genhtml` and open in browser (registered only if `genhtml` is on `$PATH`) |
 
-![Coverage Report](doc/img/report.gif)
+![Coverage Report](doc/img/report.webp)
 
 ### Lua API
 
