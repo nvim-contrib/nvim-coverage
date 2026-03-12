@@ -139,11 +139,15 @@ require("coverage").setup({
 | `:CoverageClear` | Remove signs, clear cache, stop file watcher |
 | `:CoverageReport` | Open the summary popup |
 | `:CoverageHeatmap` | Open full-screen treemap — files sized by LOC, colored by coverage % |
+
+![Coverage Heatmap](doc/img/heatmap.gif)
 | `:CoverageToggleLineHits` | Toggle virtual text hit counts per line |
 | `:CoverageToggleBranchHits` | Toggle branch overlay popup on partial lines |
 | `:CoverageQuickfix [uncovered]` | Populate quickfix list with per-file coverage summary |
 | `:CoverageLoclist [uncovered\|partial]` | Populate location list with lines of given type in current buffer |
 | `:CoverageBrowser` | Generate HTML report via `genhtml` and open in browser (registered only if `genhtml` is on `$PATH`) |
+
+![Coverage Report](doc/img/report.gif)
 
 ### Lua API
 
@@ -194,6 +198,8 @@ coverage.jump_prev("uncovered")
 | `<CR>` | Open file under cursor |
 | `?` | Toggle help |
 | `q` / `<Esc>` | Close |
+
+![Branch Overlay](doc/img/branch.png)
 
 ### Quickfix / loclist workflow
 
