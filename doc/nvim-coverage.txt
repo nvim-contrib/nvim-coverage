@@ -64,10 +64,6 @@ Valid keys for {opts}:
         })
 <
 
-    sign_group: ~
-        Name of the sign group used when placing signs. See |sign-group|.
-        Defaults to: `"coverage"`
-
                                                          *coverage.highlights*
 Valid keys for {opts.highlights}:
 
@@ -83,27 +79,6 @@ Valid keys for {opts.highlights}:
     partial: ~
         Highlight for partially covered lines (branch coverage).
         Defaults to: `{ fg = "#AA71F0" }`
-    report_border: ~
-        Border highlight for the summary popup.
-        Defaults to: `{ link = "FloatBorder" }`
-    report_normal: ~
-        Normal text highlight for the summary popup.
-        Defaults to: `{ link = "NormalFloat" }`
-    report_cursor_line: ~
-        Cursor line highlight for the summary popup.
-        Defaults to: `{ link = "CursorLine" }`
-    report_header: ~
-        Header row highlight for the summary popup.
-        Defaults to: `{ style = "bold,underline", sp = "fg" }`
-    report_pass: ~
-        Highlight for files above the min_coverage threshold.
-        Defaults to: `{ link = "CoverageCovered" }`
-    report_fail: ~
-        Highlight for files below the min_coverage threshold.
-        Defaults to: `{ link = "CoverageUncovered" }`
-    line_hits: ~
-        Highlight for virtual text hit counts.
-        Defaults to: `{ link = "Comment" }`
 
                                                               *coverage.signs*
 Valid keys for {opts.signs}:
@@ -118,6 +93,10 @@ Valid keys for {opts.signs}:
         Sign for partially covered lines.
         Defaults to: `{ hl = "CoveragePartial", text = "▎" }`
 
+    group: ~
+        Name of the sign group used when placing signs. See |sign-group|.
+        Defaults to: `"coverage"`
+
     Each sign also accepts an optional `priority` key. See |sign-priority|.
 
                                                              *coverage.report*
@@ -131,12 +110,36 @@ Valid keys for {opts.report}:
         Defaults to: `0.50`
     min_coverage: ~
         Coverage percentage threshold. Files below this value are highlighted
-        with `report_fail`, files above with `report_pass`.
+        with `report.highlights.fail`, files above with `report.highlights.pass`.
         Defaults to: `80.0`
     borders: ~
         Border characters for the popup. See plenary window API.
     window: ~
         Additional window options passed to the popup. See plenary window API.
+
+                                                   *coverage.report.highlights*
+Valid keys for {opts.report.highlights}:
+
+    Each highlight group accepts: `fg`, `bg`, `sp`, `style`, `link`.
+
+    border: ~
+        Border highlight for the summary popup.
+        Defaults to: `{ link = "FloatBorder" }`
+    normal: ~
+        Normal text highlight for the summary popup.
+        Defaults to: `{ link = "NormalFloat" }`
+    cursor_line: ~
+        Cursor line highlight for the summary popup.
+        Defaults to: `{ link = "CursorLine" }`
+    header: ~
+        Header row highlight for the summary popup.
+        Defaults to: `{ style = "bold,underline", sp = "fg" }`
+    pass: ~
+        Highlight for files above the min_coverage threshold.
+        Defaults to: `{ link = "CoverageCovered" }`
+    fail: ~
+        Highlight for files below the min_coverage threshold.
+        Defaults to: `{ link = "CoverageUncovered" }`
 
                                                            *coverage.line_hits*
 Valid keys for {opts.line_hits}:
@@ -150,6 +153,11 @@ Valid keys for {opts.line_hits}:
         Where to place the virtual text. One of `"eol"`, `"right_align"`,
         or `"inline"`. See |nvim_buf_set_extmark()|.
         Defaults to: `"eol"`
+
+    highlight: ~
+        Highlight applied to the virtual text hit counts.
+        Accepts: `fg`, `bg`, `sp`, `style`, `link`.
+        Defaults to: `{ link = "Comment" }`
 
 
 ================================================================================

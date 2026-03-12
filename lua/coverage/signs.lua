@@ -59,7 +59,7 @@ end
 
 --- Unplaces all coverage signs.
 M.unplace = function()
-	vim.fn.sign_unplace(config.opts.sign_group)
+	vim.fn.sign_unplace(config.opts.signs.group)
 	enabled = false
 end
 
@@ -98,7 +98,7 @@ M.jump = function(sign_type, direction)
 	if not enabled or cached_signs == nil then
 		return
 	end
-	local placed = vim.fn.sign_getplaced("", { group = config.opts.sign_group })
+	local placed = vim.fn.sign_getplaced("", { group = config.opts.signs.group })
 	if #placed == 0 then
 		return
 	end
@@ -116,10 +116,10 @@ M.jump = function(sign_type, direction)
 
 	for _, sign in ipairs(placed_signs) do
 		if direction > 0 and sign.lnum > current_lnum and sign_name == sign.name then
-			vim.fn.sign_jump(sign.id, config.opts.sign_group, "")
+			vim.fn.sign_jump(sign.id, config.opts.signs.group, "")
 			return
 		elseif direction < 0 and sign.lnum < current_lnum and sign_name == sign.name then
-			vim.fn.sign_jump(sign.id, config.opts.sign_group, "")
+			vim.fn.sign_jump(sign.id, config.opts.signs.group, "")
 			return
 		end
 	end
@@ -131,7 +131,7 @@ end
 M.new_covered = function(buffer, lnum)
 	return {
 		buffer = buffer,
-		group = config.opts.sign_group,
+		group = config.opts.signs.group,
 		lnum = lnum,
 		name = name("covered"),
 		priority = config.opts.signs.covered.priority or default_priority,
@@ -144,7 +144,7 @@ end
 M.new_uncovered = function(buffer, lnum)
 	return {
 		buffer = buffer,
-		group = config.opts.sign_group,
+		group = config.opts.signs.group,
 		lnum = lnum,
 		name = name("uncovered"),
 		priority = config.opts.signs.uncovered.priority or default_priority,
@@ -161,7 +161,7 @@ M.new_partial = function(buffer, lnum)
 	end
 	return {
 		buffer = buffer,
-		group = config.opts.sign_group,
+		group = config.opts.signs.group,
 		lnum = lnum,
 		name = name("partial"),
 		priority = priority,

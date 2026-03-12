@@ -94,33 +94,37 @@ require("coverage").setup({
   on_load = nil,
 
   signs = {
-    covered  = { hl = "CoverageCovered",   text = "▎" },
+    covered   = { hl = "CoverageCovered",   text = "▎" },
     uncovered = { hl = "CoverageUncovered", text = "▎" },
-    partial  = { hl = "CoveragePartial",   text = "▎" },
+    partial   = { hl = "CoveragePartial",   text = "▎" },
+    group     = "coverage",  -- sign group name (:h sign-group)
   },
 
   highlights = {
-    covered             = { fg = "#B7F071" },
-    uncovered           = { fg = "#F07178" },
-    partial             = { fg = "#AA71F0" },
-    report_border      = { link = "FloatBorder" },
-    report_normal      = { link = "NormalFloat" },
-    report_cursor_line = { link = "CursorLine" },
-    report_header      = { style = "bold,underline", sp = "fg" },
-    report_pass        = { link = "CoverageCovered" },
-    report_fail        = { link = "CoverageUncovered" },
-    line_hits           = { link = "Comment" },
+    covered   = { fg = "#B7F071" },
+    uncovered = { fg = "#F07178" },
+    partial   = { fg = "#AA71F0" },
   },
 
   report = {
     width        = 0.70,
     height       = 0.50,
     min_coverage = 80.0, -- threshold for pass/fail highlight in report
+    window       = {},   -- extra options passed to the popup window
+    highlights = {
+      border      = { link = "FloatBorder" },
+      normal      = { link = "NormalFloat" },
+      cursor_line = { link = "CursorLine" },
+      header      = { style = "bold,underline", sp = "fg" },
+      pass        = { link = "CoverageCovered" },
+      fail        = { link = "CoverageUncovered" },
+    },
   },
 
   line_hits = {
-    enabled  = false,           -- show hit counts automatically after load
-    position = "eol",           -- "eol" | "right_align" | "inline"
+    enabled   = false,  -- show hit counts automatically after load
+    position  = "eol",  -- "eol" | "right_align" | "inline"
+    highlight = { link = "Comment" },
   },
 })
 ```

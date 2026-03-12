@@ -25,6 +25,7 @@ coverage.neotest.go	nvim-coverage.txt	/*coverage.neotest.go*
 coverage.quickfix()	nvim-coverage.txt	/*coverage.quickfix()*
 coverage.report	nvim-coverage.txt	/*coverage.report*
 coverage.report()	nvim-coverage.txt	/*coverage.report()*
+coverage.report.highlights	nvim-coverage.txt	/*coverage.report.highlights*
 coverage.setup()	nvim-coverage.txt	/*coverage.setup()*
 coverage.show()	nvim-coverage.txt	/*coverage.show()*
 coverage.signs	nvim-coverage.txt	/*coverage.signs*

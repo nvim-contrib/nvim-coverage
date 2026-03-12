@@ -3,7 +3,7 @@
 local config = require("coverage.config")
 local signs  = require("coverage.signs")
 
--- Minimal setup so sign_group and priorities are available
+-- Minimal setup so signs.group and priorities are available
 config.setup()
 
 local make_data = function(opts)
