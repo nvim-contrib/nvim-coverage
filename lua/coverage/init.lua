@@ -93,7 +93,6 @@ end
 --- @param file? string|string[] path(s) to the lcov file (defaults to config.opts.file)
 --- @param place? boolean true to immediately place signs
 M.load = function(file, place)
-
     file = resolve_file(file) or resolve_file(config.opts.file)
     if file == nil then
         vim.notify("A path to the lcov file was not supplied.", vim.log.levels.INFO)
