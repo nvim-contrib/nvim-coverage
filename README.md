@@ -224,13 +224,33 @@ require("neotest").setup({
 })
 ```
 
-Both consumers can be combined:
+**Python consumer** — converts `.coverage` (coverage.py database) to `coverage/lcov.info` via `python -m coverage lcov`, then reloads. Requires [`coverage[toml]`](https://coverage.readthedocs.io/) and [`pytest-cov`](https://pytest-cov.readthedocs.io/) to be installed.
+
+Enable coverage collection by adding to your `pyproject.toml`:
+
+```toml
+[tool.pytest.ini_options]
+addopts = "--cov"
+```
+
+Then register the consumer:
 
 ```lua
 require("neotest").setup({
   consumers = {
-    coverage    = require("coverage.neotest"),
-    coverage_go = require("coverage.neotest.go"),
+    coverage_python = require("coverage.neotest.python"),
+  },
+})
+```
+
+All consumers can be combined:
+
+```lua
+require("neotest").setup({
+  consumers = {
+    coverage        = require("coverage.neotest"),
+    coverage_go     = require("coverage.neotest.go"),
+    coverage_python = require("coverage.neotest.python"),
   },
 })
 ```
