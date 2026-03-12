@@ -5,11 +5,10 @@
 local M = {}
 
 local cache = require("coverage.cache")
-local config = require("coverage.config")
 local Path = require("plenary.path")
 
 local ns = vim.api.nvim_create_namespace("coverage_heatmap")
-local popup_bufnr = nil
+local augroup = vim.api.nvim_create_augroup("CoverageHeatmap", { clear = false })
 local popup_win = nil
 local layout_data = nil -- last computed layout, used for <CR> navigation
 
@@ -40,22 +39,23 @@ local function pct_to_bg(pct)
 	return string.format("#%02x%02x%02x", r, g, b)
 end
 
---- Create all heatmap highlight groups (called once per session / colorscheme change).
-local hl_created = false
+--- Create all heatmap highlight groups. Re-runs on ColorScheme change.
 local function create_highlights()
 	for i = 0, 20 do
 		local pct = i * 5
 		local name = "CoverageHeatmap" .. pct
 		vim.api.nvim_set_hl(0, name, { bg = pct_to_bg(pct), fg = "#dddddd", default = false })
 	end
-	hl_created = true
 end
+
+-- Recreate highlight groups whenever the colorscheme changes.
+vim.api.nvim_create_autocmd("ColorScheme", {
+	group = augroup,
+	callback = create_highlights,
+})
 
 --- Return the highlight group name for a coverage percentage.
 local function hl_for_pct(pct)
-	if not hl_created then
-		create_highlights()
-	end
 	local bucket = math.floor(pct / 5 + 0.5) * 5
 	bucket = math.max(0, math.min(100, bucket))
 	return "CoverageHeatmap" .. bucket
@@ -197,7 +197,7 @@ local function write_text(lines, row, col, w, text)
 	local t = text:sub(1, w)
 	-- Pad to block width so highlights stay solid
 	t = t .. string.rep(" ", w - #t)
-	local line = lines[row + 1] or string.rep(" ", col + w)
+	local line = lines[row + 1]
 	-- Splice t into the line at [col, col+w)
 	local prefix = line:sub(1, col)
 	local suffix = line:sub(col + w + 1)
@@ -217,9 +217,9 @@ local function render(bufnr, rects, W, H)
 	-- terminal background shows through as a 1-char gap between adjacent blocks.
 	local highlights = {} -- {row, col, w, hl}
 	for _, rect in ipairs(rects) do
-		local hl   = hl_for_pct(rect.pct)
-		local iw   = math.max(1, rect.w - 1) -- inset width  (gap on right)
-		local ih   = math.max(1, rect.h - 1) -- inset height (gap on bottom)
+		local hl = hl_for_pct(rect.pct)
+		local iw = math.max(1, rect.w - 1) -- inset width  (gap on right)
+		local ih = math.max(1, rect.h - 1) -- inset height (gap on bottom)
 
 		-- Highlight the inset area only
 		for r = rect.row, rect.row + ih - 1 do
@@ -228,11 +228,11 @@ local function render(bufnr, rects, W, H)
 
 		-- Write label inside the inset area
 		local pct_str = string.format("%.0f%%", rect.pct)
-		local name_w  = iw - 1 -- 1-char left padding
-		local short   = shorten_name(rect.filename, name_w)
+		local name_w = iw - 1 -- 1-char left padding
+		local short = shorten_name(rect.filename, name_w)
 
 		if ih >= 2 then
-			write_text(lines, rect.row,     rect.col, iw, " " .. short)
+			write_text(lines, rect.row, rect.col, iw, " " .. short)
 			write_text(lines, rect.row + 1, rect.col, iw, " " .. pct_str)
 		elseif iw >= 6 then
 			write_text(lines, rect.row, rect.col, iw, " " .. short .. " " .. pct_str)
@@ -258,7 +258,7 @@ end
 --- Open a full-screen floating window with a rounded border.
 local function open_float()
 	-- Border consumes 2 rows and 2 columns; shrink content area accordingly
-	local width  = vim.o.columns - 2
+	local width = vim.o.columns - 2
 	local height = vim.o.lines - vim.o.cmdheight - 3
 
 	local bufnr = vim.api.nvim_create_buf(false, true)
@@ -267,13 +267,13 @@ local function open_float()
 
 	local win = vim.api.nvim_open_win(bufnr, true, {
 		relative = "editor",
-		row      = 0,
-		col      = 0,
-		width    = width,
-		height   = height,
-		style    = "minimal",
-		border   = "rounded",
-		title    = " Coverage Heatmap ",
+		row = 0,
+		col = 0,
+		width = width,
+		height = height,
+		style = "minimal",
+		border = "rounded",
+		title = " Coverage Heatmap ",
 		title_pos = "center",
 	})
 
@@ -333,14 +333,18 @@ M.show = function()
 	end
 
 	local bufnr, win, W, H = open_float()
-	popup_bufnr = bufnr
 	popup_win = win
 	layout_data = build_layout(files, W, H)
 
 	render(bufnr, layout_data, W, H)
 	set_keymaps(bufnr)
 
-	vim.cmd(string.format("au BufLeave <buffer=%d> lua require('coverage.heatmap').close()", bufnr))
+	vim.api.nvim_create_autocmd("BufLeave", {
+		group = augroup,
+		buffer = bufnr,
+		once = true,
+		callback = M.close,
+	})
 end
 
 --- Open the file under the cursor and close the heatmap.
@@ -360,7 +364,6 @@ M.close = function()
 		vim.api.nvim_win_close(popup_win, true)
 	end
 	popup_win = nil
-	popup_bufnr = nil
 	layout_data = nil
 end
 
