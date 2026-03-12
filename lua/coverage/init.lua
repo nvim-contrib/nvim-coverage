@@ -12,6 +12,31 @@ local overlay      = require("coverage.overlay")
 local quickfix     = require("coverage.quickfix")
 local loclist      = require("coverage.loclist")
 
+--- Opens vim.ui.select with all *.info files found under cwd, then loads the chosen file.
+--- @param place? boolean true to immediately place signs
+local pick_and_load = function(place)
+    local cwd = vim.fn.getcwd()
+    local candidates = vim.fn.globpath(cwd, "**/*.info", false, true)
+    if #candidates == 0 then
+        vim.notify("No *.info files found under " .. cwd, vim.log.levels.INFO)
+        return
+    end
+    if #candidates == 1 then
+        M.load(candidates[1], place)
+        return
+    end
+    -- Make paths relative for readability in the picker
+    local rel = {}
+    for _, p in ipairs(candidates) do
+        table.insert(rel, p:sub(#cwd + 2))
+    end
+    vim.ui.select(rel, { prompt = "Select coverage file:" }, function(choice)
+        if choice then
+            M.load(cwd .. "/" .. choice, place)
+        end
+    end)
+end
+
 --- Setup the coverage plugin.
 --- @param user_opts? Configuration
 M.setup = function(user_opts)
@@ -65,31 +90,6 @@ local resolve_file = function(file)
         end
     end
     return nil
-end
-
---- Opens vim.ui.select with all *.info files found under cwd, then loads the chosen file.
---- @param place? boolean true to immediately place signs
-local pick_and_load = function(place)
-    local cwd = vim.fn.getcwd()
-    local candidates = vim.fn.globpath(cwd, "**/*.info", false, true)
-    if #candidates == 0 then
-        vim.notify("No *.info files found under " .. cwd, vim.log.levels.INFO)
-        return
-    end
-    if #candidates == 1 then
-        M.load(candidates[1], place)
-        return
-    end
-    -- Make paths relative for readability in the picker
-    local rel = {}
-    for _, p in ipairs(candidates) do
-        table.insert(rel, p:sub(#cwd + 2))
-    end
-    vim.ui.select(rel, { prompt = "Select coverage file:" }, function(choice)
-        if choice then
-            M.load(cwd .. "/" .. choice, place)
-        end
-    end)
 end
 
 --- Loads an lcov file and optionally places signs immediately.
