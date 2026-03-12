@@ -251,10 +251,11 @@ end
 -- 4. POPUP MANAGEMENT
 -- =============================================================================
 
---- Open a full-screen floating window.
+--- Open a full-screen floating window with a rounded border.
 local function open_float()
-	local width = vim.o.columns
-	local height = vim.o.lines - vim.o.cmdheight - 1
+	-- Border consumes 2 rows and 2 columns; shrink content area accordingly
+	local width  = vim.o.columns - 2
+	local height = vim.o.lines - vim.o.cmdheight - 3
 
 	local bufnr = vim.api.nvim_create_buf(false, true)
 	vim.api.nvim_buf_set_option(bufnr, "bufhidden", "wipe")
@@ -262,12 +263,14 @@ local function open_float()
 
 	local win = vim.api.nvim_open_win(bufnr, true, {
 		relative = "editor",
-		row = 0,
-		col = 0,
-		width = width,
-		height = height,
-		style = "minimal",
-		border = "none",
+		row      = 0,
+		col      = 0,
+		width    = width,
+		height   = height,
+		style    = "minimal",
+		border   = "rounded",
+		title    = " Coverage Heatmap ",
+		title_pos = "center",
 	})
 
 	vim.api.nvim_win_set_option(win, "cursorline", true)
