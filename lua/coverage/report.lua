@@ -298,7 +298,7 @@ local build = function(data)
 	local files = {}
 	for fname, cov in pairs(data.files) do
 		table.insert(files, {
-			filename = fname,
+			filename = Path:new(fname):make_relative(),
 			statements = cov.summary.num_statements,
 			missing = cov.summary.uncovered_lines,
 			excluded = cov.summary.excluded_lines,
@@ -405,7 +405,7 @@ M.show = function()
 	-- get the current filename before opening a new popup
 	local current_filename = vim.api.nvim_buf_get_name(0)
 	local border_opts = vim.tbl_deep_extend("force", {}, config.opts.report.borders)
-	border_opts.title = "Coverage Summary"
+	border_opts.title = "Coverage Report"
 	if summary.totals ~= nil and summary.totals.coverage ~= nil then
 		border_opts.title = string.format("%s: %.0f%%", border_opts.title, summary.totals.coverage)
 		local hl_group = get_cov_hl_group(summary.totals.coverage)
