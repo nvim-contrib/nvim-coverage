@@ -4,7 +4,7 @@ local Path = require("plenary.path")
 local util = require("coverage.util")
 
 local fixture = function(name)
-    return Path:new(vim.fn.getcwd() .. "/spec/fixtures/" .. name)
+    return Path:new(vim.fn.getcwd() .. "/tests/fixtures/" .. name)
 end
 
 describe("util.lcov_to_table", function()

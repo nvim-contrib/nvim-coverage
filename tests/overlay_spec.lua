@@ -59,7 +59,7 @@ describe("util.lcov_to_table branches field", function()
     local util = require("coverage.util")
 
     local fixture = function(name)
-        return Path:new(vim.fn.getcwd() .. "/spec/fixtures/" .. name)
+        return Path:new(vim.fn.getcwd() .. "/tests/fixtures/" .. name)
     end
 
     it("stores all BRDA lines per line number", function()

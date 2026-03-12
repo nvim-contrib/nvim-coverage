@@ -4,7 +4,7 @@ local coverage = require("coverage")
 local config   = require("coverage.config")
 
 local fixture = function(name)
-    return vim.fn.getcwd() .. "/spec/fixtures/" .. name
+    return vim.fn.getcwd() .. "/tests/fixtures/" .. name
 end
 
 local nonexistent = "/tmp/does-not-exist-nvim-coverage.lcov"
