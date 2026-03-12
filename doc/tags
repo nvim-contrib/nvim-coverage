@@ -1,6 +1,8 @@
 :CoverageClear	nvim-coverage.txt	/*:CoverageClear*
 :CoverageHide	nvim-coverage.txt	/*:CoverageHide*
 :CoverageLoad	nvim-coverage.txt	/*:CoverageLoad*
+:CoverageLoclist	nvim-coverage.txt	/*:CoverageLoclist*
+:CoverageQuickfix	nvim-coverage.txt	/*:CoverageQuickfix*
 :CoverageShow	nvim-coverage.txt	/*:CoverageShow*
 :CoverageSummary	nvim-coverage.txt	/*:CoverageSummary*
 :CoverageToggle	nvim-coverage.txt	/*:CoverageToggle*
@@ -11,7 +13,12 @@ coverage.hide()	nvim-coverage.txt	/*coverage.hide()*
 coverage.highlights	nvim-coverage.txt	/*coverage.highlights*
 coverage.jump_next()	nvim-coverage.txt	/*coverage.jump_next()*
 coverage.jump_prev()	nvim-coverage.txt	/*coverage.jump_prev()*
+coverage.line_hits	nvim-coverage.txt	/*coverage.line_hits*
 coverage.load()	nvim-coverage.txt	/*coverage.load()*
+coverage.loclist()	nvim-coverage.txt	/*coverage.loclist()*
+coverage.neotest	nvim-coverage.txt	/*coverage.neotest*
+coverage.neotest.go	nvim-coverage.txt	/*coverage.neotest.go*
+coverage.quickfix()	nvim-coverage.txt	/*coverage.quickfix()*
 coverage.setup()	nvim-coverage.txt	/*coverage.setup()*
 coverage.show()	nvim-coverage.txt	/*coverage.show()*
 coverage.signs	nvim-coverage.txt	/*coverage.signs*
@@ -20,8 +27,8 @@ coverage.summary()	nvim-coverage.txt	/*coverage.summary()*
 coverage.toggle()	nvim-coverage.txt	/*coverage.toggle()*
 coverage.toggle_branch_hits()	nvim-coverage.txt	/*coverage.toggle_branch_hits()*
 coverage.toggle_line_hits()	nvim-coverage.txt	/*coverage.toggle_line_hits()*
-coverage.virtual_text	nvim-coverage.txt	/*coverage.virtual_text*
 nvim-coverage	nvim-coverage.txt	/*nvim-coverage*
 nvim-coverage-commands	nvim-coverage.txt	/*nvim-coverage-commands*
 nvim-coverage-lua-api	nvim-coverage.txt	/*nvim-coverage-lua-api*
+nvim-coverage-neotest	nvim-coverage.txt	/*nvim-coverage-neotest*
 nvim-coverage-setup	nvim-coverage.txt	/*nvim-coverage-setup*

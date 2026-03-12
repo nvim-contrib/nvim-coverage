@@ -155,10 +155,15 @@ Valid keys for {opts.line_hits}:
 ================================================================================
 COMMANDS                                              *nvim-coverage-commands*
 
-:CoverageLoad [{file}]                                         *:CoverageLoad*
+:CoverageLoad[!] [{file}]                                      *:CoverageLoad*
     Load an lcov file. If {file} is not given, uses the `file` config option.
     Signs are placed immediately if already visible, otherwise cached until
     |:CoverageShow| is called.
+
+    With [!]: open an interactive picker (`vim.ui.select`) over all `*.info`
+    files found under the current working directory. If exactly one file is
+    found it is loaded directly without prompting. Any {file} argument is
+    ignored when [!] is given.
 
 :CoverageShow                                                  *:CoverageShow*
     Show coverage signs. Requires a prior |:CoverageLoad|.
@@ -207,6 +212,7 @@ coverage.load({file}, {place})
     Load an lcov file. If {file} is nil, uses `config.opts.file`.
     When {place} is true, signs are placed immediately; otherwise signs are
     placed only if already visible, else cached until |coverage.show()|.
+    For the interactive file picker use |:CoverageLoad| with [!].
     Also starts the file watcher when `auto_reload.enabled` is true.
 
                                                             *coverage.show()*
