@@ -1,0 +1,4 @@
+mode: set
+github.com/user/pkg/foo.go:10.2,12.5 1 1
+github.com/user/pkg/foo.go:14.2,16.5 1 0
+github.com/user/pkg/bar.go:5.1,7.3 2 3
