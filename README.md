@@ -143,8 +143,6 @@ require("coverage").setup({
 | `:CoverageClear` | Remove signs, clear cache, stop file watcher |
 | `:CoverageReport` | Open the summary popup |
 | `:CoverageHeatmap` | Open full-screen treemap — files sized by LOC, colored by coverage % |
-
-![Coverage Heatmap](doc/img/heatmap.webp)
 | `:CoverageShowLineHits` | Show virtual text hit counts per line |
 | `:CoverageHideLineHits` | Hide virtual text hit counts |
 | `:CoverageToggleLineHits` | Toggle virtual text hit counts per line |
@@ -154,6 +152,8 @@ require("coverage").setup({
 | `:CoverageQuickfix [uncovered]` | Populate quickfix list with per-file coverage summary |
 | `:CoverageLoclist [uncovered\|partial]` | Populate location list with lines of given type in current buffer |
 | `:CoverageBrowser` | Generate HTML report via `genhtml` and open in browser (registered only if `genhtml` is on `$PATH`) |
+
+![Coverage Heatmap](doc/img/heatmap.webp)
 
 ![Coverage Report](doc/img/report.webp)
 
