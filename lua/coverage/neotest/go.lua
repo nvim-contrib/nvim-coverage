@@ -18,32 +18,32 @@
 local go_cov = require("coverage.neotest.go_cov")
 
 local consumer = function(client)
-    client.listeners.results = function(adapter_id, results, partial)
-        if partial then
-            return
-        end
+	client.listeners.results = function(adapter_id, results, partial)
+		if partial then
+			return
+		end
 
-        vim.schedule(function()
-            local cwd = vim.fn.getcwd()
-            local path = cwd .. "/coverage.out"
+		vim.schedule(function()
+			local cwd = vim.fn.getcwd()
+			local path = cwd .. "/coverage.out"
 
-            if vim.fn.filereadable(path) == 0 then
-                local fcwd = vim.fn.expand("%:p:h")
-                local fpath = fcwd .. "/coverage.out"
-                vim.fn.system({ "mv", fpath, path })
-            end
+			if vim.fn.filereadable(path) == 0 then
+				local fcwd = vim.fn.expand("%:p:h")
+				local fpath = fcwd .. "/coverage.out"
+				vim.fn.system({ "mv", "-f", fpath, path })
+			end
 
-            local report = go_cov.to_lcov({ path })
-            if #report == 0 then
-                return
-            end
+			local report = go_cov.to_lcov({ path })
+			if #report == 0 then
+				return
+			end
 
-            local lcov_out = cwd .. "/lcov.info"
-            vim.fn.writefile(report, lcov_out)
-            require("coverage").load(lcov_out, true)
-        end)
-    end
-    return {}
+			local lcov_out = cwd .. "/lcov.info"
+			vim.fn.writefile(report, lcov_out)
+			require("coverage").load(lcov_out, true)
+		end)
+	end
+	return {}
 end
 
 return consumer
