@@ -3,7 +3,7 @@ INTRODUCTION                                                   *nvim-coverage*
 
 nvim-coverage displays code coverage from lcov files directly in the editor.
 It reads a pre-generated lcov file and provides sign column markers, virtual
-text hit counts, a branch overlay popup, a summary popup, and quickfix/loclist
+text hit counts, a branch hints popup, a summary popup, and quickfix/loclist
 navigation. It does not run tests or invoke any external tools itself.
 
   1. Setup................................................|nvim-coverage-setup|
@@ -166,25 +166,25 @@ COMMANDS                                              *nvim-coverage-commands*
 :CoverageLoad[!] [{file}]                                      *:CoverageLoad*
     Load an lcov file. If {file} is not given, uses the `file` config option.
     Signs are placed immediately if already visible, otherwise cached until
-    |:CoverageShowSigns| is called.
+    |:CoverageShowLineSigns| is called.
 
     With [!]: open an interactive picker (`vim.ui.select`) over all `*.info`
     files found under the current working directory. If exactly one file is
     found it is loaded directly without prompting. Any {file} argument is
     ignored when [!] is given.
 
-:CoverageShowSigns                                        *:CoverageShowSigns*
-    Show coverage signs. Requires a prior |:CoverageLoad|.
+:CoverageShowLineSigns                                  *:CoverageShowLineSigns*
+    Show coverage line signs. Requires a prior |:CoverageLoad|.
 
-:CoverageHideSigns                                        *:CoverageHideSigns*
-    Hide coverage signs.
+:CoverageHideLineSigns                                  *:CoverageHideLineSigns*
+    Hide coverage line signs.
 
-:CoverageToggleSigns                                    *:CoverageToggleSigns*
-    Toggle coverage sign visibility.
+:CoverageToggleLineSigns                              *:CoverageToggleLineSigns*
+    Toggle coverage line sign visibility.
 
 :CoverageClear                                                *:CoverageClear*
     Remove signs, clear the cached report, stop the file watcher, and disable
-    virtual text and branch overlay.
+    line hints and branch hints.
 
 :CoverageReport                                            *:CoverageReport*
     Open the coverage summary popup. Requires a prior |:CoverageLoad|.
@@ -195,26 +195,26 @@ COMMANDS                                              *nvim-coverage-commands*
     green). Press `<CR>` to open the file under the cursor, `q` or `<Esc>` to
     close. Requires a prior |:CoverageLoad|.
 
-:CoverageShowLineHits                              *:CoverageShowLineHits*
-    Show virtual text hit counts. Shows execution count for every instrumented
-    line (e.g. `× 42`). Requires a prior |:CoverageLoad|.
+:CoverageShowLineHints                              *:CoverageShowLineHints*
+    Show line hints (virtual text hit counts). Shows execution count for every
+    instrumented line (e.g. `× 42`). Requires a prior |:CoverageLoad|.
 
-:CoverageHideLineHits                              *:CoverageHideLineHits*
-    Hide virtual text hit counts.
+:CoverageHideLineHints                              *:CoverageHideLineHints*
+    Hide line hints.
 
-:CoverageToggleLineHits                            *:CoverageToggleLineHits*
-    Toggle virtual text hit counts on/off. Requires a prior |:CoverageLoad|.
+:CoverageToggleLineHints                            *:CoverageToggleLineHints*
+    Toggle line hints on/off. Requires a prior |:CoverageLoad|.
 
-:CoverageShowBranchOverlay                      *:CoverageShowBranchOverlay*
-    Show branch overlay popup. When enabled, moving the cursor to a partially
+:CoverageShowBranchHints                            *:CoverageShowBranchHints*
+    Show branch hints popup. When enabled, moving the cursor to a partially
     covered line shows a floating window with per-branch execution counts.
     Requires a prior |:CoverageLoad|.
 
-:CoverageHideBranchOverlay                      *:CoverageHideBranchOverlay*
-    Hide branch overlay popup.
+:CoverageHideBranchHints                            *:CoverageHideBranchHints*
+    Hide branch hints popup.
 
-:CoverageToggleBranchOverlay                  *:CoverageToggleBranchOverlay*
-    Toggle branch overlay popup on/off. Requires a prior |:CoverageLoad|.
+:CoverageToggleBranchHints                        *:CoverageToggleBranchHints*
+    Toggle branch hints popup on/off. Requires a prior |:CoverageLoad|.
 
 :CoverageQuickfix [{filter}]                              *:CoverageQuickfix*
     Populate the quickfix list with one entry per file showing coverage
@@ -243,27 +243,28 @@ LUA API                                                *nvim-coverage-lua-api*
 coverage.load({file}, {place})
     Load an lcov file. If {file} is nil, uses `config.opts.file`.
     When {place} is true, signs are placed immediately; otherwise signs are
-    placed only if already visible, else cached until |coverage.show_signs()|.
+    placed only if already visible, else cached until
+    |coverage.show_line_signs()|.
     For the interactive file picker use |:CoverageLoad| with [!].
     Also starts the file watcher when `auto_reload.enabled` is true.
 
-                                                       *coverage.show_signs()*
-coverage.show_signs()
-    Show coverage signs. No-op if coverage has not been loaded or signs are
-    already visible.
+                                                  *coverage.show_line_signs()*
+coverage.show_line_signs()
+    Show coverage line signs. No-op if coverage has not been loaded or signs
+    are already visible.
 
-                                                       *coverage.hide_signs()*
-coverage.hide_signs()
-    Hide coverage signs.
+                                                  *coverage.hide_line_signs()*
+coverage.hide_line_signs()
+    Hide coverage line signs.
 
-                                                     *coverage.toggle_signs()*
-coverage.toggle_signs()
-    Toggle sign visibility.
+                                                *coverage.toggle_line_signs()*
+coverage.toggle_line_signs()
+    Toggle line sign visibility.
 
                                                            *coverage.clear()*
 coverage.clear()
     Remove signs, clear the cached report, stop the file watcher, and disable
-    virtual text and branch overlay.
+    line hints and branch hints.
 
                                                          *coverage.report()*
 coverage.report()
@@ -287,32 +288,33 @@ coverage.heatmap()
         `q`       Close
         `<Esc>`   Close
 
-                                                *coverage.show_line_hits()*
-coverage.show_line_hits()
-    Show virtual text hit counts. Shows execution count for every instrumented
-    line as virtual text (e.g. `× 42`). Requires a prior |coverage.load()|.
+                                               *coverage.show_line_hints()*
+coverage.show_line_hints()
+    Show line hints (virtual text hit counts). Shows execution count for every
+    instrumented line as virtual text (e.g. `× 42`). Requires a prior
+    |coverage.load()|.
 
-                                                *coverage.hide_line_hits()*
-coverage.hide_line_hits()
-    Hide virtual text hit counts.
+                                               *coverage.hide_line_hints()*
+coverage.hide_line_hints()
+    Hide line hints.
 
-                                               *coverage.toggle_line_hits()*
-coverage.toggle_line_hits()
-    Toggle virtual text hit counts. Requires a prior |coverage.load()|.
+                                              *coverage.toggle_line_hints()*
+coverage.toggle_line_hints()
+    Toggle line hints. Requires a prior |coverage.load()|.
 
-                                             *coverage.show_branch_overlay()*
-coverage.show_branch_overlay()
-    Show branch overlay popup. When enabled, moving the cursor to a partially
+                                             *coverage.show_branch_hints()*
+coverage.show_branch_hints()
+    Show branch hints popup. When enabled, moving the cursor to a partially
     covered line shows a floating window with per-branch execution counts.
     Requires a prior |coverage.load()|.
 
-                                             *coverage.hide_branch_overlay()*
-coverage.hide_branch_overlay()
-    Hide branch overlay popup.
+                                             *coverage.hide_branch_hints()*
+coverage.hide_branch_hints()
+    Hide branch hints popup.
 
-                                           *coverage.toggle_branch_overlay()*
-coverage.toggle_branch_overlay()
-    Toggle branch overlay popup. Requires a prior |coverage.load()|.
+                                           *coverage.toggle_branch_hints()*
+coverage.toggle_branch_hints()
+    Toggle branch hints popup. Requires a prior |coverage.load()|.
 
                                                         *coverage.quickfix()*
 coverage.quickfix({filter})
@@ -371,9 +373,8 @@ require("coverage.neotest")
                                                     *coverage.neotest.go*
 require("coverage.neotest.go")
     Go consumer. After tests finish, converts `coverage.out` in the current
-    working directory to `coverage/lcov.info` using `go tool cover`, then
-    reloads coverage. Expects tests to produce a `coverage.out` file (e.g.
-    via `-coverprofile=coverage.out`).
+    working directory to `lcov.info`, then reloads coverage. Expects tests
+    to produce a `coverage.out` file (e.g. via `-coverprofile=coverage.out`).
 
     Usage: >
         require("neotest").setup({

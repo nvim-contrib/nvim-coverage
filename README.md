@@ -137,18 +137,18 @@ require("coverage").setup({
 |---------|-------------|
 | `:CoverageLoad [file]` | Load lcov file and place signs (uses `file` config if no arg) |
 | `:CoverageLoad!` | Open interactive picker over all `*.info` files found under cwd |
-| `:CoverageShowSigns` | Show signs (if previously hidden) |
-| `:CoverageHideSigns` | Hide signs |
-| `:CoverageToggleSigns` | Toggle sign visibility |
+| `:CoverageShowLineSigns` | Show line signs (if previously hidden) |
+| `:CoverageHideLineSigns` | Hide line signs |
+| `:CoverageToggleLineSigns` | Toggle line sign visibility |
 | `:CoverageClear` | Remove signs, clear cache, stop file watcher |
 | `:CoverageReport` | Open the summary popup |
 | `:CoverageHeatmap` | Open full-screen treemap — files sized by LOC, colored by coverage % |
-| `:CoverageShowLineHits` | Show virtual text hit counts per line |
-| `:CoverageHideLineHits` | Hide virtual text hit counts |
-| `:CoverageToggleLineHits` | Toggle virtual text hit counts per line |
-| `:CoverageShowBranchOverlay` | Show branch overlay popup on partial lines |
-| `:CoverageHideBranchOverlay` | Hide branch overlay popup |
-| `:CoverageToggleBranchOverlay` | Toggle branch overlay popup on partial lines |
+| `:CoverageShowLineHints` | Show line hints (virtual text hit counts) |
+| `:CoverageHideLineHints` | Hide line hints |
+| `:CoverageToggleLineHints` | Toggle line hints |
+| `:CoverageShowBranchHints` | Show branch hints popup on partial lines |
+| `:CoverageHideBranchHints` | Hide branch hints popup |
+| `:CoverageToggleBranchHints` | Toggle branch hints popup |
 | `:CoverageQuickfix [uncovered]` | Populate quickfix list with per-file coverage summary |
 | `:CoverageLoclist [uncovered\|partial]` | Populate location list with lines of given type in current buffer |
 | `:CoverageBrowser` | Generate HTML report via `genhtml` and open in browser (registered only if `genhtml` is on `$PATH`) |
@@ -167,10 +167,10 @@ coverage.load()                          -- load from config.file
 coverage.load("path/to/lcov.info")       -- load from explicit path
 coverage.load("path/to/lcov.info", true) -- load and immediately show signs
 
--- signs
-coverage.show_signs()
-coverage.hide_signs()
-coverage.toggle_signs()
+-- line signs
+coverage.show_line_signs()
+coverage.hide_line_signs()
+coverage.toggle_line_signs()
 coverage.clear()
 
 -- summary popup
@@ -179,15 +179,15 @@ coverage.report()
 -- treemap heatmap
 coverage.heatmap()
 
--- virtual text — shows execution hit counts (e.g. × 42) on every instrumented line
-coverage.show_line_hits()
-coverage.hide_line_hits()
-coverage.toggle_line_hits()
+-- line hints — shows execution hit counts (e.g. × 42) on every instrumented line
+coverage.show_line_hints()
+coverage.hide_line_hints()
+coverage.toggle_line_hints()
 
--- branch overlay — floating popup on partial lines showing per-branch counts
-coverage.show_branch_overlay()
-coverage.hide_branch_overlay()
-coverage.toggle_branch_overlay()
+-- branch hints — floating popup on partial lines showing per-branch counts
+coverage.show_branch_hints()
+coverage.hide_branch_hints()
+coverage.toggle_branch_hints()
 
 -- quickfix / loclist navigation
 coverage.quickfix()             -- all files, sorted by coverage ascending
@@ -238,7 +238,7 @@ require("neotest").setup({
 })
 ```
 
-**Go consumer** — converts `coverage.out` to `coverage/lcov.info` via `go tool cover`, then reloads. Expects tests to be run with `-coverprofile=coverage.out`:
+**Go consumer** — converts `coverage.out` to `lcov.info` in pure Lua, then reloads. Expects tests to be run with `-coverprofile=coverage.out`:
 
 ```lua
 require("neotest").setup({

@@ -46,18 +46,18 @@ M.setup = function(user_opts)
 
 	if config.opts.commands then
 		vim.cmd([[
-    command! CoverageShowSigns lua require('coverage').show_signs()
-    command! CoverageHideSigns lua require('coverage').hide_signs()
-    command! CoverageToggleSigns lua require('coverage').toggle_signs()
+    command! CoverageShowLineSigns lua require('coverage').show_line_signs()
+    command! CoverageHideLineSigns lua require('coverage').hide_line_signs()
+    command! CoverageToggleLineSigns lua require('coverage').toggle_line_signs()
     command! CoverageClear lua require('coverage').clear()
     command! CoverageReport lua require('coverage').report()
     command! CoverageHeatmap lua require('coverage').heatmap()
-    command! CoverageShowLineHits lua require('coverage').show_line_hits()
-    command! CoverageHideLineHits lua require('coverage').hide_line_hits()
-    command! CoverageToggleLineHits lua require('coverage').toggle_line_hits()
-    command! CoverageShowBranchOverlay lua require('coverage').show_branch_overlay()
-    command! CoverageHideBranchOverlay lua require('coverage').hide_branch_overlay()
-    command! CoverageToggleBranchOverlay lua require('coverage').toggle_branch_overlay()
+    command! CoverageShowLineHints lua require('coverage').show_line_hints()
+    command! CoverageHideLineHints lua require('coverage').hide_line_hints()
+    command! CoverageToggleLineHints lua require('coverage').toggle_line_hints()
+    command! CoverageShowBranchHints lua require('coverage').show_branch_hints()
+    command! CoverageHideBranchHints lua require('coverage').hide_branch_hints()
+    command! CoverageToggleBranchHints lua require('coverage').toggle_branch_hints()
     ]])
 		if vim.fn.executable("genhtml") == 1 then
 			vim.cmd([[command! CoverageBrowser lua require('coverage').browser()]])
@@ -134,16 +134,16 @@ M.load = function(file, place)
 	reload()
 end
 
---- Shows signs, if loaded.
-M.show_signs = signs.show
+--- Shows line signs, if loaded.
+M.show_line_signs = signs.show
 
---- Hides signs.
-M.hide_signs = signs.unplace
+--- Hides line signs.
+M.hide_line_signs = signs.unplace
 
---- Toggles signs.
-M.toggle_signs = signs.toggle
+--- Toggles line signs.
+M.toggle_line_signs = signs.toggle
 
---- Hides signs, clears cache, stops file watcher, disables virtual text and branch overlay.
+--- Hides signs, clears cache, stops file watcher, disables line hints and branch hints.
 M.clear = function()
 	signs.clear()
 	hints.clear()
@@ -160,8 +160,8 @@ M.heatmap = function()
 	require("coverage.heatmap").show()
 end
 
---- Shows virtual text hit counts.
-M.show_line_hits = function()
+--- Shows line hints (virtual text hit counts).
+M.show_line_hints = function()
 	if not cache.is_cached() then
 		vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
 		return
@@ -169,26 +169,26 @@ M.show_line_hits = function()
 	hints.place(cache.get())
 end
 
---- Hides virtual text hit counts.
-M.hide_line_hits = function()
+--- Hides line hints.
+M.hide_line_hints = function()
 	hints.clear()
 end
 
---- Toggles virtual text hit counts.
-M.toggle_line_hits = function()
+--- Toggles line hints.
+M.toggle_line_hints = function()
 	if not cache.is_cached() then
 		vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
 		return
 	end
 	if hints.is_enabled() then
-		M.hide_line_hits()
+		M.hide_line_hints()
 	else
-		M.show_line_hits()
+		M.show_line_hints()
 	end
 end
 
---- Shows branch overlay popup. Shows per-branch execution counts when cursor is on a partial line.
-M.show_branch_overlay = function()
+--- Shows branch hints popup. Shows per-branch execution counts when cursor is on a partial line.
+M.show_branch_hints = function()
 	if not cache.is_cached() then
 		vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
 		return
@@ -196,21 +196,21 @@ M.show_branch_overlay = function()
 	overlay.enable()
 end
 
---- Hides branch overlay popup.
-M.hide_branch_overlay = function()
+--- Hides branch hints popup.
+M.hide_branch_hints = function()
 	overlay.disable()
 end
 
---- Toggles branch overlay popup.
-M.toggle_branch_overlay = function()
+--- Toggles branch hints popup.
+M.toggle_branch_hints = function()
 	if not cache.is_cached() then
 		vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
 		return
 	end
 	if overlay.is_enabled() then
-		M.hide_branch_overlay()
+		M.hide_branch_hints()
 	else
-		M.show_branch_overlay()
+		M.show_branch_hints()
 	end
 end
 
