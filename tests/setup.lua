@@ -1,3 +1,4 @@
+vim.o.swapfile = false
 vim.opt.rtp:append(".")
 
 local function add_plugin(path)
