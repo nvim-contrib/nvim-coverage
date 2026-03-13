@@ -96,19 +96,19 @@ setmetatable(M, {
         client.listeners.results = function(_, _, partial)
             if partial then return end
 
-            local cwd = vim.fn.getcwd()
-            local profiles = vim.fn.glob(cwd .. "/**/coverage.out", true, true)
-            if #profiles == 0 then return end
-
-            local lcov_dir = cwd .. "/coverage"
-            local lcov_out = lcov_dir .. "/lcov.info"
-            vim.fn.mkdir(lcov_dir, "p")
-
-            local merged = gcov_to_lcov(profiles)
-            if #merged == 0 then return end
-
-            vim.fn.writefile(merged, lcov_out)
             vim.schedule(function()
+                local cwd = vim.fn.getcwd()
+                local profiles = vim.fn.glob(cwd .. "/**/coverage.out", true, true)
+                if #profiles == 0 then return end
+
+                local lcov_dir = cwd .. "/coverage"
+                local lcov_out = lcov_dir .. "/lcov.info"
+                vim.fn.mkdir(lcov_dir, "p")
+
+                local merged = gcov_to_lcov(profiles)
+                if #merged == 0 then return end
+
+                vim.fn.writefile(merged, lcov_out)
                 require("coverage").load(lcov_out, require("coverage.signs").is_enabled())
             end)
         end

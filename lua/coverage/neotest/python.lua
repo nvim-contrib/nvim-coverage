@@ -17,23 +17,25 @@ local consumer = function(client)
     client.listeners.results = function(_, _, partial)
         if partial then return end
 
-        local cwd      = vim.fn.getcwd()
-        local db       = cwd .. "/.coverage"
-        local lcov_out = cwd .. "/coverage/lcov.info"
+        vim.schedule(function()
+            local cwd      = vim.fn.getcwd()
+            local db       = cwd .. "/.coverage"
+            local lcov_out = cwd .. "/coverage/lcov.info"
 
-        if vim.fn.filereadable(db) ~= 1 then return end
+            if vim.fn.filereadable(db) ~= 1 then return end
 
-        vim.fn.mkdir(cwd .. "/coverage", "p")
-        vim.fn.jobstart({ "python", "-m", "coverage", "lcov", "-o", lcov_out }, {
-            cwd = cwd,
-            on_exit = function(_, code)
-                if code == 0 then
-                    vim.schedule(function()
-                        require("coverage").load(lcov_out, require("coverage.signs").is_enabled())
-                    end)
-                end
-            end,
-        })
+            vim.fn.mkdir(cwd .. "/coverage", "p")
+            vim.fn.jobstart({ "python", "-m", "coverage", "lcov", "-o", lcov_out }, {
+                cwd = cwd,
+                on_exit = function(_, code)
+                    if code == 0 then
+                        vim.schedule(function()
+                            require("coverage").load(lcov_out, require("coverage.signs").is_enabled())
+                        end)
+                    end
+                end,
+            })
+        end)
     end
     return {}
 end
