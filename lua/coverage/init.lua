@@ -100,16 +100,21 @@ end
 --- Loads an lcov file and optionally places signs immediately.
 --- @param file? string|string[] path(s) to the lcov file (defaults to config.opts.file)
 --- @param place? boolean true to immediately place signs
-M.load = function(file, place)
+--- @param silent? boolean true to suppress notifications when file is missing
+M.load = function(file, place, silent)
 	file = resolve_file(file) or resolve_file(config.opts.file)
 	if file == nil then
-		vim.notify("A path to the lcov file was not supplied.", vim.log.levels.INFO)
+		if not silent then
+			vim.notify("A path to the lcov file was not supplied.", vim.log.levels.INFO)
+		end
 		return
 	end
 
 	local p = require("plenary.path"):new(file)
 	if not p:exists() then
-		vim.notify("No coverage file exists at: " .. file, vim.log.levels.INFO)
+		if not silent then
+			vim.notify("No coverage file exists at: " .. file, vim.log.levels.INFO)
+		end
 		return
 	end
 
