@@ -19,6 +19,8 @@ A Neovim plugin that displays code coverage from [lcov](http://ltp.sourceforge.n
 - Auto-reload when the lcov file changes on disk
 - Works with any language that produces lcov output
 
+![Signs and virtual text](doc/img/signs.webp)
+
 ## Requirements
 
 - Neovim >= 0.9
