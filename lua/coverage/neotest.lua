@@ -13,7 +13,7 @@
 local consumer = function(client)
 	client.listeners.results = function(_, _, partial)
 		if not partial then
-			require("coverage").load(nil, require("coverage.signs").is_enabled(), true)
+			require("coverage").load(nil, { place = require("coverage.signs").is_enabled(), silent = true })
 		end
 	end
 	return {}

@@ -99,9 +99,16 @@ end
 
 --- Loads an lcov file and optionally places signs immediately.
 --- @param file? string|string[] path(s) to the lcov file (defaults to config.opts.file)
---- @param place? boolean true to immediately place signs
---- @param silent? boolean true to suppress notifications when file is missing
-M.load = function(file, place, silent)
+--- @param opts? boolean|{place?: boolean, silent?: boolean} options or legacy boolean (place)
+M.load = function(file, opts)
+	local place, silent
+	if type(opts) == "boolean" then
+		place = opts
+	elseif type(opts) == "table" then
+		place = opts.place
+		silent = opts.silent
+	end
+
 	file = resolve_file(file) or resolve_file(config.opts.file)
 	if file == nil then
 		if not silent then
