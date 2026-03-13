@@ -4,9 +4,8 @@
 --- Expects tests to be run with `-coverprofile=coverage.out` (e.g. via ginkgo
 --- or neotest-go/neotest-golang with coverage flags enabled).
 ---
---- After tests finish the consumer globs for all `**/coverage.out` files under
---- cwd, converts each to lcov in pure Lua, concatenates the results
---- into `cwd/coverage/lcov.info`, and loads the merged file.
+--- After tests finish the consumer converts `cwd/coverage.out` to lcov,
+--- writes `cwd/lcov.info` alongside it, and loads the result.
 ---
 --- Usage:
 ---   require("neotest").setup({
@@ -15,15 +14,15 @@
 ---     },
 ---   })
 
---- Converts a list of Go coverage.out file paths to lcov format.
---- @param profiles string[] list of coverage.out file paths
+--- Converts a Go coverage.out file to lcov format.
+--- @param path string path to coverage.out
 --- @return string[] lcov lines
-local gcov_to_lcov = function(profiles)
+local gcov_to_lcov = function(path)
     -- file_path -> { line_number -> count }
     local file_data = {}
 
-    for _, profile in ipairs(profiles) do
-        local lines = vim.fn.readfile(profile)
+    do
+        local lines = vim.fn.readfile(path)
         for _, line in ipairs(lines) do
             if line:match("^mode:") then
                 goto continue
@@ -50,7 +49,7 @@ local gcov_to_lcov = function(profiles)
 
             ::continue::
         end
-    end
+    end -- do
 
     local result = {}
     -- Sort files for deterministic output.
@@ -98,21 +97,15 @@ setmetatable(M, {
 
             vim.schedule(function()
                 local cwd = vim.fn.getcwd()
-                local profiles = vim.fn.glob(cwd .. "/**/coverage.out", true, true)
-                if #profiles == 0 then return end
+                local profile = cwd .. "/coverage.out"
+                if vim.fn.filereadable(profile) ~= 1 then return end
 
-                local lcov_dir = cwd .. "/coverage"
-                local lcov_out = lcov_dir .. "/lcov.info"
-                vim.fn.mkdir(lcov_dir, "p")
+                local lcov_out = cwd .. "/lcov.info"
+                local lcov = gcov_to_lcov(profile)
+                if #lcov == 0 then return end
 
-                local merged = gcov_to_lcov(profiles)
-                if #merged == 0 then return end
-
-                vim.fn.writefile(merged, lcov_out)
-                local ok, err = pcall(require("coverage").load, lcov_out, require("coverage.signs").is_enabled())
-                if not ok then
-                    vim.notify("coverage.neotest.go: load failed: " .. tostring(err), vim.log.levels.ERROR)
-                end
+                vim.fn.writefile(lcov, lcov_out)
+                require("coverage").load(lcov_out, true)
             end)
         end
         return {}

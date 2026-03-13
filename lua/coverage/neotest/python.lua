@@ -30,7 +30,7 @@ local consumer = function(client)
                 on_exit = function(_, code)
                     if code == 0 then
                         vim.schedule(function()
-                            require("coverage").load(lcov_out, require("coverage.signs").is_enabled())
+                            require("coverage").load(lcov_out, true)
                         end)
                     end
                 end,
