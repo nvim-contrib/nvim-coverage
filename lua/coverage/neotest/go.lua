@@ -18,7 +18,7 @@
 local go_cov = require("coverage.neotest.go_cov")
 
 local consumer = function(client)
-	client.listeners.results = function(adapter_id, results, partial)
+	client.listeners.results = function(_, _, partial)
 		if partial then
 			return
 		end
@@ -31,6 +31,10 @@ local consumer = function(client)
 				local fcwd = vim.fn.expand("%:p:h")
 				local fpath = fcwd .. "/coverage.out"
 				vim.fn.system({ "mv", "-f", fpath, path })
+			end
+
+			if vim.fn.filereadable(path) == 0 then
+				return
 			end
 
 			local report = go_cov.to_lcov({ path })
