@@ -240,11 +240,12 @@ COMMANDS                                              *nvim-coverage-commands*
 LUA API                                                *nvim-coverage-lua-api*
 
                                                              *coverage.load()*
-coverage.load({file}, {place})
+coverage.load({file}, {opts})
     Load an lcov file. If {file} is nil, uses `config.opts.file`.
-    When {place} is true, signs are placed immediately; otherwise signs are
-    placed only if already visible, else cached until
-    |coverage.show_line_signs()|.
+    {opts} can be a boolean for backward compatibility, or a table:
+        place:  (boolean) When true, signs are placed immediately; otherwise
+                cached until |coverage.show_line_signs()|. Default: false.
+        silent: (boolean) When true, suppresses notifications. Default: false.
     For the interactive file picker use |:CoverageLoad| with [!].
     Also starts the file watcher when `auto_reload.enabled` is true.
 
@@ -380,6 +381,20 @@ require("coverage.neotest.go")
         require("neotest").setup({
           consumers = {
             coverage_go = require("coverage.neotest.go"),
+          },
+        })
+<
+
+                                                    *coverage.neotest.python*
+require("coverage.neotest.python")
+    Python consumer. After tests finish, converts `.coverage` to `lcov.info`
+    using `coverage lcov`, then reloads coverage. Expects `coverage`
+    (coverage.py) to be installed.
+
+    Usage: >
+        require("neotest").setup({
+          consumers = {
+            coverage_python = require("coverage.neotest.python"),
           },
         })
 <
