@@ -109,7 +109,10 @@ setmetatable(M, {
                 if #merged == 0 then return end
 
                 vim.fn.writefile(merged, lcov_out)
-                require("coverage").load(lcov_out, require("coverage.signs").is_enabled())
+                local ok, err = pcall(require("coverage").load, lcov_out, require("coverage.signs").is_enabled())
+                if not ok then
+                    vim.notify("coverage.neotest.go: load failed: " .. tostring(err), vim.log.levels.ERROR)
+                end
             end)
         end
         return {}
