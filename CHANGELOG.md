@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.6.1](https://github.com/nvim-contrib/nvim-coverage/compare/v0.6.0...v0.6.1) (2026-03-13)
+
+
+### Bug Fixes
+
+* add pcall error reporting around coverage.load in Go consumer ([fd8d152](https://github.com/nvim-contrib/nvim-coverage/commit/fd8d152c1eff0e5cf9ba369c79966719f0613a60))
+* merge all coverage.out files in neotest Go consumer ([5ce8b35](https://github.com/nvim-contrib/nvim-coverage/commit/5ce8b35cdfb3efb43f4cb93a0b9fb029b3afe933))
+* **neotest/go:** add file existence check before coverage conversion ([3f48359](https://github.com/nvim-contrib/nvim-coverage/commit/3f48359ddaa560a6205ebb6e73bfaba272e7a8c4))
+* **neotest/go:** find coverage.out from neotest output directories ([b83ee9d](https://github.com/nvim-contrib/nvim-coverage/commit/b83ee9de2ba38ca5e317c470ea8286fae51c07ae))
+* **neotest:** suppress notifications in generic consumer ([cabbc3f](https://github.com/nvim-contrib/nvim-coverage/commit/cabbc3fce0e54cbe892111cd145554a0cfa59a16))
+* replace broken go tool cover with pure Lua converter in neotest Go consumer ([6eeb669](https://github.com/nvim-contrib/nvim-coverage/commit/6eeb6696649d13c014df9822177ad223a2a55528))
+* report close error and genhtml failing with Go module paths ([5e6d302](https://github.com/nvim-contrib/nvim-coverage/commit/5e6d3020ed0942a8dca04bef7926c9599965b8f6))
+* simplify Go consumer to convert single coverage.out in cwd ([9fd4bf3](https://github.com/nvim-contrib/nvim-coverage/commit/9fd4bf357fda60600c49cdef6a0efc36d0f503c1))
+* wrap neotest listener bodies in vim.schedule for fast-event safety ([fcd79da](https://github.com/nvim-contrib/nvim-coverage/commit/fcd79da6d43b2a4a17768634dc275ea9e6534c2a))
+
 ## [0.6.0](https://github.com/nvim-contrib/nvim-coverage/compare/v0.5.0...v0.6.0) (2026-03-12)
 
 
