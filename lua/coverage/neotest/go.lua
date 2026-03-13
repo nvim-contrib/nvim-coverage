@@ -17,23 +17,33 @@
 
 local go_cov = require("coverage.neotest.go_cov")
 
+--- Finds the coverage.out file in the neotest results output directories.
+--- @param results table<string, neotest.Result> neotest results
+--- @return string|nil path to coverage.out if found
+local function find_coverage_profile(results)
+	if not results then
+		return nil
+	end
+	for _, result in pairs(results) do
+		if result.output then
+			local path = vim.fn.fnamemodify(result.output, ":h") .. "/coverage.out"
+			if vim.fn.filereadable(path) == 1 then
+				return path
+			end
+		end
+	end
+	return nil
+end
+
 local consumer = function(client)
-	client.listeners.results = function(_, _, partial)
+	client.listeners.results = function(_, results, partial)
 		if partial then
 			return
 		end
 
 		vim.schedule(function()
-			local cwd = vim.fn.getcwd()
-			local path = cwd .. "/coverage.out"
-
-			if vim.fn.filereadable(path) == 0 then
-				local fcwd = vim.fn.expand("%:p:h")
-				local fpath = fcwd .. "/coverage.out"
-				vim.fn.system({ "mv", "-f", fpath, path })
-			end
-
-			if vim.fn.filereadable(path) == 0 then
+			local path = find_coverage_profile(results)
+			if not path then
 				return
 			end
 
@@ -42,7 +52,7 @@ local consumer = function(client)
 				return
 			end
 
-			local lcov_out = cwd .. "/lcov.info"
+			local lcov_out = vim.fn.getcwd() .. "/lcov.info"
 			vim.fn.writefile(report, lcov_out)
 			require("coverage").load(lcov_out, true)
 		end)
