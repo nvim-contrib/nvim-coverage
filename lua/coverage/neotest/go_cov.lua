@@ -1,9 +1,30 @@
 local M = {}
 
+--- Reads the module path from go.mod in the given directory.
+--- @param dir string directory containing go.mod
+--- @return string|nil module path
+local function read_module_path(dir)
+    local gomod = dir .. "/go.mod"
+    if vim.fn.filereadable(gomod) == 0 then
+        return nil
+    end
+    for _, line in ipairs(vim.fn.readfile(gomod)) do
+        local mod = line:match("^module%s+(%S+)")
+        if mod then
+            return mod
+        end
+    end
+    return nil
+end
+
 --- Converts a list of Go coverage.out file paths to lcov format.
 --- @param profiles string[] list of coverage.out file paths
+--- @param dir? string project root (defaults to cwd), used to resolve module paths
 --- @return string[] lcov lines
-M.to_lcov = function(profiles)
+M.to_lcov = function(profiles, dir)
+    dir = dir or vim.fn.getcwd()
+    local mod_path = read_module_path(dir)
+
     -- file_path -> { line_number -> count }
     local file_data = {}
 
@@ -58,7 +79,11 @@ M.to_lcov = function(profiles)
             end
         end
 
-        result[#result + 1] = "SF:" .. file
+        local sf = file
+        if mod_path and file:sub(1, #mod_path) == mod_path then
+            sf = dir .. file:sub(#mod_path + 1)
+        end
+        result[#result + 1] = "SF:" .. sf
         for _, da in ipairs(da_records) do
             result[#result + 1] = da
         end
