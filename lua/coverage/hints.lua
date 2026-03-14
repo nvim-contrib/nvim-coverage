@@ -13,8 +13,10 @@ local function get_ns()
 end
 
 --- Places virtual text hit counts for all open buffers in data.
+--- Clears any existing extmarks first to avoid duplication on reload.
 --- @param data CoverageData
 M.place = function(data)
+	M.clear()
 	local vt = config.opts.line_hits
 	for fname, cov in pairs(data.files) do
 		local bufnr = vim.fn.bufnr(fname, false)
