@@ -137,7 +137,7 @@ require("coverage").setup({
 
 | Command | Description |
 |---------|-------------|
-| `:CoverageLoad [file]` | Load lcov file and place signs (uses `file` config if no arg) |
+| `:CoverageLoad [file]` | Load lcov file and cache signs (uses `file` config if no arg) |
 | `:CoverageLoad!` | Open interactive picker over all `*.info` files found under cwd |
 | `:CoverageSigns [show\|hide\|toggle]` | Show, hide, or toggle line signs (default: `toggle`) |
 | `:CoverageHints [show\|hide\|toggle]` | Show, hide, or toggle line hints / virtual text hit counts (default: `toggle`) |
