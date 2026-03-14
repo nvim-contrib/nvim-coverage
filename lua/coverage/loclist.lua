@@ -1,30 +1,20 @@
 local M = {}
 
-local report = require("coverage.cache")
+local cache = require("coverage.cache")
 
 --- Populates the location list for the current window with lines of the given type.
 --- @param sign_type? "uncovered"|"partial" Defaults to "uncovered".
 M.populate = function(sign_type)
 	sign_type = sign_type or "uncovered"
 
-	if not report.is_cached() then
+	if not cache.is_cached() then
 		vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
 		return
 	end
 
-	local data = report.get()
 	local fname = vim.fn.expand("%:p")
-	local file = data.files[fname]
-
-	if file == nil then
-		for sf, cov in pairs(data.files) do
-			if vim.fn.bufnr(sf, false) == vim.fn.bufnr("%", false) then
-				file = cov
-				fname = sf
-				break
-			end
-		end
-	end
+	local file
+	file, fname = cache.find_file(fname)
 
 	if file == nil then
 		vim.notify("No coverage data for current file.", vim.log.levels.INFO)

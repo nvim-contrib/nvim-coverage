@@ -32,4 +32,24 @@ M.clear = function()
 	loaded_file = nil
 end
 
+--- Finds file coverage by filename, falling back to buffer number matching.
+--- @param fname string absolute path to look up
+--- @return FileCoverage|nil coverage data for the file
+--- @return string|nil matched filename key
+M.find_file = function(fname)
+	if cached == nil then
+		return nil, nil
+	end
+	local file = cached.files[fname]
+	if file ~= nil then
+		return file, fname
+	end
+	for sf, cov in pairs(cached.files) do
+		if vim.fn.bufnr(sf, false) == vim.fn.bufnr(fname, false) then
+			return cov, sf
+		end
+	end
+	return nil, nil
+end
+
 return M

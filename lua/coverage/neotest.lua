@@ -11,9 +11,11 @@
 ---
 --- @type fun(client: table): table
 local consumer = function(client)
-	client.listeners.results = function(_, _, partial)
+	client.listeners.results["coverage.neotest"] = function(_, _, partial)
 		if not partial then
-			require("coverage").load(nil, { place = require("coverage.signs").is_enabled(), silent = true })
+			vim.schedule(function()
+				require("coverage").load(nil, { place = require("coverage.signs").is_enabled(), silent = true })
+			end)
 		end
 	end
 	return {}

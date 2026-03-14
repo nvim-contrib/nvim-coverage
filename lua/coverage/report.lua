@@ -2,7 +2,7 @@ local M = {}
 
 local config = require("coverage.config")
 local Path = require("plenary.path")
-local report = require("coverage.cache")
+local cache = require("coverage.cache")
 local window = require("plenary.window.float")
 
 -- Plenary popup window
@@ -140,8 +140,7 @@ local load_content = function()
 			file.missing or "",
 			file.excluded or "",
 			file.branches or "",
-			file.partial or "",
-			file.coverage or 0
+			file.partial or ""
 		)
 		if file.coverage ~= nil then
 			local hl_group = get_cov_hl_group(file.coverage)
@@ -226,8 +225,8 @@ end
 --- Sets the modifiable and readonly buffer options on the popup.
 -- @param modifiable (bool)
 local set_modifiable = function(modifiable)
-	vim.api.nvim_buf_set_option(popup.bufnr, "modifiable", modifiable)
-	vim.api.nvim_buf_set_option(popup.bufnr, "readonly", not modifiable)
+	vim.bo[popup.bufnr].modifiable = modifiable
+	vim.bo[popup.bufnr].readonly = not modifiable
 end
 
 --- Renders the summary report in the popup.
@@ -275,37 +274,30 @@ end
 
 --- Inserts keymaps into the popup buffer.
 local keymaps = function()
-	vim.api.nvim_buf_set_keymap(popup.bufnr, "n", "q", ":" .. popup.bufnr .. "bwipeout!<CR>", { silent = true })
-	vim.api.nvim_buf_set_keymap(popup.bufnr, "n", "<Esc>", ":" .. popup.bufnr .. "bwipeout!<CR>", { silent = true })
-	vim.api.nvim_buf_set_keymap(popup.bufnr, "n", "H", ":" .. #header.lines + 1 .. "<CR>", { silent = true })
-	vim.api.nvim_buf_set_keymap(
-		popup.bufnr,
-		"n",
-		"s",
-		":lua require('coverage.report').sort(false)<CR>",
-		{ silent = true }
-	)
-	vim.api.nvim_buf_set_keymap(
-		popup.bufnr,
-		"n",
-		"S",
-		":lua require('coverage.report').sort(true)<CR>",
-		{ silent = true }
-	)
-	vim.api.nvim_buf_set_keymap(
-		popup.bufnr,
-		"n",
-		"<CR>",
-		":lua require('coverage.report').select_item()<CR>",
-		{ silent = true }
-	)
-	vim.api.nvim_buf_set_keymap(
-		popup.bufnr,
-		"n",
-		"?",
-		":lua require('coverage.report').toggle_help()<CR>",
-		{ silent = true }
-	)
+	local opts = { buffer = popup.bufnr, silent = true, noremap = true }
+	local close = function()
+		if vim.api.nvim_buf_is_valid(popup.bufnr) then
+			vim.api.nvim_buf_delete(popup.bufnr, { force = true })
+		end
+	end
+	local first_line = #header.lines + 1
+	vim.keymap.set("n", "q", close, opts)
+	vim.keymap.set("n", "<Esc>", close, opts)
+	vim.keymap.set("n", "H", function()
+		vim.api.nvim_win_set_cursor(popup.win_id, { first_line, 0 })
+	end, opts)
+	vim.keymap.set("n", "s", function()
+		require("coverage.report").sort(false)
+	end, opts)
+	vim.keymap.set("n", "S", function()
+		require("coverage.report").sort(true)
+	end, opts)
+	vim.keymap.set("n", "<CR>", function()
+		require("coverage.report").select_item()
+	end, opts)
+	vim.keymap.set("n", "?", function()
+		require("coverage.report").toggle_help()
+	end, opts)
 end
 
 --- Builds a summary report from CoverageData.
@@ -338,27 +330,24 @@ end
 
 --- Loads the summary report.
 local load_summary = function()
-	summary = build(report.get())
+	summary = build(cache.get())
 end
 
 --- Sets buffer/window options for the popup after creation.
 local set_options = function()
 	local win_width = vim.api.nvim_win_get_width(popup.win_id)
-	vim.api.nvim_buf_set_option(popup.bufnr, "textwidth", win_width)
-	vim.api.nvim_buf_set_option(popup.bufnr, "filetype", "coverage")
-	vim.api.nvim_win_set_option(popup.win_id, "cursorline", true)
-	vim.api.nvim_win_set_option(popup.win_id, "winblend", 0)
-	vim.api.nvim_win_set_option(
-		popup.win_id,
-		"winhl",
-		"Normal:CoverageReportNormal,CursorLine:CoverageReportCursorLine"
-	)
-	vim.cmd(string.format(
-		[[
-    au BufLeave <buffer=%d> lua require('coverage.report').close()
-    ]],
-		popup.bufnr
-	))
+	vim.bo[popup.bufnr].textwidth = win_width
+	vim.bo[popup.bufnr].filetype = "coverage"
+	vim.wo[popup.win_id].cursorline = true
+	vim.wo[popup.win_id].winblend = 0
+	vim.wo[popup.win_id].winhl = "Normal:CoverageReportNormal,CursorLine:CoverageReportCursorLine"
+	vim.api.nvim_create_autocmd("BufLeave", {
+		buffer = popup.bufnr,
+		once = true,
+		callback = function()
+			require("coverage.report").close()
+		end,
+	})
 end
 
 --- Opens the file under the cursor and closes the popup.
@@ -379,7 +368,7 @@ M.select_item = function()
 
 	local bufnr = get_bufnr(fname)
 	if bufnr == -1 then
-		vim.cmd("edit " .. fname)
+		vim.cmd("edit " .. vim.fn.fnameescape(fname))
 		require("coverage").load(nil, true)
 	else
 		vim.api.nvim_win_set_buf(0, bufnr)
@@ -412,8 +401,8 @@ end
 
 --- Display the coverage report summary popup.
 M.show = function()
-	if not report.is_cached() then
-		vim.notify("Coverage report not loaded.")
+	if not cache.is_cached() then
+		vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
 		return
 	end
 

@@ -35,6 +35,8 @@ local new_file_meta = function()
 			excluded_lines = 0,
 			uncovered_lines = 0,
 			num_statements = 0,
+			num_branches = 0,
+			num_partial_branches = 0,
 			percent_covered = 0,
 		},
 		uncovered_lines = {},
@@ -54,18 +56,25 @@ M.lcov_to_table = function(path)
 	local files = {}
 	local cfile = nil
 	local cmeta = nil
+	local partial_set = nil
 
 	for _, line in ipairs(path:readlines()) do
 		if line:match("end_of_record") and cmeta ~= nil and cfile ~= nil then
 			cmeta.summary.excluded_lines = 0
-			cmeta.summary.percent_covered = cmeta.summary.covered_lines / cmeta.summary.num_statements * 100
+			if cmeta.summary.num_statements > 0 then
+				cmeta.summary.percent_covered = cmeta.summary.covered_lines / cmeta.summary.num_statements * 100
+			else
+				cmeta.summary.percent_covered = 0
+			end
 			files[cfile] = cmeta
 			cfile = nil
 			cmeta = nil
+			partial_set = nil
 		elseif line:match("SF:.+") then
 			-- SF:<absolute path to the source file>
 			cfile = line:gsub("SF:", "")
 			cmeta = new_file_meta()
+			partial_set = {}
 		elseif line:match("^DA:%d+,%d+,?.*") and cmeta ~= nil then
 			-- DA:<line number>,<execution count>[,<checksum>]
 			local ls, ns = line:match("DA:(%d+),(%d+),?.*")
@@ -90,7 +99,8 @@ M.lcov_to_table = function(path)
 				branch = tonumber(brs, 10),
 				count = n,
 			})
-			if n == 0 then
+			if n == 0 and not partial_set[l] then
+				partial_set[l] = true
 				table.insert(cmeta.partial_lines, { l, -1 })
 			end
 		elseif line:match("^BRF:%d+") and cmeta ~= nil then
@@ -111,16 +121,29 @@ M.lcov_to_table = function(path)
 		end
 	end
 
-	local totals = { num_statements = 0, covered_lines = 0, uncovered_lines = 0, excluded_lines = 0 }
+	local totals = {
+		num_statements = 0,
+		covered_lines = 0,
+		uncovered_lines = 0,
+		excluded_lines = 0,
+		num_branches = 0,
+		num_partial_branches = 0,
+	}
 	for _, meta in pairs(files) do
 		totals.num_statements = totals.num_statements + meta.summary.num_statements
 		totals.covered_lines = totals.covered_lines + meta.summary.covered_lines
 		totals.uncovered_lines = totals.uncovered_lines + meta.summary.uncovered_lines
 		totals.excluded_lines = totals.excluded_lines + meta.summary.excluded_lines
+		totals.num_branches = totals.num_branches + meta.summary.num_branches
+		totals.num_partial_branches = totals.num_partial_branches + meta.summary.num_partial_branches
 	end
-	totals.percent_covered = totals.covered_lines / totals.num_statements * 100
+	if totals.num_statements > 0 then
+		totals.percent_covered = totals.covered_lines / totals.num_statements * 100
+	else
+		totals.percent_covered = 0
+	end
 
-	return { meta = {}, totals = totals, files = files }
+	return { totals = totals, files = files }
 end
 
 return M

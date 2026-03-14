@@ -155,11 +155,11 @@ M.load = function(file, opts)
 	end
 
 	local reload = function()
+		local data = util.lcov_to_table(p)
+		cache.set(data, file)
 		if config.opts.on_load ~= nil then
 			vim.schedule(config.opts.on_load)
 		end
-		local data = util.lcov_to_table(p)
-		cache.set(data, file)
 		local sign_list = signs.build(data)
 		if place or signs.is_enabled() then
 			signs.place(sign_list)

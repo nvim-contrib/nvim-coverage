@@ -12,15 +12,26 @@ local config = require("coverage.config")
 --- @param group string name of the highlight group
 --- @param color Highlight
 local highlight = function(group, color)
-	local style = color.style and "gui=" .. color.style or "gui=NONE"
-	local fg = color.fg and "guifg=" .. color.fg or "guifg=NONE"
-	local bg = color.bg and "guibg=" .. color.bg or "guibg=NONE"
-	local sp = color.sp and "guisp=" .. color.sp or ""
-	local hl = "highlight default " .. group .. " " .. style .. " " .. fg .. " " .. bg .. " " .. sp
-	vim.cmd(hl)
 	if color.link then
-		vim.cmd("highlight default link " .. group .. " " .. color.link)
+		vim.api.nvim_set_hl(0, group, { link = color.link, default = true })
+		return
 	end
+	local opts = { default = true }
+	if color.fg then
+		opts.fg = color.fg
+	end
+	if color.bg then
+		opts.bg = color.bg
+	end
+	if color.sp then
+		opts.sp = color.sp
+	end
+	if color.style then
+		for attr in color.style:gmatch("[^,]+") do
+			opts[attr] = true
+		end
+	end
+	vim.api.nvim_set_hl(0, group, opts)
 end
 
 local create_highlight_groups = function()

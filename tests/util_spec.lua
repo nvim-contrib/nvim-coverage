@@ -73,6 +73,11 @@ describe("util.lcov_to_table", function()
         it("calculates total percent_covered", function()
             assert.is_near(71.43, data.totals.percent_covered, 0.01)
         end)
+
+        it("initializes branch totals to zero", function()
+            assert.equals(0, data.totals.num_branches)
+            assert.equals(0, data.totals.num_partial_branches)
+        end)
     end)
 
     describe("lcov file with branch coverage", function()
@@ -99,14 +104,49 @@ describe("util.lcov_to_table", function()
             assert.equals(1, #branches)
             assert.equals(2, branches[1][1])
         end)
+
+        it("aggregates branch totals", function()
+            assert.equals(4, data.totals.num_branches)
+            assert.equals(1, data.totals.num_partial_branches)
+        end)
+    end)
+
+    describe("lcov file with multiple untaken branches on same line", function()
+        it("does not duplicate partial_lines entries", function()
+            local data = util.lcov_to_table(fixture("multi_partial.lcov"))
+            local multi = data.files["/project/src/multi.lua"]
+            -- line 2 has two BRDA records with count=0; should appear once
+            assert.equals(1, #multi.partial_lines)
+            assert.equals(2, multi.partial_lines[1][1])
+        end)
     end)
 
     describe("empty lcov file", function()
+        local data
+
+        before_each(function()
+            data = util.lcov_to_table(fixture("empty.lcov"))
+        end)
+
         it("handles zero statements without error", function()
-            -- LF:0 would cause division by zero — should not crash
             assert.has_no.errors(function()
                 util.lcov_to_table(fixture("empty.lcov"))
             end)
+        end)
+
+        it("sets percent_covered to zero", function()
+            local empty = data.files["/project/src/empty.lua"]
+            assert.equals(0, empty.summary.percent_covered)
+        end)
+
+        it("initializes branch fields to zero", function()
+            local empty = data.files["/project/src/empty.lua"]
+            assert.equals(0, empty.summary.num_branches)
+            assert.equals(0, empty.summary.num_partial_branches)
+        end)
+
+        it("sets total percent_covered to zero", function()
+            assert.equals(0, data.totals.percent_covered)
         end)
     end)
 end)

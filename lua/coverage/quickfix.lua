@@ -1,16 +1,16 @@
 local M = {}
 
-local report = require("coverage.cache")
+local cache = require("coverage.cache")
 
 --- Populates the quickfix list with one entry per file showing coverage summary.
 --- @param filter? "uncovered" When given, only includes files with uncovered lines.
 M.populate = function(filter)
-	if not report.is_cached() then
+	if not cache.is_cached() then
 		vim.notify("Coverage report not loaded.", vim.log.levels.INFO)
 		return
 	end
 
-	local data = report.get()
+	local data = cache.get()
 	local rows = {}
 
 	for filename, file in pairs(data.files) do

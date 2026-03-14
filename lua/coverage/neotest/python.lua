@@ -14,17 +14,17 @@
 ---
 --- @type fun(client: table): table
 local consumer = function(client)
-	client.listeners.results = function(_, _, partial)
+	client.listeners.results["coverage.neotest.python"] = function(_, _, partial)
 		if partial then
 			return
 		end
 
 		vim.schedule(function()
 			local cwd = vim.fn.getcwd()
-			local dir = cwd .. "/.coverage"
+			local coverage_db = cwd .. "/.coverage"
 			local path = cwd .. "/coverage/lcov.info"
 
-			if vim.fn.filereadable(dir) ~= 1 then
+			if vim.fn.filereadable(coverage_db) ~= 1 then
 				return
 			end
 

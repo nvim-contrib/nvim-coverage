@@ -1,6 +1,6 @@
 local M = {}
 
-local report = require("coverage.cache")
+local cache = require("coverage.cache")
 
 local float_win = nil
 local float_bufnr = nil
@@ -36,8 +36,8 @@ local show_for_line = function(lnum, branches)
 
 	float_bufnr = vim.api.nvim_create_buf(false, true)
 	vim.api.nvim_buf_set_lines(float_bufnr, 0, -1, false, lines)
-	vim.api.nvim_buf_set_option(float_bufnr, "modifiable", false)
-	vim.api.nvim_buf_set_option(float_bufnr, "filetype", "coverage-overlay")
+	vim.bo[float_bufnr].modifiable = false
+	vim.bo[float_bufnr].filetype = "coverage-overlay"
 
 	local width = 30
 	for _, l in ipairs(lines) do
@@ -59,7 +59,7 @@ local show_for_line = function(lnum, branches)
 		border = "rounded",
 	})
 
-	vim.api.nvim_win_set_option(float_win, "winhl", "Normal:CoverageReportNormal,FloatBorder:CoverageReportBorder")
+	vim.wo[float_win].winhl = "Normal:CoverageReportNormal,FloatBorder:CoverageReportBorder"
 
 	-- highlight header
 	vim.api.nvim_buf_add_highlight(float_bufnr, -1, "CoverageReportHeader", 0, 0, -1)
@@ -73,23 +73,13 @@ end
 
 --- Checks current cursor line and updates the overlay accordingly.
 local on_cursor_moved = function()
-	if not report.is_cached() then
+	if not cache.is_cached() then
 		close_float()
 		return
 	end
 
 	local fname = vim.fn.expand("%:p")
-	local data = report.get()
-	local file = data.files[fname]
-	if file == nil then
-		-- fallback: match by buffer number the same way signs.build does
-		for sf, cov in pairs(data.files) do
-			if vim.fn.bufnr(sf, false) == vim.fn.bufnr("%", false) then
-				file = cov
-				break
-			end
-		end
-	end
+	local file = cache.find_file(fname)
 	if file == nil then
 		close_float()
 		return

@@ -4,9 +4,9 @@
 --- Expects tests to be run with `-coverprofile=coverage.out` (e.g. via ginkgo
 --- or neotest-go/neotest-golang with coverage flags enabled).
 ---
---- After tests finish the consumer globs for all `**/coverage.out` files under
---- cwd, converts each to lcov in pure Lua, concatenates the results
---- into `cwd/coverage/lcov.info`, and loads the merged file.
+--- After tests finish the consumer finds `coverage.out` in the neotest output
+--- directory, converts it to lcov in pure Lua, writes the result to
+--- `cwd/lcov.info`, and loads the merged file.
 ---
 --- Usage:
 ---   require("neotest").setup({
@@ -36,7 +36,7 @@ local function find_coverage_profile(results)
 end
 
 local consumer = function(client)
-	client.listeners.results = function(_, results, partial)
+	client.listeners.results["coverage.neotest.go"] = function(_, results, partial)
 		if partial then
 			return
 		end

@@ -176,25 +176,27 @@ M.build = function(data)
 	for fname, cov in pairs(data.files) do
 		local buffer = vim.fn.bufnr(fname, false)
 		if buffer ~= -1 then
-			local partial_lnums = {}
+			local partial_set = {}
 			if cov.partial_lines ~= nil then
 				for _, branch in ipairs(cov.partial_lines) do
-					table.insert(partial_lnums, branch[1])
+					partial_set[branch[1]] = true
 				end
 			end
 
+			local uncovered_set = {}
+			for _, lnum in ipairs(cov.uncovered_lines) do
+				uncovered_set[lnum] = true
+				table.insert(list, M.new_uncovered(buffer, lnum))
+			end
+
 			for _, lnum in ipairs(cov.covered_lines) do
-				if not vim.tbl_contains(partial_lnums, lnum) then
+				if not partial_set[lnum] then
 					table.insert(list, M.new_covered(buffer, lnum))
 				end
 			end
 
-			for _, lnum in ipairs(cov.uncovered_lines) do
-				table.insert(list, M.new_uncovered(buffer, lnum))
-			end
-
-			for _, lnum in ipairs(partial_lnums) do
-				if not vim.tbl_contains(cov.uncovered_lines, lnum) then
+			for lnum in pairs(partial_set) do
+				if not uncovered_set[lnum] then
 					table.insert(list, M.new_partial(buffer, lnum))
 				end
 			end

@@ -240,9 +240,9 @@ local function render(bufnr, rects, W, H)
 	end
 
 	-- Flush lines into buffer
-	vim.api.nvim_buf_set_option(bufnr, "modifiable", true)
+	vim.bo[bufnr].modifiable = true
 	vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-	vim.api.nvim_buf_set_option(bufnr, "modifiable", false)
+	vim.bo[bufnr].modifiable = false
 
 	-- Apply highlights
 	vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
@@ -261,8 +261,8 @@ local function open_float()
 	local height = vim.o.lines - vim.o.cmdheight - 1
 
 	local bufnr = vim.api.nvim_create_buf(false, true)
-	vim.api.nvim_buf_set_option(bufnr, "bufhidden", "wipe")
-	vim.api.nvim_buf_set_option(bufnr, "filetype", "coverage-heatmap")
+	vim.bo[bufnr].bufhidden = "wipe"
+	vim.bo[bufnr].filetype = "coverage-heatmap"
 
 	local win = vim.api.nvim_open_win(bufnr, true, {
 		relative = "editor",
@@ -273,24 +273,24 @@ local function open_float()
 		style = "minimal",
 	})
 
-	vim.api.nvim_win_set_option(win, "cursorline", true)
-	vim.api.nvim_win_set_option(win, "wrap", false)
+	vim.wo[win].cursorline = true
+	vim.wo[win].wrap = false
 
 	return bufnr, win, width, height
 end
 
 --- Set keymaps on the heatmap buffer.
 local function set_keymaps(bufnr)
-	local close_cmd = ":lua require('coverage.heatmap').close()<CR>"
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "q", close_cmd, { silent = true, noremap = true })
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<Esc>", close_cmd, { silent = true, noremap = true })
-	vim.api.nvim_buf_set_keymap(
-		bufnr,
-		"n",
-		"<CR>",
-		":lua require('coverage.heatmap').open_file()<CR>",
-		{ silent = true, noremap = true }
-	)
+	local opts = { buffer = bufnr, silent = true, noremap = true }
+	vim.keymap.set("n", "q", function()
+		require("coverage.heatmap").close()
+	end, opts)
+	vim.keymap.set("n", "<Esc>", function()
+		require("coverage.heatmap").close()
+	end, opts)
+	vim.keymap.set("n", "<CR>", function()
+		require("coverage.heatmap").open_file()
+	end, opts)
 end
 
 --- Find the rect at the current cursor position.

@@ -2,8 +2,8 @@ local M = {}
 
 local config = require("coverage.config")
 
--- vim.uv is the preferred alias in Neovim 0.10+; fall back to uv for 0.9
-local uv = vim.uv or uv
+-- vim.uv is the preferred alias in Neovim 0.10+; fall back to vim.loop for 0.9
+local uv = vim.uv or vim.loop
 
 local fs_event = nil
 local debounce_timer = nil
@@ -71,6 +71,10 @@ M.start = start
 
 --- Stops the file watcher.
 M.stop = function()
+	if debounce_timer ~= nil then
+		uv.timer_stop(debounce_timer)
+		debounce_timer = nil
+	end
 	if fs_event ~= nil then
 		uv.fs_event_stop(fs_event)
 	end
