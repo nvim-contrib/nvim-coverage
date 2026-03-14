@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.6.2](https://github.com/nvim-contrib/nvim-coverage/compare/v0.6.1...v0.6.2) (2026-03-14)
+
+
+### Bug Fixes
+
+* address tech debt and bugs from fork ([f9a45eb](https://github.com/nvim-contrib/nvim-coverage/commit/f9a45eba5bc69d7f9fc102c9cbe800bc6faeba0c))
+* **hints:** clear extmarks before placing to prevent duplication on reload ([bfc4bd3](https://github.com/nvim-contrib/nvim-coverage/commit/bfc4bd3ca556a2a3aec7f771b4c9eccc187b7d52))
+* **neotest:** use direct listener assignment instead of named keys ([8382fe8](https://github.com/nvim-contrib/nvim-coverage/commit/8382fe84e5dea6122f9cd765334ef91ac9416bcc))
+* **tests:** disable swap files in test setup ([2e2e960](https://github.com/nvim-contrib/nvim-coverage/commit/2e2e9603c12c95e1fd83d7b14c4c39a6635a54cf))
+
 ## [0.6.1](https://github.com/nvim-contrib/nvim-coverage/compare/v0.6.0...v0.6.1) (2026-03-13)
 
 
