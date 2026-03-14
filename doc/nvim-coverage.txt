@@ -166,21 +166,27 @@ COMMANDS                                              *nvim-coverage-commands*
 :CoverageLoad[!] [{file}]                                      *:CoverageLoad*
     Load an lcov file. If {file} is not given, uses the `file` config option.
     Signs are placed immediately if already visible, otherwise cached until
-    |:CoverageShowLineSigns| is called.
+    |:CoverageSigns| show is called.
 
     With [!]: open an interactive picker (`vim.ui.select`) over all `*.info`
     files found under the current working directory. If exactly one file is
     found it is loaded directly without prompting. Any {file} argument is
     ignored when [!] is given.
 
-:CoverageShowLineSigns                                  *:CoverageShowLineSigns*
-    Show coverage line signs. Requires a prior |:CoverageLoad|.
+:CoverageSigns [{action}]                                    *:CoverageSigns*
+    Show, hide, or toggle coverage line signs. {action} is `show`, `hide`, or
+    `toggle` (default: `toggle`). Requires a prior |:CoverageLoad|.
 
-:CoverageHideLineSigns                                  *:CoverageHideLineSigns*
-    Hide coverage line signs.
+:CoverageHints [{action}]                                    *:CoverageHints*
+    Show, hide, or toggle line hints (virtual text hit counts). {action} is
+    `show`, `hide`, or `toggle` (default: `toggle`). Shows execution count for
+    every instrumented line (e.g. `× 42`). Requires a prior |:CoverageLoad|.
 
-:CoverageToggleLineSigns                              *:CoverageToggleLineSigns*
-    Toggle coverage line sign visibility.
+:CoverageBranches [{action}]                              *:CoverageBranches*
+    Show, hide, or toggle the branch hints popup. {action} is `show`, `hide`,
+    or `toggle` (default: `toggle`). When enabled, moving the cursor to a
+    partially covered line shows a floating window with per-branch execution
+    counts. Requires a prior |:CoverageLoad|.
 
 :CoverageClear                                                *:CoverageClear*
     Remove signs, clear the cached report, stop the file watcher, and disable
@@ -194,27 +200,6 @@ COMMANDS                                              *nvim-coverage-commands*
     their line count and colored by coverage % (dark red → dark amber → dark
     green). Press `<CR>` to open the file under the cursor, `q` or `<Esc>` to
     close. Requires a prior |:CoverageLoad|.
-
-:CoverageShowLineHints                              *:CoverageShowLineHints*
-    Show line hints (virtual text hit counts). Shows execution count for every
-    instrumented line (e.g. `× 42`). Requires a prior |:CoverageLoad|.
-
-:CoverageHideLineHints                              *:CoverageHideLineHints*
-    Hide line hints.
-
-:CoverageToggleLineHints                            *:CoverageToggleLineHints*
-    Toggle line hints on/off. Requires a prior |:CoverageLoad|.
-
-:CoverageShowBranchHints                            *:CoverageShowBranchHints*
-    Show branch hints popup. When enabled, moving the cursor to a partially
-    covered line shows a floating window with per-branch execution counts.
-    Requires a prior |:CoverageLoad|.
-
-:CoverageHideBranchHints                            *:CoverageHideBranchHints*
-    Hide branch hints popup.
-
-:CoverageToggleBranchHints                        *:CoverageToggleBranchHints*
-    Toggle branch hints popup on/off. Requires a prior |:CoverageLoad|.
 
 :CoverageQuickfix [{filter}]                              *:CoverageQuickfix*
     Populate the quickfix list with one entry per file showing coverage
@@ -232,8 +217,7 @@ COMMANDS                                              *nvim-coverage-commands*
 :CoverageBrowser                                    *:CoverageBrowser*
     Generate an HTML coverage report from the loaded lcov file using `genhtml`
     and open `index.html` in the system browser (`open` on macOS, `xdg-open`
-    on Linux). Requires a prior |:CoverageLoad|.
-    Only registered when `genhtml` is found on $PATH at startup.
+    on Linux). Requires `genhtml` on $PATH and a prior |:CoverageLoad|.
 
 
 ================================================================================

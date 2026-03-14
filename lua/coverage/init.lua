@@ -45,23 +45,52 @@ M.setup = function(user_opts)
 	highlight.setup()
 
 	if config.opts.commands then
-		vim.cmd([[
-    command! CoverageShowLineSigns lua require('coverage').show_line_signs()
-    command! CoverageHideLineSigns lua require('coverage').hide_line_signs()
-    command! CoverageToggleLineSigns lua require('coverage').toggle_line_signs()
-    command! CoverageClear lua require('coverage').clear()
-    command! CoverageReport lua require('coverage').report()
-    command! CoverageHeatmap lua require('coverage').heatmap()
-    command! CoverageShowLineHints lua require('coverage').show_line_hints()
-    command! CoverageHideLineHints lua require('coverage').hide_line_hints()
-    command! CoverageToggleLineHints lua require('coverage').toggle_line_hints()
-    command! CoverageShowBranchHints lua require('coverage').show_branch_hints()
-    command! CoverageHideBranchHints lua require('coverage').hide_branch_hints()
-    command! CoverageToggleBranchHints lua require('coverage').toggle_branch_hints()
-    ]])
-		if vim.fn.executable("genhtml") == 1 then
-			vim.cmd([[command! CoverageBrowser lua require('coverage').browser()]])
+		local action_complete = function()
+			return { "show", "hide", "toggle" }
 		end
+
+		local function action_cmd(actions)
+			return function(opts)
+				local action = opts.args ~= "" and opts.args or "toggle"
+				local fn = actions[action]
+				if fn then
+					fn()
+				else
+					vim.notify("Invalid action: " .. action, vim.log.levels.ERROR)
+				end
+			end
+		end
+
+		vim.api.nvim_create_user_command("CoverageSigns", action_cmd({
+			show = require("coverage").show_line_signs,
+			hide = require("coverage").hide_line_signs,
+			toggle = require("coverage").toggle_line_signs,
+		}), { nargs = "?", complete = action_complete })
+
+		vim.api.nvim_create_user_command("CoverageHints", action_cmd({
+			show = require("coverage").show_line_hints,
+			hide = require("coverage").hide_line_hints,
+			toggle = require("coverage").toggle_line_hints,
+		}), { nargs = "?", complete = action_complete })
+
+		vim.api.nvim_create_user_command("CoverageBranches", action_cmd({
+			show = require("coverage").show_branch_hints,
+			hide = require("coverage").hide_branch_hints,
+			toggle = require("coverage").toggle_branch_hints,
+		}), { nargs = "?", complete = action_complete })
+
+		vim.api.nvim_create_user_command("CoverageClear", function()
+			require("coverage").clear()
+		end, {})
+		vim.api.nvim_create_user_command("CoverageReport", function()
+			require("coverage").report()
+		end, {})
+		vim.api.nvim_create_user_command("CoverageHeatmap", function()
+			require("coverage").heatmap()
+		end, {})
+		vim.api.nvim_create_user_command("CoverageBrowser", function()
+			require("coverage").browser()
+		end, {})
 		vim.api.nvim_create_user_command("CoverageLoad", function(opts)
 			if opts.bang then
 				pick_and_load(nil)

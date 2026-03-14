@@ -139,21 +139,15 @@ require("coverage").setup({
 |---------|-------------|
 | `:CoverageLoad [file]` | Load lcov file and place signs (uses `file` config if no arg) |
 | `:CoverageLoad!` | Open interactive picker over all `*.info` files found under cwd |
-| `:CoverageShowLineSigns` | Show line signs (if previously hidden) |
-| `:CoverageHideLineSigns` | Hide line signs |
-| `:CoverageToggleLineSigns` | Toggle line sign visibility |
+| `:CoverageSigns [show\|hide\|toggle]` | Show, hide, or toggle line signs (default: `toggle`) |
+| `:CoverageHints [show\|hide\|toggle]` | Show, hide, or toggle line hints / virtual text hit counts (default: `toggle`) |
+| `:CoverageBranches [show\|hide\|toggle]` | Show, hide, or toggle branch hints popup (default: `toggle`) |
 | `:CoverageClear` | Remove signs, clear cache, stop file watcher |
 | `:CoverageReport` | Open the summary popup |
 | `:CoverageHeatmap` | Open full-screen treemap — files sized by LOC, colored by coverage % |
-| `:CoverageShowLineHints` | Show line hints (virtual text hit counts) |
-| `:CoverageHideLineHints` | Hide line hints |
-| `:CoverageToggleLineHints` | Toggle line hints |
-| `:CoverageShowBranchHints` | Show branch hints popup on partial lines |
-| `:CoverageHideBranchHints` | Hide branch hints popup |
-| `:CoverageToggleBranchHints` | Toggle branch hints popup |
 | `:CoverageQuickfix [uncovered]` | Populate quickfix list with per-file coverage summary |
 | `:CoverageLoclist [uncovered\|partial]` | Populate location list with lines of given type in current buffer |
-| `:CoverageBrowser` | Generate HTML report via `genhtml` and open in browser (registered only if `genhtml` is on `$PATH`) |
+| `:CoverageBrowser` | Generate HTML report via `genhtml` and open in browser |
 
 ![Coverage Heatmap](doc/img/heatmap.webp)
 
