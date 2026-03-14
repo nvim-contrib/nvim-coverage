@@ -142,7 +142,7 @@ require("coverage").setup({
 | `:CoverageSigns [show\|hide\|toggle]` | Show, hide, or toggle line signs (default: `toggle`) |
 | `:CoverageHints [show\|hide\|toggle]` | Show, hide, or toggle line hints / virtual text hit counts (default: `toggle`) |
 | `:CoverageBranches [show\|hide\|toggle]` | Show, hide, or toggle branch hints popup (default: `toggle`) |
-| `:CoverageClear` | Remove signs, clear cache, stop file watcher |
+| `:CoverageClear` | Remove signs, hints, and branch overlay; clear cache; stop file watcher |
 | `:CoverageReport` | Open the summary popup |
 | `:CoverageHeatmap` | Open full-screen treemap — files sized by LOC, colored by coverage % |
 | `:CoverageQuickfix [uncovered]` | Populate quickfix list with per-file coverage summary |
