@@ -14,7 +14,7 @@
 ---
 --- @type fun(client: table): table
 local consumer = function(client)
-	client.listeners.results["coverage.neotest.python"] = function(_, _, partial)
+	client.listeners.results = function(_, _, partial)
 		if partial then
 			return
 		end

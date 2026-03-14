@@ -36,7 +36,7 @@ local function find_coverage_profile(results)
 end
 
 local consumer = function(client)
-	client.listeners.results["coverage.neotest.go"] = function(_, results, partial)
+	client.listeners.results = function(_, results, partial)
 		if partial then
 			return
 		end
