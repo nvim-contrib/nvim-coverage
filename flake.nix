@@ -37,6 +37,7 @@
       in
       {
         devShells.default = pkgs.mkShell {
+          name = "nvim-coverage";
           packages = [
             neovimForTests
           ];
