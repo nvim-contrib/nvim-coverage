@@ -45,10 +45,13 @@ local defaults = {
 	--- @field partial Sign
 	--- @field group string name of the sign group (:h sign-group)
 	signs = {
-		covered = { hl = "CoverageCovered", text = "▎" },
+		covered   = { hl = "CoverageCovered",   text = "▎" },
 		uncovered = { hl = "CoverageUncovered", text = "▎" },
-		partial = { hl = "CoveragePartial", text = "▎" },
-		group = "coverage",
+		partial   = { hl = "CoveragePartial",   text = "▎" },
+		group   = "coverage",
+		signhl  = true,  -- show glyph in sign column
+		numhl   = false, -- color the line number (opt-in)
+		linehl  = false, -- color the entire line background (opt-in)
 	},
 
 	--- @class ReportHighlightConfig

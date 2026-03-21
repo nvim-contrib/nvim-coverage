@@ -6,6 +6,10 @@ local enabled = false
 local cached_signs = nil
 local default_priority = 10
 
+local rt_signhl = false
+local rt_numhl  = false
+local rt_linehl = false
+
 --- @class Sign
 --- @field hl string name of the highlight group
 --- @field text string text to place in sign column
@@ -23,21 +27,46 @@ local name = function(n)
 	return prefix .. n
 end
 
+local redefine = function()
+	vim.fn.sign_define(name("covered"), {
+		text   = rt_signhl and config.opts.signs.covered.text or "",
+		texthl = config.opts.signs.covered.hl,
+		numhl  = rt_numhl  and "CoverageCoveredNumber"  or "",
+		linehl = rt_linehl and "CoverageCoveredLine"    or "",
+	})
+	vim.fn.sign_define(name("uncovered"), {
+		text   = rt_signhl and config.opts.signs.uncovered.text or "",
+		texthl = config.opts.signs.uncovered.hl,
+		numhl  = rt_numhl  and "CoverageUncoveredNumber" or "",
+		linehl = rt_linehl and "CoverageUncoveredLine"   or "",
+	})
+	vim.fn.sign_define(name("partial"), {
+		text   = rt_signhl and config.opts.signs.partial.text or "",
+		texthl = config.opts.signs.partial.hl,
+		numhl  = rt_numhl  and "CoveragePartialNumber"  or "",
+		linehl = rt_linehl and "CoveragePartialLine"    or "",
+	})
+end
+
 --- Defines signs.
 M.setup = function()
-	vim.fn.sign_define(
-		name("covered"),
-		{ text = config.opts.signs.covered.text, texthl = config.opts.signs.covered.hl }
-	)
-	vim.fn.sign_define(
-		name("uncovered"),
-		{ text = config.opts.signs.uncovered.text, texthl = config.opts.signs.uncovered.hl }
-	)
-	vim.fn.sign_define(
-		name("partial"),
-		{ text = config.opts.signs.partial.text, texthl = config.opts.signs.partial.hl }
-	)
+	rt_signhl = config.opts.signs.signhl
+	rt_numhl  = config.opts.signs.numhl
+	rt_linehl = config.opts.signs.linehl
+	redefine()
 end
+
+M.show_signhl   = function() rt_signhl = true;  redefine() end
+M.hide_signhl   = function() rt_signhl = false; redefine() end
+M.toggle_signhl = function() rt_signhl = not rt_signhl; redefine() end
+
+M.show_numhl    = function() rt_numhl = true;  redefine() end
+M.hide_numhl    = function() rt_numhl = false; redefine() end
+M.toggle_numhl  = function() rt_numhl = not rt_numhl; redefine() end
+
+M.show_linehl   = function() rt_linehl = true;  redefine() end
+M.hide_linehl   = function() rt_linehl = false; redefine() end
+M.toggle_linehl = function() rt_linehl = not rt_linehl; redefine() end
 
 --- Caches signs but does not place them.
 --- @param signs SignPlace[]

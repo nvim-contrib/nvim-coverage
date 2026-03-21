@@ -45,6 +45,16 @@ local create_highlight_groups = function()
 	highlight("CoverageReportFail", config.opts.report.highlights.fail)
 	highlight("CoverageReportHeader", config.opts.report.highlights.header)
 	highlight("CoverageLineHits", config.opts.line_hits.highlight)
+
+	-- Number column highlights (for numhl opt-in): inherit sign fg color
+	highlight("CoverageCoveredNumber",   { link = "CoverageCovered" })
+	highlight("CoverageUncoveredNumber", { link = "CoverageUncovered" })
+	highlight("CoveragePartialNumber",   { link = "CoveragePartial" })
+
+	-- Full line background highlights (for linehl opt-in)
+	highlight("CoverageCoveredLine",   { bg = "#1a2e0d" })
+	highlight("CoverageUncoveredLine", { bg = "#2e0d0d" })
+	highlight("CoveragePartialLine",   { bg = "#1e0d2e" })
 end
 
 -- Creates default highlight groups.

@@ -184,6 +184,18 @@ M.hide_line_signs = signs.unplace
 --- Toggles line signs.
 M.toggle_line_signs = signs.toggle
 
+M.show_signhl   = signs.show_signhl
+M.hide_signhl   = signs.hide_signhl
+M.toggle_signhl = signs.toggle_signhl
+
+M.show_numhl    = signs.show_numhl
+M.hide_numhl    = signs.hide_numhl
+M.toggle_numhl  = signs.toggle_numhl
+
+M.show_linehl   = signs.show_linehl
+M.hide_linehl   = signs.hide_linehl
+M.toggle_linehl = signs.toggle_linehl
+
 --- Hides signs, clears cache, stops file watcher, disables line hints and branch hints.
 M.clear = function()
 	signs.clear()

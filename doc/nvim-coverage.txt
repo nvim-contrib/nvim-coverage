@@ -97,6 +97,21 @@ Valid keys for {opts.signs}:
         Name of the sign group used when placing signs. See |sign-group|.
         Defaults to: `"coverage"`
 
+    signhl: ~
+        When true, the glyph text is shown in the sign column.
+        Can be toggled at runtime with |coverage.toggle_signhl()|.
+        Defaults to: `true`
+
+    numhl: ~
+        When true, the line number is colored with the coverage highlight group.
+        Can be toggled at runtime with |coverage.toggle_numhl()|.
+        Defaults to: `false`
+
+    linehl: ~
+        When true, the entire line background is colored with the coverage
+        highlight group. Can be toggled at runtime with |coverage.toggle_linehl()|.
+        Defaults to: `false`
+
     Each sign also accepts an optional `priority` key. See |sign-priority|.
 
                                                              *coverage.report*
@@ -245,6 +260,42 @@ coverage.hide_line_signs()
                                                 *coverage.toggle_line_signs()*
 coverage.toggle_line_signs()
     Toggle line sign visibility.
+
+                                                        *coverage.show_signhl()*
+coverage.show_signhl()
+    Show the sign column glyph.
+
+                                                        *coverage.hide_signhl()*
+coverage.hide_signhl()
+    Hide the sign column glyph.
+
+                                                      *coverage.toggle_signhl()*
+coverage.toggle_signhl()
+    Toggle sign column glyph visibility.
+
+                                                         *coverage.show_numhl()*
+coverage.show_numhl()
+    Enable line number coloring.
+
+                                                         *coverage.hide_numhl()*
+coverage.hide_numhl()
+    Disable line number coloring.
+
+                                                       *coverage.toggle_numhl()*
+coverage.toggle_numhl()
+    Toggle line number coloring.
+
+                                                        *coverage.show_linehl()*
+coverage.show_linehl()
+    Enable full-line background coloring.
+
+                                                        *coverage.hide_linehl()*
+coverage.hide_linehl()
+    Disable full-line background coloring.
+
+                                                      *coverage.toggle_linehl()*
+coverage.toggle_linehl()
+    Toggle full-line background coloring.
 
                                                            *coverage.clear()*
 coverage.clear()

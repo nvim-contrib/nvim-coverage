@@ -100,6 +100,9 @@ require("coverage").setup({
     uncovered = { hl = "CoverageUncovered", text = "▎" },
     partial   = { hl = "CoveragePartial",   text = "▎" },
     group     = "coverage",  -- sign group name (:h sign-group)
+    signhl    = true,         -- show glyph in sign column (toggleable at runtime)
+    numhl     = false,        -- color the line number (opt-in, toggleable at runtime)
+    linehl    = false,        -- color the entire line background (opt-in, toggleable at runtime)
   },
 
   highlights = {
@@ -168,6 +171,11 @@ coverage.show_line_signs()
 coverage.hide_line_signs()
 coverage.toggle_line_signs()
 coverage.clear()
+
+-- sign column glyph / line number / full-line background (runtime toggles)
+coverage.show_signhl()   coverage.hide_signhl()   coverage.toggle_signhl()
+coverage.show_numhl()    coverage.hide_numhl()    coverage.toggle_numhl()
+coverage.show_linehl()   coverage.hide_linehl()   coverage.toggle_linehl()
 
 -- summary popup
 coverage.report()
