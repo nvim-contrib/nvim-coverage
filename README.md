@@ -19,7 +19,7 @@
 - Auto-reload when the lcov file changes on disk
 - Works with any language that produces lcov output
 
-![Signs and virtual text](doc/images/signs.webp)
+![Signs and virtual text](doc/tapes/output/signs.webp)
 
 ## Requirements
 
@@ -67,14 +67,14 @@ target/lcov.info
 
 Override with the `file` option if your tool writes elsewhere.
 
-| Language | Command | Default output path |
-|----------|---------|---------------------|
-| Go | `go test -coverprofile=coverage.out ./... && go tool cover -o coverage/lcov.info coverage.out` | `coverage/lcov.info` |
-| Rust | `cargo +nightly llvm-cov --lcov --branch --output-path target/lcov.info` | `target/lcov.info` |
-| JavaScript/TypeScript | `jest --coverage` | `coverage/lcov.info` |
-| Python | `pytest --cov && coverage lcov -o coverage/lcov.info` | `coverage/lcov.info` |
-| C/C++ | `lcov --capture --directory . --output-file lcov.info` | `lcov.info` |
-| Swift | `xcrun xccov view --report --json ... \| <converter>` | `coverage/lcov.info` |
+| Language              | Command                                                                                        | Default output path  |
+| --------------------- | ---------------------------------------------------------------------------------------------- | -------------------- |
+| Go                    | `go test -coverprofile=coverage.out ./... && go tool cover -o coverage/lcov.info coverage.out` | `coverage/lcov.info` |
+| Rust                  | `cargo +nightly llvm-cov --lcov --branch --output-path target/lcov.info`                       | `target/lcov.info`   |
+| JavaScript/TypeScript | `jest --coverage`                                                                              | `coverage/lcov.info` |
+| Python                | `pytest --cov && coverage lcov -o coverage/lcov.info`                                          | `coverage/lcov.info` |
+| C/C++                 | `lcov --capture --directory . --output-file lcov.info`                                         | `lcov.info`          |
+| Swift                 | `xcrun xccov view --report --json ... \| <converter>`                                          | `coverage/lcov.info` |
 
 ## Configuration
 
@@ -138,23 +138,23 @@ require("coverage").setup({
 
 ### Commands
 
-| Command | Description |
-|---------|-------------|
-| `:CoverageLoad [file]` | Load lcov file and cache signs (uses `file` config if no arg) |
-| `:CoverageLoad!` | Open interactive picker over all `*.info` files found under cwd |
-| `:CoverageSigns [show\|hide\|toggle]` | Show, hide, or toggle line signs (default: `toggle`) |
-| `:CoverageHints [show\|hide\|toggle]` | Show, hide, or toggle line hints / virtual text hit counts (default: `toggle`) |
-| `:CoverageBranches [show\|hide\|toggle]` | Show, hide, or toggle branch hints popup (default: `toggle`) |
-| `:CoverageReport` | Open the summary popup |
-| `:CoverageHeatmap` | Open full-screen treemap — files sized by LOC, colored by coverage % |
-| `:CoverageQuickfix [uncovered]` | Populate quickfix list with per-file coverage summary |
-| `:CoverageLoclist [uncovered\|partial]` | Populate location list with lines of given type in current buffer |
-| `:CoverageBrowser` | Generate HTML report via `genhtml` and open in browser |
-| `:CoverageClear` | Remove signs, hints, and branch overlay; clear cache; stop file watcher |
+| Command                                  | Description                                                                    |
+| ---------------------------------------- | ------------------------------------------------------------------------------ |
+| `:CoverageLoad [file]`                   | Load lcov file and cache signs (uses `file` config if no arg)                  |
+| `:CoverageLoad!`                         | Open interactive picker over all `*.info` files found under cwd                |
+| `:CoverageSigns [show\|hide\|toggle]`    | Show, hide, or toggle line signs (default: `toggle`)                           |
+| `:CoverageHints [show\|hide\|toggle]`    | Show, hide, or toggle line hints / virtual text hit counts (default: `toggle`) |
+| `:CoverageBranches [show\|hide\|toggle]` | Show, hide, or toggle branch hints popup (default: `toggle`)                   |
+| `:CoverageReport`                        | Open the summary popup                                                         |
+| `:CoverageHeatmap`                       | Open full-screen treemap — files sized by LOC, colored by coverage %           |
+| `:CoverageQuickfix [uncovered]`          | Populate quickfix list with per-file coverage summary                          |
+| `:CoverageLoclist [uncovered\|partial]`  | Populate location list with lines of given type in current buffer              |
+| `:CoverageBrowser`                       | Generate HTML report via `genhtml` and open in browser                         |
+| `:CoverageClear`                         | Remove signs, hints, and branch overlay; clear cache; stop file watcher        |
 
-![Coverage Heatmap](doc/images/heatmap.webp)
+![Coverage Heatmap](doc/tapes/output/heatmap.webp)
 
-![Coverage Report](doc/images/report.webp)
+![Coverage Report](doc/tapes/output/report.webp)
 
 ### Lua API
 
@@ -208,16 +208,16 @@ coverage.clear()
 
 ### Summary popup keys
 
-| Key | Action |
-|-----|--------|
-| `s` | Sort by coverage ascending |
-| `S` | Sort by coverage descending |
-| `H` | Jump to top entry |
-| `<CR>` | Open file under cursor |
-| `?` | Toggle help |
-| `q` / `<Esc>` | Close |
+| Key           | Action                      |
+| ------------- | --------------------------- |
+| `s`           | Sort by coverage ascending  |
+| `S`           | Sort by coverage descending |
+| `H`           | Jump to top entry           |
+| `<CR>`        | Open file under cursor      |
+| `?`           | Toggle help                 |
+| `q` / `<Esc>` | Close                       |
 
-![Branch Overlay](doc/images/branch.png)
+![Branch Overlay](doc/tapes/output/branch.png)
 
 ### Quickfix / loclist workflow
 
