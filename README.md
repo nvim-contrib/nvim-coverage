@@ -145,12 +145,12 @@ require("coverage").setup({
 | `:CoverageSigns [show\|hide\|toggle]` | Show, hide, or toggle line signs (default: `toggle`) |
 | `:CoverageHints [show\|hide\|toggle]` | Show, hide, or toggle line hints / virtual text hit counts (default: `toggle`) |
 | `:CoverageBranches [show\|hide\|toggle]` | Show, hide, or toggle branch hints popup (default: `toggle`) |
-| `:CoverageClear` | Remove signs, hints, and branch overlay; clear cache; stop file watcher |
 | `:CoverageReport` | Open the summary popup |
 | `:CoverageHeatmap` | Open full-screen treemap — files sized by LOC, colored by coverage % |
 | `:CoverageQuickfix [uncovered]` | Populate quickfix list with per-file coverage summary |
 | `:CoverageLoclist [uncovered\|partial]` | Populate location list with lines of given type in current buffer |
 | `:CoverageBrowser` | Generate HTML report via `genhtml` and open in browser |
+| `:CoverageClear` | Remove signs, hints, and branch overlay; clear cache; stop file watcher |
 
 ![Coverage Heatmap](doc/img/heatmap.webp)
 
@@ -170,7 +170,6 @@ coverage.load("path/to/lcov.info", true) -- load and immediately show signs
 coverage.show_line_signs()
 coverage.hide_line_signs()
 coverage.toggle_line_signs()
-coverage.clear()
 
 -- sign column glyph / line number / full-line background (runtime toggles)
 coverage.show_signhl()   coverage.hide_signhl()   coverage.toggle_signhl()
@@ -202,6 +201,9 @@ coverage.loclist("partial")     -- partially covered lines in current buffer
 -- jump to next/previous sign
 coverage.jump_next("uncovered")  -- "covered" | "uncovered" | "partial"
 coverage.jump_prev("uncovered")
+
+-- clear
+coverage.clear()
 ```
 
 ### Summary popup keys

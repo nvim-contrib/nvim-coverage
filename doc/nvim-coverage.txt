@@ -203,10 +203,6 @@ COMMANDS                                              *nvim-coverage-commands*
     partially covered line shows a floating window with per-branch execution
     counts. Requires a prior |:CoverageLoad|.
 
-:CoverageClear                                                *:CoverageClear*
-    Remove signs, clear the cached report, stop the file watcher, and disable
-    line hints and branch hints.
-
 :CoverageReport                                            *:CoverageReport*
     Open the coverage summary popup. Requires a prior |:CoverageLoad|.
 
@@ -233,6 +229,10 @@ COMMANDS                                              *nvim-coverage-commands*
     Generate an HTML coverage report from the loaded lcov file using `genhtml`
     and open `index.html` in the system browser (`open` on macOS, `xdg-open`
     on Linux). Requires `genhtml` on $PATH and a prior |:CoverageLoad|.
+
+:CoverageClear                                                *:CoverageClear*
+    Remove signs, clear the cached report, stop the file watcher, and disable
+    line hints and branch hints.
 
 
 ================================================================================
@@ -296,11 +296,6 @@ coverage.hide_linehl()
                                                       *coverage.toggle_linehl()*
 coverage.toggle_linehl()
     Toggle full-line background coloring.
-
-                                                           *coverage.clear()*
-coverage.clear()
-    Remove signs, clear the cached report, stop the file watcher, and disable
-    line hints and branch hints.
 
                                                          *coverage.report()*
 coverage.report()
@@ -384,6 +379,11 @@ coverage.browser()
     Generate an HTML report from the loaded lcov file using `genhtml` and open
     it in the system browser. Requires `genhtml` on $PATH and a prior
     |coverage.load()|.
+
+                                                           *coverage.clear()*
+coverage.clear()
+    Remove signs, clear the cached report, stop the file watcher, and disable
+    line hints and branch hints.
 
 
 ================================================================================
