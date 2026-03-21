@@ -19,7 +19,7 @@
 - Auto-reload when the lcov file changes on disk
 - Works with any language that produces lcov output
 
-![Signs and virtual text](doc/img/signs.webp)
+![Signs and virtual text](doc/images/signs.webp)
 
 ## Requirements
 
@@ -152,9 +152,9 @@ require("coverage").setup({
 | `:CoverageBrowser` | Generate HTML report via `genhtml` and open in browser |
 | `:CoverageClear` | Remove signs, hints, and branch overlay; clear cache; stop file watcher |
 
-![Coverage Heatmap](doc/img/heatmap.webp)
+![Coverage Heatmap](doc/images/heatmap.webp)
 
-![Coverage Report](doc/img/report.webp)
+![Coverage Report](doc/images/report.webp)
 
 ### Lua API
 
@@ -217,7 +217,7 @@ coverage.clear()
 | `?` | Toggle help |
 | `q` / `<Esc>` | Close |
 
-![Branch Overlay](doc/img/branch.png)
+![Branch Overlay](doc/images/branch.png)
 
 ### Quickfix / loclist workflow
 

@@ -1,3 +1,5 @@
+.DS_Store
+
 # Compiled Lua sources
 luac.out
 
@@ -39,5 +41,5 @@ luac.out
 *.x86_64
 *.hex
 
-# VHS tapes (local only)
-tapes/
+# VHS tape output (raw recordings)
+doc/tapes/output/
