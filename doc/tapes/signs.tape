@@ -14,14 +14,14 @@ Set Padding 20
 Set TypingSpeed 75ms
 
 Hide
-Type "cd /Users/iamralch/Projects/github.com/tmux-contrib/tmux-pomodoro/crates/pomodoro && clear"
+Type "export REPO=$(pwd) && cd doc/demo && clear"
 Enter
 Sleep 500ms
 Type "nvim src/app/cmd.rs"
 Enter
 Sleep 3s
 # Reconfigure signs with a thicker block char before loading coverage
-Type ":luafile /Users/iamralch/Projects/github.com/nvim-contrib/nvim-coverage/doc/tapes/sign_override.lua"
+Type ":luafile $REPO/doc/tapes/sign_override.lua"
 Enter
 Sleep 500ms
 Type ":CoverageLoad"

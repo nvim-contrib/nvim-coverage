@@ -11,7 +11,7 @@ Set FontFamily "JetBrainsMono Nerd Font"
 Set CursorBlink false
 Set Padding 20
 Hide
-Type "cd /Users/iamralch/Projects/github.com/tmux-contrib/tmux-pomodoro/crates/pomodoro && clear"
+Type "cd doc/demo && clear"
 Enter
 Sleep 500ms
 Show
