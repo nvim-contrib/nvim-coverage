@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/nvim-contrib/nvim-coverage/compare/v0.6.2...v0.7.0) (2026-03-21)
+
+
+### Features
+
+* **signs:** add signhl/numhl/linehl config options with runtime toggles ([fbe812f](https://github.com/nvim-contrib/nvim-coverage/commit/fbe812f031e9172384a5c66f6800e4b14ae2692e))
+
 ## [0.6.2](https://github.com/nvim-contrib/nvim-coverage/compare/v0.6.1...v0.6.2) (2026-03-14)
 
 
