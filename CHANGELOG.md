@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/nvim-contrib/nvim-coverage/compare/v0.7.0...v0.7.1) (2026-03-22)
+
+
+### Bug Fixes
+
+* **hints:** skip extmarks for out-of-range lines ([df47560](https://github.com/nvim-contrib/nvim-coverage/commit/df47560c7d4068e40dc2fccaadcb9e2f7d9793f5))
+
 ## [0.7.0](https://github.com/nvim-contrib/nvim-coverage/compare/v0.6.2...v0.7.0) (2026-03-21)
 
 
