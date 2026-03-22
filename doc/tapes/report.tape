@@ -13,7 +13,7 @@ Set CursorBlink false
 Set Padding 20
 Set TypingSpeed 75ms
 Hide
-Type "cd doc/demo && clear"
+Type "cd doc/tapes/demo && clear"
 Enter
 Sleep 500ms
 Show

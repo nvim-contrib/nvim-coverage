@@ -14,7 +14,7 @@ Set Padding 20
 Set TypingSpeed 75ms
 
 Hide
-Type "export REPO=$(pwd) && cd doc/demo && clear"
+Type "export REPO=$(pwd) && cd doc/tapes/demo && clear"
 Enter
 Sleep 500ms
 Type "nvim src/app/cmd.rs"

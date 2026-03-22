@@ -11,7 +11,7 @@ Set FontFamily "JetBrainsMono Nerd Font"
 Set CursorBlink false
 Set Padding 20
 Hide
-Type "cd doc/demo && clear"
+Type "cd doc/tapes/demo && clear"
 Enter
 Sleep 500ms
 Show
