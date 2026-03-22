@@ -43,7 +43,7 @@ Sleep 1.5s
 Type "25j"
 Sleep 1s
 
-Type ":CoverageToggleLineHints"
+Type ":CoverageHints"
 Enter
 Sleep 1.5s
 

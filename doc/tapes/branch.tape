@@ -32,7 +32,7 @@ Type ":lnext"
 Enter
 Sleep 500ms
 
-Type ":CoverageToggleBranchHints"
+Type ":CoverageHints toggle"
 Enter
 Sleep 1.5s
 
