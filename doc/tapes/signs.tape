@@ -27,7 +27,7 @@ Sleep 500ms
 Type ":CoverageLoad"
 Enter
 Sleep 3s
-Type ":CoverageShowLineSigns"
+Type ":CoverageSigns"
 Enter
 Sleep 1s
 Show
