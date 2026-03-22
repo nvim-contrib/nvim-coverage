@@ -21,11 +21,15 @@ M.place = function(data)
 	for fname, cov in pairs(data.files) do
 		local bufnr = vim.fn.bufnr(fname, false)
 		if bufnr ~= -1 and cov.hit_counts ~= nil then
+			local line_count = vim.api.nvim_buf_line_count(bufnr)
 			for lnum, count in pairs(cov.hit_counts) do
-				vim.api.nvim_buf_set_extmark(bufnr, get_ns(), lnum - 1, 0, {
-					virt_text = { { string.format("× %d", count), "CoverageLineHits" } },
-					virt_text_pos = vt.position,
-				})
+				local line = lnum - 1
+				if line >= 0 and line < line_count then
+					vim.api.nvim_buf_set_extmark(bufnr, get_ns(), line, 0, {
+						virt_text = { { string.format("× %d", count), "CoverageLineHits" } },
+						virt_text_pos = vt.position,
+					})
+				end
 			end
 		end
 	end
