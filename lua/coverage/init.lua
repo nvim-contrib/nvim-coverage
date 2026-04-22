@@ -44,6 +44,26 @@ M.setup = function(user_opts)
 	signs.setup()
 	highlight.setup()
 
+	local augroup = vim.api.nvim_create_augroup("CoverageAutoPlace", { clear = true })
+	vim.api.nvim_create_autocmd("BufWinEnter", {
+		group = augroup,
+		callback = function()
+			if not cache.is_cached() then
+				return
+			end
+			if not signs.is_enabled() then
+				return
+			end
+			local fname = vim.api.nvim_buf_get_name(0)
+			local data = cache.get()
+			if data.files[fname] == nil then
+				return
+			end
+			local sign_list = signs.build(data)
+			signs.place(sign_list)
+		end,
+	})
+
 	if config.opts.commands then
 		local action_complete = function()
 			return { "show", "hide", "toggle" }
@@ -175,14 +195,27 @@ M.load = function(file, opts)
 	reload()
 end
 
---- Shows line signs, if loaded.
-M.show_line_signs = signs.show
+--- Shows line signs, rebuilding from cached data so newly-opened buffers are included.
+M.show_line_signs = function()
+	if signs.is_enabled() or not cache.is_cached() then
+		return
+	end
+	local sign_list = signs.build(cache.get())
+	signs.place(sign_list)
+end
 
 --- Hides line signs.
 M.hide_line_signs = signs.unplace
 
---- Toggles line signs.
-M.toggle_line_signs = signs.toggle
+--- Toggles line signs, rebuilding from cached data so newly-opened buffers are included.
+M.toggle_line_signs = function()
+	if signs.is_enabled() then
+		signs.unplace()
+	elseif cache.is_cached() then
+		local sign_list = signs.build(cache.get())
+		signs.place(sign_list)
+	end
+end
 
 M.show_signhl   = signs.show_signhl
 M.hide_signhl   = signs.hide_signhl
