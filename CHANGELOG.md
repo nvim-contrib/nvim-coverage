@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.7.2](https://github.com/nvim-contrib/nvim-coverage/compare/v0.7.1...v0.7.2) (2026-04-22)
+
+
+### Bug Fixes
+
+* add postCreateCommand to restore nix volume permissions ([9e29e78](https://github.com/nvim-contrib/nvim-coverage/commit/9e29e784f46c969490bf1d6dba74b23f5ce6badd))
+* **coverage/neotest/go:** suppress load notification and keep sign placement ([26c774a](https://github.com/nvim-contrib/nvim-coverage/commit/26c774ab0c2d96c75ea1f4a46cc725ab774b9d96))
+
 ## [0.7.1](https://github.com/nvim-contrib/nvim-coverage/compare/v0.7.0...v0.7.1) (2026-03-22)
 
 
