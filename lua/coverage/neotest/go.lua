@@ -56,7 +56,7 @@ local consumer = function(client)
 			local report_dir = vim.fn.fnamemodify(path, ":h")
 			local report_path = report_dir .. "/lcov.info"
 			vim.fn.writefile(report, report_path)
-			require("coverage").load(report_path, true)
+			require("coverage").load(report_path, { place = true, silent = true })
 		end)
 	end
 	return {}
