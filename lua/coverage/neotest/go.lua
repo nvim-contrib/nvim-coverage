@@ -1,12 +1,12 @@
 --- Go neotest consumer that converts coverage.out to lcov after tests finish,
 --- then reloads coverage.
 ---
+--- Searches neotest output directories for `coverage.out` files generated
+--- during the test run. Merges all profiles found into a single lcov report
+--- and loads it.
+---
 --- Expects tests to be run with `-coverprofile=coverage.out` (e.g. via ginkgo
 --- or neotest-go/neotest-golang with coverage flags enabled).
----
---- After tests finish the consumer finds `coverage.out` in the neotest output
---- directory, converts it to lcov in pure Lua, writes the result to
---- `cwd/lcov.info`, and loads the merged file.
 ---
 --- Usage:
 ---   require("neotest").setup({
@@ -14,51 +14,52 @@
 ---       coverage_go = require("coverage.neotest.go"),
 ---     },
 ---   })
-
-local go_cov = require("coverage.neotest.go_cov")
-
---- Finds the coverage.out file in the neotest results output directories.
---- @param results table<string, neotest.Result> neotest results
---- @return string|nil path to coverage.out if found
-local function find_coverage_profile(results)
-	if not results then
-		return nil
-	end
-	for _, result in pairs(results) do
-		if result.output then
-			local report_dir = vim.fn.fnamemodify(result.output, ":h")
-			local report_path = report_dir .. "/coverage.out"
-			if vim.fn.filereadable(report_path) == 1 then
-				return report_path
+---
+--- @type fun(client: table): table
+local consumer = function(client)
+	--- @param results table<string, neotest.Result>
+	--- @return string[] deduplicated list of coverage.out paths
+	local function find_in_results(results)
+		if not results then
+			return {}
+		end
+		local seen = {}
+		local found = {}
+		for _, result in pairs(results) do
+			if result.output then
+				local dir = vim.fn.fnamemodify(result.output, ":h")
+				local path = dir .. "/coverage.out"
+				if not seen[path] and vim.fn.filereadable(path) == 1 then
+					seen[path] = true
+					found[#found + 1] = path
+				end
 			end
 		end
+		return found
 	end
-	return nil
-end
 
-local consumer = function(client)
 	client.listeners.results = function(_, results, partial)
 		if partial then
 			return
 		end
 
 		vim.schedule(function()
-			local path = find_coverage_profile(results)
-			if not path then
+			local paths = find_in_results(results)
+			if #paths == 0 then
 				return
 			end
 
-			local report = go_cov.to_lcov({ path })
+			local report = require("coverage.neotest.go_cov").to_lcov(paths)
 			if #report == 0 then
 				return
 			end
 
-			local report_dir = vim.fn.fnamemodify(path, ":h")
-			local report_path = report_dir .. "/lcov.info"
+			local report_path = vim.fn.tempname() .. ".info"
 			vim.fn.writefile(report, report_path)
 			require("coverage").load(report_path, { place = true, silent = true })
 		end)
 	end
+
 	return {}
 end
 
