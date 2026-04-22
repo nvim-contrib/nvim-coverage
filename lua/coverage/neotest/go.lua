@@ -26,9 +26,10 @@ local function find_coverage_profile(results)
 	end
 	for _, result in pairs(results) do
 		if result.output then
-			local path = vim.fn.fnamemodify(result.output, ":h") .. "/coverage.out"
-			if vim.fn.filereadable(path) == 1 then
-				return path
+			local report_dir = vim.fn.fnamemodify(result.output, ":h")
+			local report_path = report_dir .. "/coverage.out"
+			if vim.fn.filereadable(report_path) == 1 then
+				return report_path
 			end
 		end
 	end
@@ -52,9 +53,10 @@ local consumer = function(client)
 				return
 			end
 
-			local lcov_out = vim.fn.getcwd() .. "/lcov.info"
-			vim.fn.writefile(report, lcov_out)
-			require("coverage").load(lcov_out, true)
+			local report_dir = vim.fn.fnamemodify(path, ":h")
+			local report_path = report_dir .. "/lcov.info"
+			vim.fn.writefile(report, report_path)
+			require("coverage").load(report_path, true)
 		end)
 	end
 	return {}
