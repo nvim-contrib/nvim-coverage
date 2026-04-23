@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.3](https://github.com/nvim-contrib/nvim-coverage/compare/v0.7.2...v0.7.3) (2026-04-23)
+
+
+### Bug Fixes
+
+* **coverage:** place signs on files opened after coverage loads ([8ccdcb0](https://github.com/nvim-contrib/nvim-coverage/commit/8ccdcb08fc055f3bbccac6d26227dad71fcdcfc9))
+
 ## [0.7.2](https://github.com/nvim-contrib/nvim-coverage/compare/v0.7.1...v0.7.2) (2026-04-22)
 
 
