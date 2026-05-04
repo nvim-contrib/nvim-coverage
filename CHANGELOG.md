@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.4](https://github.com/nvim-contrib/nvim-coverage/compare/v0.7.3...v0.7.4) (2026-05-04)
+
+
+### Bug Fixes
+
+* **github:** correct action versions in update.yml ([27becd1](https://github.com/nvim-contrib/nvim-coverage/commit/27becd1ba30db5bcf237d3c239b8bbd66fad2470))
+
 ## [0.7.3](https://github.com/nvim-contrib/nvim-coverage/compare/v0.7.2...v0.7.3) (2026-04-23)
 
 
