@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.5](https://github.com/nvim-contrib/nvim-coverage/compare/v0.7.4...v0.7.5) (2026-11-07)
+
+
+### Bug Fixes
+
+* **ci:** merge with the App token so main gets its CI run ([#67](https://github.com/nvim-contrib/nvim-coverage/issues/67)) ([bf10191](https://github.com/nvim-contrib/nvim-coverage/commit/bf10191dc11cdf20003b75f530bea145b64a838c))
+
 ## [0.7.4](https://github.com/nvim-contrib/nvim-coverage/compare/v0.7.3...v0.7.4) (2026-05-04)
 
 
